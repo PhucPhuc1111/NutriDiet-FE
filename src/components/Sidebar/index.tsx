@@ -1,4 +1,3 @@
-"use client";
 
 import React, { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
@@ -46,8 +45,8 @@ const menuGroups = [
           </svg>
         ),
         label: "Dashboard",
-        route: "#",
-        children: [{ label: "eCommerce", route: "/" }],
+        route: "/dashboard",
+        children: [{ label: "eCommerce", route: "/dashboard" }],
       },
       {
         icon: (
@@ -329,20 +328,14 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   return (
     <ClickOutside onClick={() => setSidebarOpen(false)}>
       <aside
-        className={`fixed left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:translate-x-0 ${
+        className={`fixed left-0  z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* <!-- SIDEBAR HEADER --> */}
         <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
           <Link href="/">
-            <Image
-              width={176}
-              height={32}
-              src={"/images/logo/logo.svg"}
-              alt="Logo"
-              priority
-            />
+          <div className="text-2xl font-semibold">NutriAdmin</div>
           </Link>
 
           <button
