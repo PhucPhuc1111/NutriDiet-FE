@@ -139,7 +139,7 @@ const Contact = () => {
                       <p className="font-semibold text-sm sm:text-base">Fanpage</p>
                     </div>
                     <div>
-                      {/* <Image className="w-12" src="/images/facebook.png" alt="facebook" /> */}
+                      <Image src="/images/logo/facebook.png" alt="facebook" width={50} height={50} />
                     </div>
                   </div>
                 </Link>
@@ -153,7 +153,7 @@ const Contact = () => {
                       <p className="font-semibold text-sm sm:text-base">Instagram</p>
                     </div>
                     <div>
-                      {/* <Image className="w-12" src="/images/instagram.png" alt="instagram" /> */}
+                      <Image className="w-12" src="/images/logo/instagram.png" alt="instagram" width={50} height={50} />
                     </div>
                   </div>
                 </Link>
@@ -163,10 +163,10 @@ const Contact = () => {
                 <div className="p-2 flex justify-between border-4 rounded-2xl border-green-800 text-white bg-green-800">
                   <div>
                     <p className="text-sm sm:text-base">Hoặc gọi đến số Hotline</p>
-                    <p className="font-semibold text-sm sm:text-base">(+84)932.898.537</p>
+                    <p className="font-semibold text-sm sm:text-base">(+84)708.518.569</p>
                   </div>
                   <div>
-                    {/* <img className="w-12" src="/images/call.png" alt="call" /> */}
+                    <Image className="w-12" src="/images/logo/call.png" width={50} height={50}  alt="call" />
                   </div>
                 </div>
               </div>

@@ -3,12 +3,10 @@ import React from 'react'
 
 const page = () => {
   return (
-  
-           <DefaultLayout>
-                        <div>Hello</div>
-                    </DefaultLayout>
-        
+    <DefaultLayout>
+                 <div>Hello</div>
+             </DefaultLayout>
   )
 }
 
-export default page
+export default page;

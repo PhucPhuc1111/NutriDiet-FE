@@ -45,10 +45,11 @@ const SignIn: React.FC = () => {
           <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
               
-              <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                Đăng nhập
+              <h2 className="mb-2 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
+              Đăng nhập
+            
               </h2>
-
+  <div className="mb-7">Quản trị viên được quyền đăng nhập</div>
               <form>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
@@ -115,10 +116,10 @@ const SignIn: React.FC = () => {
                     </span>
                   </div>
                 </div>
-                <Link href={"/forgotpassword"}></Link>
+                {/* <Link href={"/forgotpassword"}>
                     <div className="p-3 text-right hover:text-green-800 cursor-pointer">
                       Quên mật khẩu ?
-                    </div>
+                    </div></Link> */}
                 <div className="mb-5">
                   <input
                     type="submit"
@@ -127,7 +128,7 @@ const SignIn: React.FC = () => {
                   />
                 </div>
 
-                <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
+                {/* <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
                   <span>
                     <svg
                       width="20"
@@ -162,16 +163,16 @@ const SignIn: React.FC = () => {
                     </svg>
                   </span>
                   Đăng nhập với Google
-                </button>
+                </button> */}
 
-                <div className="mt-6 text-center">
+                {/* <div className="mt-6 text-center">
                   <p>
                     Chưa có tài khoản ?{" "}
                     <Link href="/auth/signup" className="text-green-800 hover:text-green-950 dark:text-gray-300 dark:hover:text-white">
                       Đăng ký
                     </Link>
                   </p>
-                </div>
+                </div> */}
               </form>
             </div>
           </div>

@@ -27,7 +27,7 @@ export const Footer = () => {
             <div className="col-span-8 px-8 sm:px-20">
               <div className="w-full flex flex-col sm:flex-row p-4 sm:p-12 text-black space-y-8 sm:space-y-0 sm:space-x-8">
                 <div className="w-full sm:w-1/3 space-y-4 sm:space-y-12">
-                  <div className="text-lg w-[150px] pb-2 sm:pb-4 border-b-2 text-black font-semibold text-sm sm:text-lg">Chính sách</div>
+                  <div className=" w-[150px] pb-2 sm:pb-4 border-b-2 text-black font-semibold text-sm sm:text-lg">Chính sách</div>
                   <div className="space-y-3 text-xs sm:text-base">
                     <div>
                       <Link className="text-black" href="#">Chính sách bảo mật</Link>
@@ -44,15 +44,15 @@ export const Footer = () => {
                 </div>
   
                 <div className="w-full sm:w-1/3 space-y-4 sm:space-y-12">
-                  <div className="text-lg w-[150px] pb-2 sm:pb-4 border-b-2 text-black font-semibold text-sm sm:text-lg">Liên hệ</div>
+                  <div className=" w-[150px] pb-2 sm:pb-4 border-b-2 text-black font-semibold text-sm sm:text-lg">Liên hệ</div>
                   <div className="space-y-3 text-xs sm:text-base">
                     <p>Email: nutridiet@gmail.com</p>
-                    <p>Phone: (+84)070.851.5369</p>
+                    <p>Phone: (+84) 708.518.569</p>
                   </div>
                 </div>
   
                 <div className="w-full sm:w-1/3 space-y-4 sm:space-y-12">
-                  <div className="text-lg w-[150px] pb-2 sm:pb-4 border-b-2 text-black font-semibold text-sm sm:text-lg">Social</div>
+                  <div className=" w-[150px] pb-2 sm:pb-4 border-b-2 text-black font-semibold text-sm sm:text-lg">Social</div>
                   <div className="space-y-3 text-xs sm:text-base">
                     <div>
                       <Link target="_blank" className="text-black" href="https://www.facebook.com/profile.php?id=61566267320324">Facebook</Link>
