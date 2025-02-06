@@ -1,8 +1,9 @@
-import ECommerce from "@/components/Dashboard/E-commerce";
+
 import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import AuthLayout from "@/components/Layouts/AuthLayout";
 import Image from "next/image";
+import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Nutridiet",
@@ -11,49 +12,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-      <AuthLayout />
-      {/* <div className=" ">
-          <div className=" flex   w-full bg-green-800 dark:bg-green-900">
-            <div className=" w-1/2  p-20 text-white">
-              {" "}
-              Ứng dụng theo dõi dinh dưỡng
-              <h2 className="p-6">
-                NutriDiet - Hệ thống đề xuất chế độ ăn uống lành mạnh{" "}
-              </h2>
-              <div className="flex items-center">
-                <ol>
-                  <li></li>
-                  <li>
-                    {" "}
-                    Cung cấp các kế hoạch bữa ăn được cá nhân hóa phù hợp với
-                    mục tiêu sức khỏe của người dùng.
-                  </li>
-                  <li>
-                    Phân tích thông tin đầu vào của người dùng (cân nặng, chiều
-                    cao, sở thích ăn uống,…) để đưa ra gợi ý bữa ăn tối ưu.
-                  </li>
-                  <li>
-                    Liên tục học hỏi để cải thiện các đề xuất về bữa ăn, đảm bảo
-                    các đề xuất thay đổi khi sở thích và mục tiêu của người dùng
-                    thay đổi.
-                  </li>
-                </ol>
-              </div>
-            </div>
-            <div className="ml-18">
-            <Image
-  className="dark:bg-green-900" 
-  src="/images/logo/Nutridiet.png"
-  alt="Nutridiet"
-  width={600}
-  height={600}
-/>
-
-
-            </div>
-          </div>
-          <div className="bg-white text-green-800 w-full">HBSIKLUJFHBUJKLSAHF</div>
-        </div> */}
+      <AuthLayout >
       <div className="flex w-full justify-center bg-white dark:bg-green-800">
         <Image
           className="flex justify-center dark:bg-green-800 "
@@ -71,17 +30,14 @@ export default function Home() {
           className="flex flex-col sm:flex-row"
           uk-scrollspy="target: > div; cls: uk-animation-fade; delay: 100; repeat: true;"
         >
-          <div className="w-full sm:w-1/2">
+          <div className="w-full sm:w-1/2  dark:bg-green-800">
             <img
               className="aspect[733/586] h-auto w-full"
               src="/images/logo/banner1.png"
               alt="banner"
             />
           </div>
-          <div
-            className="pt-16 w-full space-y-5 p-12 px-4 text-justify text-sm text-black sm:w-1/2 sm:space-y-7 sm:px-16 sm:text-base bg-white"
-           
-          >
+          <div className="w-full space-y-5 bg-white p-12 px-4 pt-16 text-justify text-sm text-black sm:w-1/2 sm:space-y-7 sm:px-16 sm:text-base dark:bg-green-800 dark:text-white">
             <p>
               Ngày nay, việc duy trì lối sống lành mạnh đã trở thành một thách
               thức lớn đối với nhiều người do lịch trình bận rộn, thiếu kiến
@@ -107,10 +63,10 @@ export default function Home() {
         </div>
       </div>
       <div className="flex w-full justify-center bg-green-800 py-4 text-xl font-bold text-white sm:text-3xl">
-          <span>VÌ SAO BẠN NÊN CHỌN NUTRIDIET ?</span>
-        </div>
-      <div className="flex w-full flex-col space-y-12 p-4 sm:flex-row sm:space-x-20 sm:space-y-0 sm:p-12 bg-white ">
-        <div className="w-full space-y-4 text-center text-black sm:w-1/4 sm:space-y-7 sm:text-left">
+        <span>VÌ SAO BẠN NÊN CHỌN NUTRIDIET ?</span>
+      </div>
+      <div className="flex w-full flex-col space-y-12 bg-white p-4 sm:flex-row sm:space-x-20 sm:space-y-0 sm:p-12 dark:bg-green-800">
+        <div className="w-full space-y-4 text-center text-black sm:w-1/4 sm:space-y-7 sm:text-left  dark:text-white ">
           <img
             className="mx-auto h-28 w-28 sm:mx-0"
             src="/images/logo/dish.png"
@@ -125,7 +81,7 @@ export default function Home() {
             dùng.
           </p>
         </div>
-        <div className="w-full space-y-4 text-center text-black sm:w-1/4 sm:space-y-7 sm:text-left">
+        <div className="w-full space-y-4 text-center text-black sm:w-1/4 sm:space-y-7 sm:text-left  dark:text-white ">
           <img
             className="mx-auto h-28 w-28 sm:mx-0"
             src="/images/logo/cal.png"
@@ -134,12 +90,12 @@ export default function Home() {
           <p className="text-base font-semibold sm:text-lg">
             Dinh dưỡng tối ưu dựa trên dữ liệu cá nhân
           </p>
-          <p className="text-sm sm:text-base">
+          <p className="text-sm sm:text-base  dark:text-slate-200 ">
             Phân tích các thông số như cân nặng, chiều cao, và mục tiêu sức khỏe
             để đưa ra các bữa ăn cân bằng và phù hợp nhất.
           </p>
         </div>
-        <div className="w-full space-y-4 text-center text-black sm:w-1/4 sm:space-y-7 sm:text-left">
+        <div className="w-full space-y-4 text-center text-black sm:w-1/4 sm:space-y-7 sm:text-left  dark:text-white ">
           <img
             className="mx-auto h-28 w-28 sm:mx-0"
             src="/images/logo/check.png"
@@ -148,21 +104,21 @@ export default function Home() {
           <p className="text-base font-semibold sm:text-lg">
             Thích nghi với thay đổi cá nhân
           </p>
-          <p className="text-sm sm:text-base">
+          <p className="text-sm sm:text-base  dark:text-slate-200 ">
             NutriDiet liên tục học hỏi và cải tiến dựa trên phản hồi và sở thích
             của người dùng, đảm bảo kế hoạch luôn cập nhật và hiệu quả.
           </p>
         </div>
-        <div className="w-full space-y-4 text-center text-black sm:w-1/4 sm:space-y-7 sm:text-left">
+        <div className="w-full  text-center text-black sm:w-1/4 sm:space-y-7 sm:text-left  dark:text-white ">
           <img
             className="mx-auto h-28 w-28 sm:mx-0"
             src="/images/logo/clock.png"
             alt="like"
           />{" "}
-          <p className="text-base font-semibold sm:text-lg">
+          <div className="text-base font-semibold sm:text-lg ">
             Tiết kiệm thời gian, đơn giản hóa dinh dưỡng
-          </p>
-          <p className="text-sm sm:text-base">
+          </div>
+          <p className="text-sm sm:text-base  dark:text-slate-200 ">
             Không còn đau đầu với việc lên kế hoạch bữa ăn, NutriDiet tự động
             hóa quá trình và giúp bạn tập trung vào việc tận hưởng thực phẩm
             lành mạnh.
@@ -208,6 +164,8 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <Footer/>
+    </AuthLayout>
     </>
   );
 }

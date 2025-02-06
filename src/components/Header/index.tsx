@@ -1,31 +1,48 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import DarkModeSwitcher from "../Header/DarkModeSwitcher";
-import DropdownNotification from "../Header/DropdownNotification";
-import DropdownMessage from "../Header/DropdownMessage";
+
 import DropdownUser from "../Header/DropdownUser";
 
-
- const Header = (props: {
+const Header = (props: {
   sidebarOpen: string | boolean | undefined;
   setSidebarOpen: (arg0: boolean) => void;
 }) => {
-  return ( 
-    <div className="sticky top-0 z-999 w-full  bg-white  px-2 ">
+  return (
+    <div className="sticky top-0 z-999 w-full  bg-white  px-2 py-3">
       <div className="flex justify-between ">
-        <div className="">
-          <Link href={"/"}>
-           <Image
-                            className="p-1"
-                            src={"/images/logo/3.png"}
-                            alt="Logo"
-                            width={100}
-                            height={100}
-                          /></Link>
+        <div>
+          <ol className="flex cursor-pointer space-x-15  p-5">
+            <Link href={"/"}>
+              <li className="text-black hover:text-green-800">Trang chủ</li>
+            </Link>
+            <Link href={"/product"}>
+              <li className="text-black hover:text-green-800">Sản phẩm</li>
+            </Link>
+            <Link href={"/contact"}>
+              <li className="text-black hover:text-green-800">Liên hệ</li>
+            </Link>
+          </ol>
+        </div>
+        <div className="flex">
+          <div>
+            <Link href={"/"}>
+              <Image
+                className="p-1"
+                src={"/images/logo/logo.png"}
+                alt="Logo"
+                width={50}
+                height={50}
+              />
+            </Link>
+          </div>
+
+          <div>
+            <p className=" text-xl font-bold text-black">NutriDiet </p>
+            <p className="text-sm">Dinh dưỡng cá nhân của bạn</p>{" "}
+          </div>
         </div>
         <div className="flex items-center gap-2 sm:gap-4 lg:hidden  ">
-          {/* <!-- Hamburger Toggle BTN --> */}
           <button
             aria-controls="sidebar"
             onClick={(e) => {
@@ -78,23 +95,10 @@ import DropdownUser from "../Header/DropdownUser";
           </Link>
         </div>
         <div className="flex items-center gap-3 2xsm:gap-7">
-          <ul className="flex items-center gap-2 2xsm:gap-4">
-            {/* <!-- Dark Mode Toggler --> */}
-            <DarkModeSwitcher />
-            {/* <!-- Dark Mode Toggler --> */}
+          <ul className="flex items-center gap-2 2xsm:gap-4"></ul>
 
-            {/* <!-- Notification Menu Area --> */}
-            <DropdownNotification />
-            {/* <!-- Notification Menu Area --> */}
-
-            {/* <!-- Chat Notification Area --> */}
-            <DropdownMessage />
-            {/* <!-- Chat Notification Area --> */}
-          </ul>
-
-          {/* <!-- User Area --> */}
           <DropdownUser />
-          {/* <!-- User Area --> */}
+
           <Link href="/auth/signin">
             <button className="w-24 rounded-md p-2 text-green-800 hover:bg-green-800 hover:text-white">
               Đăng nhập{" "}
@@ -104,7 +108,8 @@ import DropdownUser from "../Header/DropdownUser";
           <Link href="/auth/signup">
             {" "}
             <button className="w-24 rounded-md p-2 text-green-800 hover:bg-green-800  hover:text-white">
-              Đăng ký   </button>
+              Đăng ký{" "}
+            </button>
           </Link>
         </div>
       </div>
