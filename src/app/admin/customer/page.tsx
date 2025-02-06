@@ -18,7 +18,7 @@ const page = () => {
   return (
       <DefaultLayout>
                 
-<main className="flex-1 pt-32 pb-10 h-full max-h-screen overflow-auto px-8">
+<main className="">
       <div className="flex flex-row items-center justify-between">
         {/* <div>{accounts.data?.length.toLocaleString() || 0} khách hàng</div> */}
         <div>100 khách hàng</div>
@@ -37,22 +37,22 @@ const page = () => {
 
       <div className="my-2">
         <table className="w-full border-2">
-          <thead className="bg-[#0055C3] text-white text-center border-2">
+          <thead className="bg-green-800 text-white text-center border-2">
             <tr>
-              <th className="border-2 border-[#0055C3]">#ID</th>
-              <th className="border-2 border-[#0055C3]">Tên</th>
-              <th className="border-2 border-[#0055C3]">Email</th>
-              <th className="border-2 border-[#0055C3]">Ngày tạo</th>
-              <th className="border-2 border-[#0055C3]">Chi tiết</th>
+              <th className="border-2 border-green-800">#ID</th>
+              <th className="border-2 border-green-800">Tên</th>
+              <th className="border-2 border-green-800">Email</th>
+              <th className="border-2 border-green-800">Ngày tạo</th>
+              <th className="border-2 border-green-800">Chi tiết</th>
             </tr>
           </thead>
           <tbody className="text-black text-center border-2">
            
                 <tr >
-                  <th className="border-2 border-[#0055C3] py-3">
+                  <th className="border-2 border-green-800 py-3">
                     #1
                   </th>
-                  <th className="border-2 border-[#0055C3] py-3 space-x-4  ">
+                  <th className="border-2 border-green-800 py-3 space-x-4  ">
                     <div className="flex  justify-center items-center space-x-2">
                     <Image
                       src={"/images/logo/logo.png"}
@@ -66,26 +66,26 @@ const page = () => {
                       </div>
                  
                   </th>
-                  <td className="border-2 border-[#0055C3]">
+                  <td className="border-2 border-green-800">
                     bao@gmail.com
                   </td>
-                  <td className="border-2 border-[#0055C3]">
+                  <td className="border-2 border-green-800">
                     {/* {format(new Date(customer.createAt), "HH:mm dd/MM/yyyy")} */}
                     05/12/2003
                   </td>
-                  <td className="border-2 border-[#0055C3]">
+                  <td className="border-2 border-green-800">
                     {/* <Link href={`/admin/customer/${customer.accountId}`}> */}
-                      <button className="border rounded-md w-24 h-8 bg-[#0055C3] text-white hover:bg-white hover:text-[#0055C3]">
+                      <button className="border rounded-md w-24 h-8 bg-green-800 text-white hover:bg-white hover:text-green-800">
                         Chi tiết
                       </button>
                     {/* </Link> */}
                   </td>
                 </tr>
                 <tr >
-                  <th className="border-2 border-[#0055C3] py-3">
+                  <th className="border-2 border-green-800 py-3">
                     #1
                   </th>
-                  <th className="border-2 border-[#0055C3] py-3 space-x-4  ">
+                  <th className="border-2 border-green-800 py-3 space-x-4  ">
                     <div className="flex  justify-center items-center space-x-2">
                     <Image
                       src={"/images/logo/logo.png"}
@@ -99,16 +99,16 @@ const page = () => {
                       </div>
                  
                   </th>
-                  <td className="border-2 border-[#0055C3]">
+                  <td className="border-2 border-green-800">
                     bao@gmail.com
                   </td>
-                  <td className="border-2 border-[#0055C3]">
+                  <td className="border-2 border-green-800">
                     {/* {format(new Date(customer.createAt), "HH:mm dd/MM/yyyy")} */}
                     05/12/2003
                   </td>
-                  <td className="border-2 border-[#0055C3]">
+                  <td className="border-2 border-green-800">
                     {/* <Link href={`/admin/customer/${customer.accountId}`}> */}
-                      <button className="border rounded-md w-24 h-8 bg-[#0055C3] text-white hover:bg-white hover:text-[#0055C3]">
+                      <button className="border rounded-md w-24 h-8 bg-green-800 text-white hover:bg-white hover:text-green-800">
                         Chi tiết
                       </button>
                     {/* </Link> */}
@@ -119,15 +119,15 @@ const page = () => {
           </tbody>
         </table>
 
-        {/* <Pagination
+        <Pagination
           className="mt-4"
           align="center"
           showSizeChanger
-          onChange={onChange}
-          onShowSizeChange={onShowSizeChange}
-          defaultCurrent={currentPage}
+          // onChange={onChange}
+          // onShowSizeChange={onShowSizeChange}
+          // defaultCurrent={currentPage}
           total={500}
-        /> */}
+        />
       </div>
     </main>
                </DefaultLayout>
