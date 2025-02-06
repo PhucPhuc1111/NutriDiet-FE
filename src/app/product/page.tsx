@@ -7,40 +7,62 @@ import React from "react";
 const page = () => {
   return (
     <div className="w-full">
-      <AuthLayout/>
-        <div className="bg-green-800 text-white min-h-screen ">
-            
-            <div className="flex">
-                <div className="1/2 bg-white m-8 px-18  ">
-            <Image src={"/images/logo/app.png"} width={500} height={50} alt=""/></div>
-            <div className="w-1/2 m-17">
-                <div className="flex justify-center">
-
-          
-            <div className=" bg-white text-green-800 text-2xl font-bold text-center p-5 mt-5 h-20 border-2 rounded-lg mb-10">Ứng dụng đã có sẵn tại  </div>  </div>
-            <div className="flex justify-center space-x-9">
-
-          <div className="w-[1/2] border-2 border-white rounded-2xl">
-      
-            <div className="text-center bg-white text-green-800 rounded-xl p-5 text-lg font-semibold  ">Hệ điều hành IOS</div>
-            <div className="flex justify-center">
-                <Image src={"/images/logo/appstore.png"} width={300} height={100} alt=""/>
-            </div>
-            </div>      
-            <div className="w-[1/2] border-2 border-white rounded-2xl">
-      
-            <div className="text-center bg-white text-green-800 rounded-xl p-5 text-lg font-semibold  ">Hệ điều hành Android</div>
-            <div className="flex justify-center mb-10 ">
-                <Image src={"/images/logo/googleplay.png"}  width={300} height={100} alt=""/>
-            </div>
-            </div>      
+      <AuthLayout />
+      <div className="min-h-screen bg-green-800 text-white ">
+        <div className="flex">
+          <div className="1/2 m-8 bg-white px-18  ">
+            <Image
+              src={"/images/logo/app.png"}
+              width={500}
+              height={50}
+              alt=""
+            />
           </div>
-        </div>  
-        </div>
+          <div className="m-17 w-1/2">
+            <div className="flex justify-center">
+              <div className=" mb-10 mt-5 h-20 rounded-lg border-2 bg-white p-5 text-center text-2xl font-bold text-green-800">
+                Ứng dụng đã có sẵn tại{" "}
+              </div>{" "}
             </div>
-          
-    
-     <Footer/>
+            <div className="flex justify-center space-x-9">
+            <div className="w-[1/2] ">
+                <div className="flex  rounded-xl bg-white   ">
+                  <div className="mt-5 flex justify-items-center p-5 text-center text-lg font-semibold text-green-800 ">
+                    Hệ điều hành IOS
+                  </div>
+
+                  <div className="flex justify-center ">
+                    <Image
+                      src={"/images/logo/appstore.png"}
+                      width={100}
+                      height={100}
+                      alt=""
+                    />{" "}
+                  </div>
+                </div>
+              </div>
+              <div className="w-[1/2] ">
+                <div className="flex  rounded-xl bg-white   ">
+                  <div className="mt-5 flex justify-items-center p-5 text-center text-lg font-semibold text-green-800 ">
+                    Hệ điều hành Android
+                  </div>
+
+                  <div className="flex justify-center ">
+                    <Image
+                      src={"/images/logo/googleplay.png"}
+                      width={100}
+                      height={100}
+                      alt=""
+                    />{" "}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Footer />
     </div>
   );
 };
