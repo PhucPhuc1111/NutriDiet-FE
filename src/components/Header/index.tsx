@@ -25,19 +25,19 @@ const Header = (props: {
           </ol>
         </div>
         <div className="flex">
-          <div>
+          <div className="">
             <Link href={"/"}>
               <Image
-                className="p-1"
+                className=""
                 src={"/images/logo/logo.png"}
                 alt="Logo"
-                width={50}
-                height={50}
+                width={60}
+                height={60}
               />
             </Link>
           </div>
 
-          <div>
+          <div className="mt-2">
             <p className=" text-xl font-bold text-black">NutriDiet Administrator </p>
             <p className="text-sm">Your Personal Nutrition</p>{" "}
           </div>
