@@ -9,24 +9,20 @@ const page = () => {
     <div className="w-full">
       <AuthLayout />
       <div className="min-h-screen bg-green-800 text-white ">
-        <div className="flex">
-          <div className="1/2 m-8 bg-white px-18  ">
-            <Image
-              src={"/images/logo/app.png"}
-              width={500}
-              height={50}
-              alt=""
-            />
-          </div>
-          <div className="m-17 w-1/2">
+       
+        <div className="flex justify-center">
+           <div className=" w-1/2">
             <div className="flex justify-center">
-              <div className=" mb-10 mt-5 h-20 rounded-lg border-2 bg-white p-5 text-center text-2xl font-bold text-green-800">
-                Ứng dụng đã có sẵn tại{" "}
+              <div className=" mb-10 mt-5 h-20 rounded-lg border-2 bg-white p-5 text-center text-xl font-bold text-green-800">
+                NutriDiet App đã có sẵn tại{" "}
               </div>{" "}
+            </div>
+            <div className="flex justify-center ">
+              <Image src={"/images/logo/mobile.png"} alt={""} width={400} height={100}/>
             </div>
             <div className="flex justify-center space-x-9">
             <div className="w-[1/2] ">
-                <div className="flex  rounded-xl bg-white   ">
+                <div className="flex  rounded-xl bg-white    ">
                   <div className="mt-5 flex justify-items-center p-5 text-center text-lg font-semibold text-green-800 ">
                     Hệ điều hành IOS
                   </div>
@@ -60,6 +56,7 @@ const page = () => {
             </div>
           </div>
         </div>
+  
       </div>
 
       <Footer />
