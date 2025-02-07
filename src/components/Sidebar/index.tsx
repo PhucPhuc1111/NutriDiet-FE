@@ -71,8 +71,9 @@ const menuGroups = [
         route: "#",
         children: [
          
-         
+                { label: ["Nguyên liệu"], route: "/admin/ingredient" },
           { label: ["Thực phẩm"], route: "/admin/food" },
+   
           { label: ["Bữa ăn"], route: "/admin/meal" },
           { label: ["Dị ứng"], route: "/admin/allergy" },
            { label: ["Khách hàng"], route: "/admin/customer" },
