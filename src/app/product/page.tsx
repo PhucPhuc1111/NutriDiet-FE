@@ -4,7 +4,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Image from "next/image";
 import React from "react";
 
-const page = () => {
+const ProductPage = () => {
   return (
     <div className="w-full">
       <AuthLayout>
@@ -64,4 +64,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ProductPage;

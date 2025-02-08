@@ -105,7 +105,7 @@ const onChange: TableProps<DataType>["onChange"] = (
   console.log("params", pagination, filters, sorter, extra);
 };
 
-const page: React.FC = () => {
+const AllergyPage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>('');
   
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,4 +141,4 @@ const page: React.FC = () => {
   );
 };
 
-export default page;
+export default AllergyPage;
