@@ -1,8 +1,9 @@
 import { Button, Modal, Form } from 'antd';
 import { useState } from 'react';
-import AddIngredientForm from './Form/AddIngredientForm';
+import UpdateFoodForm from './Form/UpdateMealPlanForm';
 
-const AddIngredientModal: React.FC = () => {
+
+const UpdateMealPlanModal: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
@@ -16,16 +17,16 @@ const AddIngredientModal: React.FC = () => {
     form
       .validateFields() 
       .then((values) => {
-        console.log('Form Values:', values); 
-        setConfirmLoading(true);
+        console.log('Form Values:', values);
+        setConfirmLoading(true); 
         setTimeout(() => {
           setOpen(false); 
           setConfirmLoading(false); 
         }, 2000); 
       })
       .catch((errorInfo) => {
-        console.log('Validate Failed:', errorInfo); 
-        setConfirmLoading(false);
+        console.log('Validate Failed:', errorInfo);
+        setConfirmLoading(false); 
       });
   };
 
@@ -35,19 +36,19 @@ const AddIngredientModal: React.FC = () => {
   };
 
   const handleReset = () => {
-    form.resetFields(); // Reset tất cả các trường của form
+    form.resetFields(); 
   };
 
   return (
     <>
       <Button style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={showModal}>
-        Thêm nguyên liệu
+        Sửa
       </Button>
       <Modal
-        title="Thêm nguyên liệu"
+        title="Sửa"
         open={open}
         onOk={handleOk}
-        confirmLoading={confirmLoading} // Đảm bảo confirmLoading được truyền vào Modal
+        confirmLoading={confirmLoading} 
         onCancel={handleCancel}
         footer={[
           <Button key="reset" onClick={handleReset} style={{ marginRight: 10 }}>
@@ -58,13 +59,13 @@ const AddIngredientModal: React.FC = () => {
           </Button>,
           <Button key="submit" type="primary" loading={confirmLoading} onClick={handleOk}>
             Submit
-          </Button>, // Thêm loading cho nút submit khi confirmLoading là true
+          </Button>, 
         ]}
       >
-        <AddIngredientForm form={form} />
+        <UpdateFoodForm form={form} />
       </Modal>
     </>
   );
 };
 
-export default AddIngredientModal;
+export default UpdateMealPlanModal;

@@ -1,8 +1,9 @@
 import { Button, Modal, Form } from 'antd';
 import { useState } from 'react';
-import AddIngredientForm from './Form/AddIngredientForm';
+import AddAllergyForm from './Form/AddAllergyForm';
 
-const AddIngredientModal: React.FC = () => {
+
+const AddAllergyModal: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
@@ -17,15 +18,15 @@ const AddIngredientModal: React.FC = () => {
       .validateFields() 
       .then((values) => {
         console.log('Form Values:', values); 
-        setConfirmLoading(true);
+        setConfirmLoading(true); 
         setTimeout(() => {
-          setOpen(false); 
-          setConfirmLoading(false); 
+          setOpen(false);
+          setConfirmLoading(false);
         }, 2000); 
       })
       .catch((errorInfo) => {
         console.log('Validate Failed:', errorInfo); 
-        setConfirmLoading(false);
+        setConfirmLoading(false); 
       });
   };
 
@@ -41,10 +42,10 @@ const AddIngredientModal: React.FC = () => {
   return (
     <>
       <Button style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={showModal}>
-        Thêm nguyên liệu
+        Thêm dị ứng
       </Button>
       <Modal
-        title="Thêm nguyên liệu"
+        title="Thêm dị ứng"
         open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading} // Đảm bảo confirmLoading được truyền vào Modal
@@ -61,10 +62,10 @@ const AddIngredientModal: React.FC = () => {
           </Button>, // Thêm loading cho nút submit khi confirmLoading là true
         ]}
       >
-        <AddIngredientForm form={form} />
+        <AddAllergyForm form={form} />
       </Modal>
     </>
   );
 };
 
-export default AddIngredientModal;
+export default AddAllergyModal;
