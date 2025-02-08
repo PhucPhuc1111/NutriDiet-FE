@@ -7,6 +7,7 @@ import AddIngredientModal from "@/components/IngredientModal/AddIngredientModal"
 import UpdateIngredientModal from "@/components/IngredientModal/UpdateIngredientModal";
 import { RiDeleteBack2Fill } from "react-icons/ri";
 import DeleteIngredientModal from "@/components/IngredientModal/DeleteIngredientModal";
+import AddMealPlanModal from "@/components/MealPlanModel/AddMealPlanModal";
 // import UpdateMealPlanModal from "@/components/MealPlanModel/UpdateMealPlanModal";
 // import DeleteMealPlanModal from "@/components/MealPlanModel/DeleteMealPlanModal";
 // import AddMealPlanModal from "@/components/MealPlanModel/AddMealPlanModal";
@@ -119,8 +120,8 @@ const columns: TableColumnsType<DataType> = [
     dataIndex: "action",
     render: (_: any, record: DataType) => (
       <Space size="middle">
-        <UpdateMealPlanModal/>
-        <DeleteMealPlanModal/>
+        {/* <UpdateMealPlanModal/>
+        <DeleteMealPlanModal/> */}
       </Space>
     ),
   },
@@ -136,7 +137,7 @@ const onChange: TableProps<DataType>["onChange"] = (
   console.log("params", pagination, filters, sorter, extra);
 };
 
-const page: React.FC = () => {
+const MealPage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>('');
   
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -172,4 +173,4 @@ const page: React.FC = () => {
   );
 };
 
-export default page;
+export default MealPage;
