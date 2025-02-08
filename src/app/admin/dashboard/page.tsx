@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 };
 
-const Dashboard: React.FC = () => {
+const DashboardPage: React.FC = () => {
   return (
     <DefaultLayout>
       <DashboardComponent />
@@ -19,4 +19,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardPage;

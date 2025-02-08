@@ -8,6 +8,7 @@ import UpdateIngredientModal from "@/components/IngredientModal/UpdateIngredient
 
 import DeleteIngredientModal from "@/components/IngredientModal/DeleteIngredientModal";
 import AddAllergyModal from "@/components/AllergyModal/AddAllergyModal";
+import { Key } from "antd/es/table/interface";
 
 interface DataType {
   IngredientID: number;
@@ -90,10 +91,14 @@ const columns: TableColumnsType<DataType> = [
       { text: "Gia vị", value: "Gia vị" },
       { text: "Khác", value: "Khác" },
     ],
-    onFilter: (value, record) => 
-      record.Category.toLowerCase().trim().includes(value.toLowerCase().trim()),
-    width: "30",
-  },
+   onFilter: (value: string | boolean | Key, record: DataType) => {
+         if (typeof record.Category === "string" && typeof value === "string") {
+           return record.Category.toLowerCase().trim().includes(value.toLowerCase().trim());
+         }
+         return false;
+       },
+       width: "30",
+     },
   {
     title: "Đơn vị",
     dataIndex: "Unit",
@@ -135,7 +140,7 @@ const onChange: TableProps<DataType>["onChange"] = (
   console.log("params", pagination, filters, sorter, extra);
 };
 
-const page: React.FC = () => {
+const IngredientPage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>('');
   
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -171,4 +176,4 @@ const page: React.FC = () => {
   );
 };
 
-export default page;
+export default IngredientPage;

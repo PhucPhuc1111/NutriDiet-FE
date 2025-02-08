@@ -12,7 +12,7 @@ import { isError } from 'react-query'
 
 
 
-const page = () => {
+const StaffPage = () => {
    
     
   return (
@@ -134,4 +134,4 @@ const page = () => {
   )
 }
 
-export default page
+export default StaffPage

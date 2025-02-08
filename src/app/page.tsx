@@ -2,8 +2,9 @@
 import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import AuthLayout from "@/components/Layouts/AuthLayout";
-import Image from "next/image";
+
 import { Footer } from "@/components/Footer";
+import { Image } from "antd";
 
 export const metadata: Metadata = {
   title: "Nutridiet",
@@ -18,6 +19,7 @@ export default function Home() {
           className="flex justify-center dark:bg-green-800 "
           src="/images/logo/banner.png"
           alt="Nutridiet"
+          preview={false}
           width={600}
           height={600}
         />{" "}
@@ -31,10 +33,12 @@ export default function Home() {
           uk-scrollspy="target: > div; cls: uk-animation-fade; delay: 100; repeat: true;"
         >
           <div className="w-full sm:w-1/2  dark:bg-green-800">
-            <img
+            <Image
               className="aspect[733/586] h-auto w-full"
               src="/images/logo/banner1.png"
               alt="banner"
+              style={{ width: '100%', height: 'auto' }}
+              preview={false}
             />
           </div>
           <div className="w-full space-y-5 bg-white p-12 px-4 pt-16 text-justify text-sm text-black sm:w-1/2 sm:space-y-7 sm:px-16 sm:text-base dark:bg-green-800 dark:text-white">
@@ -67,10 +71,13 @@ export default function Home() {
       </div>
       <div className="flex w-full flex-col space-y-12 bg-white p-4 sm:flex-row sm:space-x-20 sm:space-y-0 sm:p-12 dark:bg-green-800">
         <div className="w-full space-y-4 text-center text-black sm:w-1/4 sm:space-y-7 sm:text-left  dark:text-white ">
-          <img
+          <Image
             className="mx-auto h-28 w-28 sm:mx-0"
             src="/images/logo/dish.png"
             alt="dish"
+            width={200}
+            height="auto"
+            preview={false}
           />
           <p className="text-base font-semibold sm:text-lg">
             Kế hoạch bữa ăn cá nhân hóa
@@ -82,13 +89,16 @@ export default function Home() {
           </p>
         </div>
         <div className="w-full space-y-4 text-center text-black sm:w-1/4 sm:space-y-7 sm:text-left  dark:text-white ">
-          <img
+          <Image
             className="mx-auto h-28 w-28 sm:mx-0"
             src="/images/logo/cal.png"
             alt="cal"
+            width={200}
+            height="auto"
+            preview={false}
           />{" "}
           <p className="text-base font-semibold sm:text-lg">
-            Dinh dưỡng tối ưu dựa trên dữ liệu cá nhân
+            Dinh dưỡng tối ưu 
           </p>
           <p className="text-sm sm:text-base  dark:text-slate-200 ">
             Phân tích các thông số như cân nặng, chiều cao, và mục tiêu sức khỏe
@@ -96,10 +106,13 @@ export default function Home() {
           </p>
         </div>
         <div className="w-full space-y-4 text-center text-black sm:w-1/4 sm:space-y-7 sm:text-left  dark:text-white ">
-          <img
+          <Image
             className="mx-auto h-28 w-28 sm:mx-0"
             src="/images/logo/check.png"
             alt="check"
+            width={200}
+            height="auto"
+            preview={false}
           />{" "}
           <p className="text-base font-semibold sm:text-lg">
             Thích nghi với thay đổi cá nhân
@@ -110,13 +123,16 @@ export default function Home() {
           </p>
         </div>
         <div className="w-full  text-center text-black sm:w-1/4 sm:space-y-7 sm:text-left  dark:text-white ">
-          <img
+          <Image
             className="mx-auto h-28 w-28 sm:mx-0"
             src="/images/logo/clock.png"
             alt="like"
+            width={200}
+            height="auto"
+            preview={false}
           />{" "}
           <div className="text-base font-semibold sm:text-lg ">
-            Tiết kiệm thời gian, đơn giản hóa dinh dưỡng
+            Tiết kiệm thời gian
           </div>
           <p className="text-sm sm:text-base  dark:text-slate-200 ">
             Không còn đau đầu với việc lên kế hoạch bữa ăn, NutriDiet tự động
@@ -128,7 +144,7 @@ export default function Home() {
 
       <div className="  flex flex-col bg-green-800 text-white sm:flex-row">
         <div className="w-full sm:w-1/2 ">
-          <img
+          <Image
             src="/images/logo/banner3.png"
             className="w-full "
             alt="banner"

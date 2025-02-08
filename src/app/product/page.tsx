@@ -7,7 +7,7 @@ import React from "react";
 const page = () => {
   return (
     <div className="w-full">
-      <AuthLayout />
+      <AuthLayout>
       <div className="min-h-screen bg-green-800 text-white ">
        
         <div className="flex justify-center">
@@ -57,7 +57,7 @@ const page = () => {
           </div>
         </div>
   
-      </div>
+      </div></AuthLayout>
 
       <Footer />
     </div>

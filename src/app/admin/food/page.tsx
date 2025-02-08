@@ -10,6 +10,14 @@ import DeleteIngredientModal from "@/components/IngredientModal/DeleteIngredient
 import UpdateFoodModal from "@/components/FoodModal/UpdateFoodModal";
 import DeleteFoodModal from "@/components/FoodModal/DeleteFoodModal";
 import AddFoodModal from "@/components/FoodModal/AddFoodModal";
+import { Key } from "antd/es/table/interface";
+
+interface Ingredient {
+  IngredientName: string;
+  Category: string;
+  Unit: string;
+  Calories: number;
+}
 
 interface DataType {
   FoodID: number;
@@ -138,8 +146,12 @@ const columns: TableColumnsType<DataType> = [
       { text: "Tối", value: "Tối" },
       
     ],
-    onFilter: (value, record) => 
-      record.MealType.toLowerCase().trim().includes(value.toLowerCase().trim()),
+    onFilter: (value: string | boolean | Key, record: DataType) => {
+      if (typeof record.MealType === "string" && typeof value === "string") {
+        return record.MealType.toLowerCase().trim().includes(value.toLowerCase().trim());
+      }
+      return false;
+    },
     width: "30",
   },
   {
@@ -150,8 +162,12 @@ const columns: TableColumnsType<DataType> = [
       { text: "Chay", value: "Chay" },
       
     ],
-    onFilter: (value, record) => 
-      record.FoodType.toLowerCase().trim().includes(value.toLowerCase().trim()),
+    onFilter: (value: string | boolean | Key, record: DataType) => {
+      if (typeof record.FoodType === "string" && typeof value === "string") {
+        return record.FoodType.toLowerCase().trim().includes(value.toLowerCase().trim());
+      }
+      return false;
+    },
     width: "30",
   },
   {
@@ -226,7 +242,7 @@ const onChange: TableProps<DataType>["onChange"] = (
   console.log("params", pagination, filters, sorter, extra);
 };
 
-const page: React.FC = () => {
+const FoodPage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>('');
   
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -262,4 +278,4 @@ const page: React.FC = () => {
   );
 };
 
-export default page;
+export default FoodPage;

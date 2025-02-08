@@ -10,6 +10,7 @@ import DeleteIngredientModal from "@/components/IngredientModal/DeleteIngredient
 import UpdateMealPlanModal from "@/components/MealPlanModel/UpdateMealPlanModal";
 import DeleteMealPlanModal from "@/components/MealPlanModel/DeleteMealPlanModal";
 import AddMealPlanModal from "@/components/MealPlanModel/AddMealPlanModal";
+import { Key } from "antd/es/table/interface";
 
 interface DataType {
   MealPlanID: number;
@@ -91,9 +92,13 @@ const columns: TableColumnsType<DataType> = [
       { text: "Tăng cơ - giảm mỡ", value: "Tăng cơ - giảm mỡ" },  
      
     ],
-    onFilter: (value, record) => 
-      record.HealthGoal.toLowerCase().trim().includes(value.toLowerCase().trim()),
-    width: "30",
+    onFilter: (value: string | boolean | Key, record: DataType) => {
+      if (typeof record.HealthGoal === "string" && typeof value === "string") {
+        return record.HealthGoal.toLowerCase().trim().includes(value.toLowerCase().trim());
+      }
+      return false;
+    },
+
   },
   {
     title: "Thời gian",
@@ -109,10 +114,14 @@ const columns: TableColumnsType<DataType> = [
       { text: "Inactive", value: "Inactive" },
      
     ],
-    onFilter: (value, record) => 
-      record.Status.toLowerCase().trim().includes(value.toLowerCase().trim()),
-    
-  },
+   onFilter: (value: string | boolean | Key, record: DataType) => {
+            if (typeof record.Status === "string" && typeof value === "string") {
+              return record.Status.toLowerCase().trim().includes(value.toLowerCase().trim());
+            }
+            return false;
+          },
+        
+        },
  
   {
     title: "Sửa/Xóa",
@@ -136,7 +145,7 @@ const onChange: TableProps<DataType>["onChange"] = (
   console.log("params", pagination, filters, sorter, extra);
 };
 
-const page: React.FC = () => {
+const MealPage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>('');
   
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -172,4 +181,4 @@ const page: React.FC = () => {
   );
 };
 
-export default page;
+export default MealPage;
