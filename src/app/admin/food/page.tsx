@@ -131,16 +131,7 @@ const columns: TableColumnsType<DataType> = [
   {
     title: "Bữa",
     dataIndex: "MealType",
-    filters: [
-      { text: "Sáng", value: "Sáng" },
-      { text: "Trưa", value: "Trưa" },
-      { text: "Chiều", value: "Chiều" },
-      { text: "Tối", value: "Tối" },
-      
-    ],
-    onFilter: (value, record) => 
-      record.MealType.toLowerCase().trim().includes(value.toLowerCase().trim()),
-    width: "30",
+    sorter: (a, b) => a.MealType.localeCompare(b.FoodName),
   },
   {
     title: "Loại",
@@ -209,7 +200,7 @@ const columns: TableColumnsType<DataType> = [
     dataIndex: "action",
     render: (_: any, record: DataType) => (
       <Space size="middle">
-        <UpdateFoodModal/> 
+        <UpdateFoodModal/>
         <DeleteFoodModal/>
       </Space>
     ),
@@ -252,7 +243,8 @@ const page: React.FC = () => {
 
         <div className="flex space-x-3 mb-2">
         <AddFoodModal/>
-          
+          <Button>Nhập Excel</Button>
+          <Button>Xuất Excel</Button>
         </div>
         </div>
        
