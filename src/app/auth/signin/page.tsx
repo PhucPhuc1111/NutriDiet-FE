@@ -17,8 +17,8 @@ const SignIn: React.FC = () => {
    
 <div className="h-full">
   <div>
-    <AuthLayout/>
-  </div>
+    <AuthLayout>
+  
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-green-800 dark:bg-green-800 ">
         <div className="flex  items-center">
           <div className="hidden w-full xl:block xl:w-1/2">
@@ -180,6 +180,8 @@ const SignIn: React.FC = () => {
       </div>
 <div>
        <Footer/>
+    </div>
+    </AuthLayout>
     </div>
     </div>
   );
