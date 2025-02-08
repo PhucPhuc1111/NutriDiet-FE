@@ -8,6 +8,7 @@ import UpdateIngredientModal from "@/components/IngredientModal/UpdateIngredient
 import { RiDeleteBack2Fill } from "react-icons/ri";
 import DeleteIngredientModal from "@/components/IngredientModal/DeleteIngredientModal";
 import AddMealPlanModal from "@/components/MealPlanModel/AddMealPlanModal";
+import { Key } from "antd/es/table/interface";
 // import UpdateMealPlanModal from "@/components/MealPlanModel/UpdateMealPlanModal";
 // import DeleteMealPlanModal from "@/components/MealPlanModel/DeleteMealPlanModal";
 // import AddMealPlanModal from "@/components/MealPlanModel/AddMealPlanModal";
@@ -92,8 +93,12 @@ const columns: TableColumnsType<DataType> = [
       { text: "Tăng cơ - giảm mỡ", value: "Tăng cơ - giảm mỡ" },  
      
     ],
-    onFilter: (value, record) => 
-      record.HealthGoal.toLowerCase().trim().includes(value.toLowerCase().trim()),
+    onFilter: (value: string | boolean | Key, record: DataType) => {
+      if (typeof record.HealthGoal === "string" && typeof value === "string") {
+        return record.HealthGoal.toLowerCase().trim().includes(value.toLowerCase().trim());
+      }
+      return false;
+    },
     width: "30",
   },
   {
@@ -110,9 +115,13 @@ const columns: TableColumnsType<DataType> = [
       { text: "Inactive", value: "Inactive" },
      
     ],
-    onFilter: (value, record) => 
-      record.Status.toLowerCase().trim().includes(value.toLowerCase().trim()),
-    
+    onFilter: (value: string | boolean | Key, record: DataType) => {
+      if (typeof record.Status === "string" && typeof value === "string") {
+        return record.Status.toLowerCase().trim().includes(value.toLowerCase().trim());
+      }
+      return false;
+    },
+    width: "30",
   },
  
   {
