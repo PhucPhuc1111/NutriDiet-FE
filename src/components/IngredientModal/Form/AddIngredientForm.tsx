@@ -5,7 +5,7 @@ const { Option } = Select;
 
 const AddIngredientForm: React.FC<{ form: any }> = ({ form }) => {
   const onFinish = (values: any) => {
-    console.log('Received values:', values); // Xử lý khi form submit
+    console.log('Received values:', values); 
   };
 
   return (
@@ -21,9 +21,9 @@ const AddIngredientForm: React.FC<{ form: any }> = ({ form }) => {
       <Form.Item name="Loại" label="Loại" rules={[{ required: true, message: 'Loại là bắt buộc' }]}>
         <Select placeholder="Chọn loại" allowClear>
           <Option value="Thịt">Thịt</Option>
-          <Option value="Rau">Rau</Option>
-          <Option value="Củ">Củ</Option>
-          <Option value="Quả">Quả</Option>
+          <Option value="Rau củ quả ">Rau củ quả </Option>
+          
+          <Option value="Trái cây">Trái cây</Option>
           <Option value="Quả">Gia vị</Option>
           <Option value="Khác">Khác</Option>
         </Select>
