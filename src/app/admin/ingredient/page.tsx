@@ -5,10 +5,9 @@ import type { TableColumnsType, TableProps } from "antd";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import AddIngredientModal from "@/components/IngredientModal/AddIngredientModal";
 import UpdateIngredientModal from "@/components/IngredientModal/UpdateIngredientModal";
-
+import { RiDeleteBack2Fill } from "react-icons/ri";
 import DeleteIngredientModal from "@/components/IngredientModal/DeleteIngredientModal";
 import AddAllergyModal from "@/components/AllergyModal/AddAllergyModal";
-import { Key } from "antd/es/table/interface";
 
 interface DataType {
   IngredientID: number;
@@ -85,9 +84,9 @@ const columns: TableColumnsType<DataType> = [
     title: "Loại",
     dataIndex: "Category",
     filters: [
-      { text: "Rau củ quả", value: "Rau củ quả" },
+      { text: "Rau củ", value: "Rau củ" },
       { text: "Thịt", value: "Thịt" },
-      { text: "Trái cây", value: "Trái cây" },  
+      { text: "Quả", value: "Quả" },  
       { text: "Gia vị", value: "Gia vị" },
       { text: "Khác", value: "Khác" },
     ],
@@ -102,15 +101,14 @@ const columns: TableColumnsType<DataType> = [
   {
     title: "Đơn vị",
     dataIndex: "Unit",
-    sorter: (a, b) => a.Unit.localeCompare(b.Unit),
-    // filters: [
-    //   { text: "chén", value: "chén" },
-    //   { text: "cốc", value: "cốc" },
-    //   { text: "gram", value: "gram" },
+    filters: [
+      { text: "chén", value: "chén" },
+      { text: "cốc", value: "cốc" },
+      { text: "gram", value: "gram" },
       
-    // ],
-    // onFilter: (value, record) => record.Unit.toLowerCase().includes(value as string),
-    // width: "30",
+    ],
+    onFilter: (value, record) => record.Unit.toLowerCase().includes(value as string),
+    width: "30",
   },
   {
     title: "Calories (cal)",
@@ -166,7 +164,8 @@ const IngredientPage: React.FC = () => {
 
         <div className="flex space-x-3 mb-2">
         <AddIngredientModal/>
-        
+          <Button>Nhập Excel</Button>
+          <Button>Xuất Excel</Button>
         </div>
         </div>
        

@@ -14,18 +14,18 @@ const AddIngredientModal: React.FC = () => {
 
   const handleOk = () => {
     form
-      .validateFields() 
+      .validateFields() // Kiểm tra xem có trường nào bị thiếu thông tin hay không
       .then((values) => {
-        console.log('Form Values:', values); 
-        setConfirmLoading(true);
+        console.log('Form Values:', values); // Xử lý khi form hợp lệ
+        setConfirmLoading(true); // Bật trạng thái loading
         setTimeout(() => {
-          setOpen(false); 
-          setConfirmLoading(false); 
-        }, 2000); 
+          setOpen(false); // Đóng modal sau khi submit thành công
+          setConfirmLoading(false); // Tắt trạng thái loading
+        }, 2000); // Giả lập tác vụ xử lý, bạn có thể thay bằng thực tế gọi API hoặc xử lý dữ liệu
       })
       .catch((errorInfo) => {
-        console.log('Validate Failed:', errorInfo); 
-        setConfirmLoading(false);
+        console.log('Validate Failed:', errorInfo); // Nếu validate thất bại, không làm gì cả
+        setConfirmLoading(false); // Tắt trạng thái loading nếu có lỗi
       });
   };
 
