@@ -1,10 +1,9 @@
 import { Button, Modal, Form } from 'antd';
 import { useState } from 'react';
-import UpdateMealPLanForm from './Form/UpdateMealPlanForm';
+import AddAllergyForm from './Form/AddAllergyForm';
 
 
-
-const UpdateMealPLanModal: React.FC = () => {
+const AddAllergyModal: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
@@ -18,15 +17,15 @@ const UpdateMealPLanModal: React.FC = () => {
     form
       .validateFields() 
       .then((values) => {
-        console.log('Form Values:', values);
+        console.log('Form Values:', values); 
         setConfirmLoading(true); 
         setTimeout(() => {
-          setOpen(false); 
-          setConfirmLoading(false); 
+          setOpen(false);
+          setConfirmLoading(false);
         }, 2000); 
       })
       .catch((errorInfo) => {
-        console.log('Validate Failed:', errorInfo);
+        console.log('Validate Failed:', errorInfo); 
         setConfirmLoading(false); 
       });
   };
@@ -37,19 +36,19 @@ const UpdateMealPLanModal: React.FC = () => {
   };
 
   const handleReset = () => {
-    form.resetFields(); 
+    form.resetFields(); // Reset tất cả các trường của form
   };
 
   return (
     <>
       <Button style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={showModal}>
-        Sửa
+        Thêm dị ứng
       </Button>
       <Modal
-        title="Sửa"
+        title="Thêm dị ứng"
         open={open}
         onOk={handleOk}
-        confirmLoading={confirmLoading} 
+        confirmLoading={confirmLoading} // Đảm bảo confirmLoading được truyền vào Modal
         onCancel={handleCancel}
         footer={[
           <Button key="reset" onClick={handleReset} style={{ marginRight: 10 }}>
@@ -60,13 +59,13 @@ const UpdateMealPLanModal: React.FC = () => {
           </Button>,
           <Button key="submit" type="primary" loading={confirmLoading} onClick={handleOk}>
             Submit
-          </Button>, 
+          </Button>, // Thêm loading cho nút submit khi confirmLoading là true
         ]}
       >
-        <UpdateMealPLanForm form={form} />
+        <AddAllergyForm form={form} />
       </Modal>
     </>
   );
 };
 
-export default UpdateMealPLanModal;
+export default AddAllergyModal;

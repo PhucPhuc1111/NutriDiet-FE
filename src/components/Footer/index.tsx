@@ -8,7 +8,7 @@ export const Footer = () => {
   
   
     return (
-      <footer className="w-full">
+      <footer className="w-full ">
         <div className="w-full border-8 border-green-800 py-3 bg-white">
           <div className="grid grid-cols-1 sm:grid-cols-12">
             <div className="col-span-4 w-full text-center sm:text-left">

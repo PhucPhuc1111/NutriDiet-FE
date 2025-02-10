@@ -32,7 +32,16 @@
         @apply h-[calc(100vh_-_8.125rem)] lg:h-[calc(100vh_-_5.625rem)];
     }
 }
+/* app.css */
 
+/* Màu nền cho tab khi hover */
+.ant-tabs-nav .ant-tabs-tab:hover {
+    color: #10a518; /* Màu nền nhẹ khi hover */
+  }
+  
+
+
+  
 /* third-party libraries CSS */
 
 .tableCheckbox:checked ~ div span {

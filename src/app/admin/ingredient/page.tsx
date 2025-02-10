@@ -15,8 +15,7 @@ interface DataType {
   IngredientName: string;
   Category: string;
   Unit:string;
-  Calories: number;
-  FoodID: number
+ 
 }
 
 const data: DataType[] = [
@@ -24,50 +23,44 @@ const data: DataType[] = [
     IngredientID: 1,             
     IngredientName: "Thịt bò",   
     Category: "Thịt",            
-    Unit: "100 gram",               
-    Calories: 250,               
-    FoodID: 1                  
+    Unit: "gram",               
+                  
   },
   {
     IngredientID: 2,             
     IngredientName: "Xương bò",  
     Category: "Thịt",            
-    Unit: "100 gram",                
-    Calories: 50,               
-    FoodID: 1                    
+    Unit: " gram",                
+                       
   },
   {
     IngredientID: 3,             
     IngredientName: "Bánh phở",  
     Category: "Khác",         
-    Unit: "100 gram",               
-    Calories: 200,              
-    FoodID: 1                    
+    Unit: " gram",               
+                   
   },
   {
     IngredientID: 4,             
     IngredientName: "Hành",     
     Category: "Rau củ",         
-    Unit: "100 gram",               
-    Calories: 20,               
-    FoodID: 1                    
+    Unit:  "gram",               
+                 
+              
   },
   {
     IngredientID: 5,             
     IngredientName: "Sườn heo", 
     Category: "Thịt",           
-    Unit: "100 gram",               
-    Calories: 300,             
-    FoodID: 2                    
-  },
+  Unit: " gram",               
+  }  ,
  
   {
     IngredientID: 6,             
     IngredientName: "Tôm",      
     Category: "Thịt",         
-    Unit: "100 gram",             
-    Calories: 120,             
-    FoodID: 3                    
+    Unit: " gram",             
+                      
   },
 ];
 const columns: TableColumnsType<DataType> = [
@@ -112,12 +105,7 @@ const columns: TableColumnsType<DataType> = [
     // onFilter: (value, record) => record.Unit.toLowerCase().includes(value as string),
     // width: "30",
   },
-  {
-    title: "Calories (cal)",
-    dataIndex: "Calories",
-    sorter: (a, b) => a.Calories - b.Calories,
-  },
- 
+  
   {
     title: "Sửa/Xóa",
     dataIndex: "action",
