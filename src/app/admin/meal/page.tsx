@@ -9,6 +9,9 @@ import { RiDeleteBack2Fill } from "react-icons/ri";
 import DeleteIngredientModal from "@/components/IngredientModal/DeleteIngredientModal";
 import AddMealPlanModal from "@/components/MealPlanModel/AddMealPlanModal";
 import { Key } from "antd/es/table/interface";
+import DeleteMealPlanModal from "@/components/MealPlanModel/DeleteMealPlanModal";
+import UpdateMealPLanModal from "@/components/MealPlanModel/UpdateMealPLanModal";
+
 // import UpdateMealPlanModal from "@/components/MealPlanModel/UpdateMealPlanModal";
 // import DeleteMealPlanModal from "@/components/MealPlanModel/DeleteMealPlanModal";
 // import AddMealPlanModal from "@/components/MealPlanModel/AddMealPlanModal";
@@ -129,8 +132,8 @@ const columns: TableColumnsType<DataType> = [
     dataIndex: "action",
     render: (_: any, record: DataType) => (
       <Space size="middle">
-        {/* <UpdateMealPlanModal/>
-        <DeleteMealPlanModal/> */}
+        <UpdateMealPLanModal/>
+        <DeleteMealPlanModal/>
       </Space>
     ),
   },

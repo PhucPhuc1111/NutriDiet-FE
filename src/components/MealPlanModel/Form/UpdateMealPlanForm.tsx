@@ -3,7 +3,7 @@ import { Form, Input, Select, Space } from 'antd';
 
 const { Option } = Select;
 
-const UpdateIngredientForm: React.FC<{ form: any }> = ({ form }) => {
+const UpdateMealPLanForm: React.FC<{ form: any }> = ({ form }) => {
   const onFinish = (values: any) => {
     console.log('Received values:', values); // Xử lý khi form submit
   };
@@ -50,4 +50,4 @@ const UpdateIngredientForm: React.FC<{ form: any }> = ({ form }) => {
   );
 };
 
-export default UpdateIngredientForm;
+export default UpdateMealPLanForm;

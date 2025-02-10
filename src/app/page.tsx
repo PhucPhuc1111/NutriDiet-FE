@@ -20,8 +20,7 @@ export default function Home() {
           src="/images/logo/banner.png"
           alt="Nutridiet"
           preview={false}
-          width={600}
-          height={600}
+          style={{ width: '100%', height: 'auto' }}
         />{" "}
       </div>
       <div>

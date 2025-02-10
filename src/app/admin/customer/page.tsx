@@ -5,10 +5,11 @@ import DeleteAllergyModal from '@/components/AllergyModal/DeleteAllerfyModal'
 import UpdateAllergyModal from '@/components/AllergyModal/UpdateAllergyModal'
 import AuthLayout from '@/components/Layouts/AuthLayout'
 import DefaultLayout from '@/components/Layouts/DefaultLayout'
-import { Input, Pagination, PaginationProps, Space, Table, TableColumnsType, TableProps } from 'antd'
+import { Button, Input, Pagination, PaginationProps, Space, Table, TableColumnsType, TableProps } from 'antd'
 import { format } from 'date-fns'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React, { useMemo, useState } from 'react'
 import { IoSearchOutline } from 'react-icons/io5'
 import { isError } from 'react-query'
@@ -16,87 +17,124 @@ import { isError } from 'react-query'
 
 
 interface DataType {
-  AllergyID: number;
-  // UserID: number;
-  AllergyName: string;
-  Notes: string;
-  CreatedAt:string;
-  UpdatedAt: number;
+  UserID: number;
+
+  FullName: string;
+   Email: string;
+  Phone:string;
+  Age: number;
+  Gender: string;
+  Location: string;
+  Avartar: string;
+  Status: string;
+
 
 }
 
 const data: DataType[] = [
   {
-    AllergyID: 1,
-    AllergyName: "Dị ứng hải sản",
-    Notes: "Tránh các loại hải sản như tôm, cua, mực, bạch tuộc, cá.",
-    CreatedAt: new Date().toISOString(),
-    UpdatedAt: Date.now()
+    UserID: 1,
+    FullName: "Nguyễn Văn A",
+    Email: "nguyenvana@example.com",
+    Phone: "0123456789",
+    Age: 30,
+    Gender: "Nam",
+    Location: "Hà Nội",
+    Avartar: "https://example.com/avatar1.jpg",
+    Status: "Active"
   },
   {
-    AllergyID: 2,
-    AllergyName: "Dị ứng đậu phộng",
-    Notes: "Tránh tất cả các sản phẩm có chứa đậu phộng hoặc các chế phẩm từ đậu phộng.",
-    CreatedAt: new Date().toISOString(),
-    UpdatedAt: Date.now()
+    UserID: 2,
+    FullName: "Trần Thị B",
+    Email: "tranthib@example.com",
+    Phone: "0987654321",
+    Age: 25,
+    Gender: "Nữ",
+    Location: "TP. Hồ Chí Minh",
+    Avartar: "https://example.com/avatar2.jpg",
+    Status: "Inactive"
   },
   {
-    AllergyID: 3,
-    AllergyName: "Dị ứng sữa",
-    Notes: "Tránh các sản phẩm từ sữa như sữa tươi, phô mai, kem, và các thực phẩm chứa sữa.",
-    CreatedAt: new Date().toISOString(),
-    UpdatedAt: Date.now()
+    UserID: 3,
+    FullName: "Lê Minh C",
+    Email: "leminhc@example.com",
+    Phone: "0912345678",
+    Age: 28,
+    Gender: "Nam",
+    Location: "Đà Nẵng",
+    Avartar: "https://example.com/avatar3.jpg",
+    Status: "Active"
   },
   {
-    AllergyID: 4,
-    AllergyName: "Dị ứng trứng",
-    Notes: "Tránh các thực phẩm có chứa trứng, bao gồm cả bánh, kem, và một số loại thực phẩm chế biến sẵn.",
-    CreatedAt: new Date().toISOString(),
-    UpdatedAt: Date.now()
+    UserID: 4,
+    FullName: "Phạm Thị D",
+    Email: "phamthid@example.com",
+    Phone: "0934567890",
+    Age: 22,
+    Gender: "Nữ",
+    Location: "Cần Thơ",
+    Avartar: "https://example.com/avatar4.jpg",
+    Status: "Active"
   },
   {
-    AllergyID: 5,
-    AllergyName: "Dị ứng lúa mì",
-    Notes: "Tránh các thực phẩm chứa gluten, bao gồm bánh mì, mì, và các sản phẩm từ lúa mì.",
-    CreatedAt: new Date().toISOString(),
-    UpdatedAt: Date.now()
+    UserID: 5,
+    FullName: "Võ Văn E",
+    Email: "vovanE@example.com",
+    Phone: "0961234567",
+    Age: 35,
+    Gender: "Nam",
+    Location: "Hải Phòng",
+    Avartar: "https://example.com/avatar5.jpg",
+    Status: "Inactive"
   }
 ];
 const columns: TableColumnsType<DataType> = [
   {
     title: "Id",
-    dataIndex: "AllergyID",
-    sorter: (a, b) => a.AllergyID - b.AllergyID,
+    dataIndex: "UserID",
+    sorter: (a, b) => a.UserID - b.UserID,
   },
   {
-    title: "Tên dị ứng",
-    dataIndex: "AllergyName",
-    sorter: (a, b) => a.AllergyName.localeCompare(b.AllergyName),
+    title: "Hình ảnh ",
+    dataIndex: "Avartar",
+
   },
   {
-    title: "Chú ý",
-    dataIndex: "Notes",
+    title: "Tên khách hàng",
+    dataIndex: "FullName",
+    sorter: (a, b) => a.FullName.localeCompare(b.FullName),
+  },
+  {
+    title: "Email",
+    dataIndex: "Email",
     
     
   },
   {
-    title: "Ngày tạo",
-    dataIndex: "CreatedAt",
-    sorter: (a, b) => a.CreatedAt.localeCompare(b.CreatedAt),
+    title: "Số điện thoại",
+    dataIndex: "Phone",
+    sorter: (a, b) => a.Phone.localeCompare(b.Phone),
   },
   {
-    title: "UpdatedAt ",
-    dataIndex: "UpdatedAt",
-    sorter: (a, b) => a.UpdatedAt - b.UpdatedAt,
+    title: "Tuổi ",
+    dataIndex: "Age",
+    sorter: (a, b) => a.Age - b.Age,
   },
+  {
+    title: "Địa chỉ ",
+    dataIndex: "Location",
+   
+  },
+  
  
   {
-    title: "Sửa/Xóa",
+    title: "Chi tiết",
     dataIndex: "action",
     render: (_: any, record: DataType) => (
       <Space size="middle">
-        <UpdateAllergyModal/>
-        <DeleteAllergyModal/>
+    <Link href={`/admin/customer/${record.UserID}`}>
+       
+        <Button style={{ backgroundColor: '#2f855a', color: 'white' }}>Chi tiết</Button> </Link>
       </Space>
     ),
   },
@@ -114,13 +152,13 @@ const onChange: TableProps<DataType>["onChange"] = (
 
 const CustomerPage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>('');
-  
+
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);};
 
 
   const filteredData = data.filter((item) => {
-    return item.AllergyName.toLowerCase().includes(searchText.toLowerCase());
+    return item.FullName.toLowerCase().includes(searchText.toLowerCase());
   });
   return (
     <DefaultLayout>
@@ -130,14 +168,14 @@ const CustomerPage: React.FC = () => {
           Tổng cộng: {data.length}
         </div>
          <Input
-          placeholder="Tìm kiếm thực phẩm"
+          placeholder="Tìm kiếm khách hàng"
           value={searchText}
           onChange={handleSearch} 
           style={{ marginBottom: 20, width: 300 }}
         />
 
         <div className="flex space-x-3 mb-2">
-        <AddAllergyModal/>
+       
           
         </div>
         </div>
