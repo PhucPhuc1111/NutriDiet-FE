@@ -11,71 +11,90 @@ import AddMealPlanModal from "@/components/MealPlanModel/AddMealPlanModal";
 import { Key } from "antd/es/table/interface";
 import DeleteMealPlanModal from "@/components/MealPlanModel/DeleteMealPlanModal";
 import UpdateMealPLanModal from "@/components/MealPlanModel/UpdateMealPLanModal";
+import Link from "next/link";
+import { MealPlan, MealPlanDetail } from "@/types/types";
 
 // import UpdateMealPlanModal from "@/components/MealPlanModel/UpdateMealPlanModal";
 // import DeleteMealPlanModal from "@/components/MealPlanModel/DeleteMealPlanModal";
 // import AddMealPlanModal from "@/components/MealPlanModel/AddMealPlanModal";
 
-interface DataType {
-  MealPlanID: number;
-  PlanName: string;
-  HealthGoal: string;
-  Duration:number;
-  Status: string;
-  CreatedBy: string;
-  CreatedAt: string;
-}
 
-const data: DataType[] = [
+// Dữ liệu mock MealPlan và MealPlanDetail với DayNumber: 2
+const dataDetail: MealPlanDetail[] = [
   {
-    MealPlanID: 1,             
-    PlanName: "Bữa ăn 1",   
-    HealthGoal: "Tăng cân",            
-    Duration:45,               
-    Status: "Active",               
-    CreatedBy: "Admin",
-    CreatedAt: "08/02/2025"               
+    MealPlanDetailID: 1,
+    MealPlanID: 1,
+    MealType:"bữa sáng",
+    FoodID: 101,
+    FoodName: "Cơm trắng",
+    Quantity: 150,
+    DayNumber: 1,
+    TotalCalories: 200,
   },
   {
-    MealPlanID: 2,             
-    PlanName: "Bữa ăn 2",  
-    HealthGoal: "Tăng cân",            
-    Duration:45,               
-    Status: "Active",               
-    CreatedBy: "Admin",
-    CreatedAt: "08/02/2025"                     
+    MealPlanID: 1,
+    MealPlanDetailID: 2,
+    MealType:"bữa chiều",
+   FoodID: 102,
+    FoodName: "Thịt gà",
+    Quantity: 100,
+    DayNumber: 1,
+    TotalCalories: 250,
   },
   {
-    MealPlanID: 3,             
-    PlanName: "Bữa ăn 3",  
-    HealthGoal: "Giảm cân",         
-    Duration:45,               
-    Status: "Active",               
-    CreatedBy: "Admin",
-    CreatedAt: "08/02/2025"                     
+    MealPlanDetailID: 3,
+    MealPlanID: 2,
+    MealType:"bữa chiều",
+    FoodID: 106,
+    FoodName: "Khoai tây",
+    Quantity: 200,
+    DayNumber: 1,
+    TotalCalories: 180,
   },
   {
-    MealPlanID: 4,             
-    PlanName: "Bữa ăn 4",     
-    HealthGoal: "Giữ cân",         
-    Duration:45,               
-    Status: "Active",               
-    CreatedBy: "Admin",
-    CreatedAt: "08/02/2025"                    
+    MealPlanDetailID: 4,
+    MealPlanID: 2,
+    MealType:"bữa chiều",
+    FoodID: 107,
+    FoodName: "Thịt bò",
+    Quantity: 150,
+    DayNumber: 1,
+    TotalCalories: 350,
   },
-  {
-    MealPlanID: 5,             
-    PlanName: "Bữa ăn 5", 
-    HealthGoal: "Tăng cơ - giảm mỡ",           
-    Duration:45,               
-    Status: "Active",               
-    CreatedBy: "Admin",
-    CreatedAt: "08/02/2025"                     
-  },
- 
-  
 ];
-const columns: TableColumnsType<DataType> = [
+const data: MealPlan[] = [
+    {
+      MealPlanID: 1,
+      UserID: 1,
+      PlanName: "Kế hoạch ăn kiêng giảm cân",
+      HealthGoal: "Giảm cân",
+      Duration: 30,
+      Status: "Active",
+      CreatedBy: "Admin",
+      CreatedAt: "2023-01-01T10:00:00",
+      UpdatedBy: "Admin",
+      UpdatedAt: "2023-01-02T10:00:00",
+      MealPlanDetails: [
+       1,2,3,4
+      ],
+    },
+    {
+      MealPlanID: 2,
+      UserID: 2,
+      PlanName: "Kế hoạch ăn tăng cơ",
+      HealthGoal: "Tăng cơ",
+      Duration: 45,
+      Status: "Active",
+      CreatedBy: "Admin",
+      CreatedAt: "2023-01-01T10:00:00",
+      UpdatedBy: "Admin",
+      UpdatedAt: "2023-01-02T10:00:00",
+      MealPlanDetails: [
+      1,2,3,4
+      ],
+    },
+  ];
+const columns: TableColumnsType<MealPlan> = [
   {
     title: "Id",
     dataIndex: "MealPlanID",
@@ -96,7 +115,7 @@ const columns: TableColumnsType<DataType> = [
       { text: "Tăng cơ - giảm mỡ", value: "Tăng cơ - giảm mỡ" },  
      
     ],
-    onFilter: (value: string | boolean | Key, record: DataType) => {
+    onFilter: (value: string | boolean | Key, record: MealPlan) => {
       if (typeof record.HealthGoal === "string" && typeof value === "string") {
         return record.HealthGoal.toLowerCase().trim().includes(value.toLowerCase().trim());
       }
@@ -118,7 +137,7 @@ const columns: TableColumnsType<DataType> = [
       { text: "Inactive", value: "Inactive" },
      
     ],
-    onFilter: (value: string | boolean | Key, record: DataType) => {
+    onFilter: (value: string | boolean | Key, record: MealPlan) => {
       if (typeof record.Status === "string" && typeof value === "string") {
         return record.Status.toLowerCase().trim().includes(value.toLowerCase().trim());
       }
@@ -130,9 +149,11 @@ const columns: TableColumnsType<DataType> = [
   {
     title: "Sửa/Xóa",
     dataIndex: "action",
-    render: (_: any, record: DataType) => (
+    render: (_: any, record: MealPlan) => (
       <Space size="middle">
-        <UpdateMealPLanModal/>
+
+      <Link href={`/admin/meal/${record.MealPlanID}`}> 
+              <Button style={{ backgroundColor: '#2f855a', color: 'white' }}>Chi tiết</Button>    </Link>
         <DeleteMealPlanModal/>
       </Space>
     ),
@@ -140,7 +161,7 @@ const columns: TableColumnsType<DataType> = [
 ];
 
 
-const onChange: TableProps<DataType>["onChange"] = (
+const onChange: TableProps<MealPlan>["onChange"] = (
   pagination,
   filters,
   sorter,
@@ -179,7 +200,7 @@ const MealPage: React.FC = () => {
         </div>
         </div>
        
-        <Table<DataType> columns={columns} dataSource={filteredData} onChange={onChange} />
+        <Table<MealPlan> columns={columns} dataSource={filteredData} onChange={onChange} />
       </div>
     </DefaultLayout>
   );
