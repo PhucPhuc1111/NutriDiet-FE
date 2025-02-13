@@ -184,7 +184,15 @@ const AddMealDaily = () => {
                     </div>
                   </div>
                 </div>
+                
               </div>
+            </div>
+            <div>
+                 <div className="flex justify-center space-x-4 p-10">
+                            <Button className="p-3 w-20 h-10">Hủy</Button>
+                            <Button className="p-3 w-20 h-10" style={{ backgroundColor: '#296547', color: 'white' }}>Thêm </Button>
+                
+                          </div>
             </div>
           </div>
         )}
