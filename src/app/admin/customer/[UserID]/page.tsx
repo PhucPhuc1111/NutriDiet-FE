@@ -1,8 +1,7 @@
 // app/admin/customer/[UserID]/page.tsx
 "use client";
 
-import HealProfileTab from "@/components/CustomerTab/HealProfileTab";
-import ProfileTab from "@/components/CustomerTab/ProfileTab";
+
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { Image, Tabs, TabsProps } from "antd";
 import { useParams } from "next/navigation"; // Sử dụng useParams từ next/navigation

@@ -18,19 +18,18 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
       <Form.Item name="Tên thực phẩm" label="Tên nguyên liệu" rules={[{ required: true, message: 'Tên thực phẩm là bắt buộc' }]}>
         <Input />
       </Form.Item>
+      <Form.Item name="Hình ảnh" label="Hình ảnh" rules={[{ required: true, message: 'Loại là bắt buộc' }]}>
+      <Input />
+      </Form.Item>
       <Form.Item name="Loại" label="Loại" rules={[{ required: true, message: 'Loại là bắt buộc' }]}>
-        <Select placeholder="Chọn loại" allowClear>
+        <Select  placeholder="Chọn loại" allowClear>
           <Option value="Chay">Chay</Option>
           <Option value="Mặn">Mặn</Option>
           
         </Select>
       </Form.Item>
-      <Form.Item name="Hình ảnh" label="Hình ảnh" rules={[{ required: true, message: 'Loại là bắt buộc' }]}>
-      <Input />
-      </Form.Item>
-      <Form.Item name="Mô tả" label="Mô tả" rules={[{ required: true, message: 'Loại là bắt buộc' }]}>
-      <Input />
-      </Form.Item>
+      
+      
       <Form.Item name="Khẩu phần" label="Khẩu phần" rules={[{ required: true, message: 'Đơn vị là bắt buộc' }]}>
       {/* <Space>
 <Input />
@@ -68,6 +67,16 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
         <Input />
       </Form.Item>
      </Space>
+     <Form.Item name="Nguyên liệu" label="Nguyên liệu" rules={[{ required: true, message: 'Nguyên liệu là bắt buộc' }]}>
+          <Select mode="multiple" placeholder="Chọn nguyên liệu" allowClear>
+            <Option value='Thịt bò'>Thịt bò</Option>
+            <Option value='Xương bò'>Xương bò</Option>
+            <Option value='Bánh phở'>Bánh phở</Option>
+          </Select>
+     </Form.Item>
+     <Form.Item name="Mô tả" label="Mô tả" rules={[{ required: true, message: 'Loại là bắt buộc' }]}>
+      <Input.TextArea />
+      </Form.Item>
     </Form>
   );
 };

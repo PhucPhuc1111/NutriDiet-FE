@@ -1,6 +1,7 @@
 import { Button, Modal, Form } from 'antd';
 import { useState } from 'react';
-import AddAllergyForm from './Form/AddAllergyForm';
+import AddAllergyForm from '../AllergyModal/Form/AddAllergyForm';
+
 
 
 const AddAllergyModal: React.FC = () => {
