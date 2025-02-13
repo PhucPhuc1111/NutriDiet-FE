@@ -195,7 +195,8 @@ const MealPage: React.FC = () => {
         />
 
         <div className="flex space-x-3 mb-2">
-        <AddMealPlanModal/>
+        <Link href={"/admin/meal/create-meal"}> 
+        <Button style={{ backgroundColor: '#2f855a', color: 'white' }}>Thêm kế hoạch</Button>    </Link>
           
         </div>
         </div>
