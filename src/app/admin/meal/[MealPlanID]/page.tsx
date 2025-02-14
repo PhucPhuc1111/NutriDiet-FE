@@ -1,6 +1,6 @@
-"use client";
+"use client"
 import React, { useState } from "react";
-import { Button, Form, Input, InputNumber, Select, Space } from "antd";
+import { Button, Form, FormInstance, Input, InputNumber, Select } from "antd";
 import { Option } from "antd/es/mentions";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import AddMealDaily from "@/components/AddMealPLan/AddMealDaily";
@@ -8,15 +8,14 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { MealPlan, MealPlanDetail } from "@/types/types";
 
-const MealPlanDetailPage: React.FC<{ form: any }> = ({ form }) => {
+const MealPlanDetailPage = ({ form }:any) => {
   const { MealPlanID } = useParams();
-  const [componentDisabled, setComponentDisabled] = useState<boolean>(true); // Quản lý trạng thái disable
-  const [isEditing, setIsEditing] = useState<boolean>(false); // Trạng thái chỉnh sửa
+  const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const onFinish = (values: any) => {
     console.log("Received values:", values);
   };
-
   const mealPlanDetails: MealPlanDetail[] = [
     {
       MealPlanDetailID: 1,
@@ -103,13 +102,13 @@ const MealPlanDetailPage: React.FC<{ form: any }> = ({ form }) => {
 
   const handleEdit = () => {
     setIsEditing(true);
-    setComponentDisabled(false); // Cho phép chỉnh sửa
+    setComponentDisabled(false);
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    setComponentDisabled(true); // Vô hiệu hóa trường nhập
-    form.resetFields(); // Đặt lại các trường về giá trị ban đầu
+    setComponentDisabled(true);
+    form.resetFields();
   };
 
   return (
@@ -144,16 +143,14 @@ const MealPlanDetailPage: React.FC<{ form: any }> = ({ form }) => {
               <Form.Item
                 name="PlanName"
                 label="Tên kế hoạch"
-                rules={[{ required: true, message: "Tên kế hoạch là bắt buộc" }]}
-              >
+                rules={[{ required: true, message: "Tên kế hoạch là bắt buộc" }]}>
                 <Input disabled={componentDisabled} defaultValue={mealPlan.PlanName} />
               </Form.Item>
 
               <Form.Item
                 name="HealthGoal"
                 label="Mục tiêu sức khỏe"
-                rules={[{ required: true, message: "Mục tiêu sức khỏe là bắt buộc" }]}
-              >
+                rules={[{ required: true, message: "Mục tiêu sức khỏe là bắt buộc" }]}>
                 <Select placeholder="Chọn mục tiêu sức khỏe" allowClear disabled={componentDisabled}>
                   <Option value="Tăng cân">Tăng cân</Option>
                   <Option value="Giảm cân">Giảm cân</Option>
@@ -165,8 +162,7 @@ const MealPlanDetailPage: React.FC<{ form: any }> = ({ form }) => {
               <Form.Item
                 name="Duration"
                 label="Thời gian hoàn thành mục tiêu"
-                rules={[{ required: true, message: "Thời gian là bắt buộc" }]}
-              >
+                rules={[{ required: true, message: "Thời gian là bắt buộc" }]}>
                 <InputNumber disabled={componentDisabled} placeholder="Ngày" defaultValue={mealPlan.Duration} />
               </Form.Item>
 
@@ -180,8 +176,8 @@ const MealPlanDetailPage: React.FC<{ form: any }> = ({ form }) => {
             </Form>
           </div>
 
-          <div className="space-y-5 p-10" >
-            <AddMealDaily  />
+          <div className="space-y-5 p-10">
+            <AddMealDaily />
           </div>
         </div>
       </DefaultLayout>

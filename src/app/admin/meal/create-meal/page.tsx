@@ -78,7 +78,7 @@ const data: MealPlan[] = [
     MealPlanDetails: [1, 2, 3, 4],
   },
 ];
-const CreateMealPlanPage: React.FC<{ form: any }> = ({ form }) => {
+const CreateMealPlanPage= ({ form }:any) => {
   const { MealPLanID } = useParams();
   const onFinish = (values: any) => {
     console.log("Received values:", values); // Xử lý khi form submit
