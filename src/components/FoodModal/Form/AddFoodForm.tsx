@@ -31,15 +31,7 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
       
       
       <Form.Item name="Khẩu phần" label="Khẩu phần" rules={[{ required: true, message: 'Đơn vị là bắt buộc' }]}>
-      {/* <Space>
-<Input />
-        <Select placeholder="Chọn đơn vị" allowClear>
-          <Option value="gram">gram</Option>
-          <Option value="chén">chén</Option>
-          <Option value="quả">quả</Option>
-          <Option value="củ">củ</Option>
-        </Select>
-      </Space> */}
+   
       <Input />
       </Form.Item>
       <Space>

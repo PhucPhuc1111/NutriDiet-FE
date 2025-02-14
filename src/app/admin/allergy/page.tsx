@@ -59,6 +59,7 @@ const columns: TableColumnsType<DataType> = [
   {
     title: "Id",
     dataIndex: "AllergyID",
+    
     sorter: (a, b) => a.AllergyID - b.AllergyID,
   },
   {
@@ -76,6 +77,7 @@ const columns: TableColumnsType<DataType> = [
     title: "Ngày tạo",
     dataIndex: "CreatedAt",
     sorter: (a, b) => a.CreatedAt.localeCompare(b.CreatedAt),
+    
   },
   {
     title: "UpdatedAt ",
