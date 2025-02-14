@@ -15,28 +15,28 @@ const AddFoodModal: React.FC = () => {
 
   const handleOk = () => {
     form
-      .validateFields() // Kiểm tra xem có trường nào bị thiếu thông tin hay không
+      .validateFields()
       .then((values) => {
-        console.log('Form Values:', values); // Xử lý khi form hợp lệ
-        setConfirmLoading(true); // Bật trạng thái loading
+        console.log('Form Values:', values); 
+        setConfirmLoading(true); 
         setTimeout(() => {
-          setOpen(false); // Đóng modal sau khi submit thành công
-          setConfirmLoading(false); // Tắt trạng thái loading
-        }, 2000); // Giả lập tác vụ xử lý, bạn có thể thay bằng thực tế gọi API hoặc xử lý dữ liệu
+          setOpen(false); 
+          setConfirmLoading(false); 
+        }, 2000); 
       })
       .catch((errorInfo) => {
-        console.log('Validate Failed:', errorInfo); // Nếu validate thất bại, không làm gì cả
-        setConfirmLoading(false); // Tắt trạng thái loading nếu có lỗi
+        console.log('Validate Failed:', errorInfo); 
+        setConfirmLoading(false); 
       });
   };
 
   const handleCancel = () => {
     console.log('Clicked cancel button');
-    setOpen(false); // Đóng modal
+    setOpen(false); 
   };
 
   const handleReset = () => {
-    form.resetFields(); // Reset tất cả các trường của form
+    form.resetFields(); 
   };
 
   return (
@@ -48,7 +48,7 @@ const AddFoodModal: React.FC = () => {
         title="Thêm thực phẩm"
         open={open}
         onOk={handleOk}
-        confirmLoading={confirmLoading} // Đảm bảo confirmLoading được truyền vào Modal
+        confirmLoading={confirmLoading}
         onCancel={handleCancel}
         footer={[
           <Button key="reset" onClick={handleReset} style={{ marginRight: 10 }}>
@@ -59,7 +59,7 @@ const AddFoodModal: React.FC = () => {
           </Button>,
           <Button key="submit" type="primary" loading={confirmLoading} onClick={handleOk}>
             Submit
-          </Button>, // Thêm loading cho nút submit khi confirmLoading là true
+          </Button>, 
         ]}
       >
         <AddFoodForm form={form} />

@@ -38,7 +38,13 @@
 .ant-tabs-nav .ant-tabs-tab:hover {
     color: #10a518; /* Màu nền nhẹ khi hover */
   }
-  
+  .ant-table-thead{
+    background-color: #1a581d;
+    color: white;
+  }
+  .ant-table-cell{
+    font-weight: 500;
+  }
 
 
   

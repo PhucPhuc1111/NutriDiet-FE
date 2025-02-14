@@ -14,12 +14,7 @@ import UpdateMealPLanModal from "@/components/MealPlanModel/UpdateMealPLanModal"
 import Link from "next/link";
 import { MealPlan, MealPlanDetail } from "@/types/types";
 
-// import UpdateMealPlanModal from "@/components/MealPlanModel/UpdateMealPlanModal";
-// import DeleteMealPlanModal from "@/components/MealPlanModel/DeleteMealPlanModal";
-// import AddMealPlanModal from "@/components/MealPlanModel/AddMealPlanModal";
 
-
-// Dữ liệu mock MealPlan và MealPlanDetail với DayNumber: 2
 const dataDetail: MealPlanDetail[] = [
   {
     MealPlanDetailID: 1,
