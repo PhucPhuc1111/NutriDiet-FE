@@ -1,0 +1,146 @@
+"use client";
+import React from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { Button, Input, Form } from "antd";
+import { toast } from "react-toastify";
+import * as Yup from "yup";  // Import Yup
+import { yupResolver } from "@hookform/resolvers/yup";  // Import yupResolver từ @hookform/resolvers
+import AuthLayout from "@/components/Layouts/AuthLayout";
+import { useRouter } from "next/navigation";
+import { baseURL } from "@/services/apiClient";
+
+// Cập nhật SigninFormSchema sử dụng Yup thay vì Zod
+export const SigninFormSchema = Yup.object({
+  email: Yup.string().email("Please enter a valid email.").trim().required("Email is required."),
+  password: Yup.string().min(6, "Password must be at least 6 characters.").required("Password is required."),
+});
+
+
+
+const SignIn: React.FC = () => {
+  const { control, handleSubmit, formState: { errors, isSubmitting } } = useForm<Yup.InferType<typeof SigninFormSchema>>({
+    resolver: yupResolver(SigninFormSchema),
+  });
+  const router = useRouter();
+
+  const onSubmit: SubmitHandler<SigninFormData> = async (data) => {
+    try {
+      const response = await fetch(`${baseURL}/api/user/login`, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = response.status !== 204 ? await response.json() : {};
+
+      if (response.ok) {
+        toast.success("Đăng nhập thành công!");
+        localStorage.setItem("authToken", result.data.token);
+        router.push("/admin/dashboard");
+      } else {
+        toast.error(result.message || "Sai email hoặc mật khẩu");
+      }
+    } catch (error) {
+      console.error("Error during sign-in:", error);
+      toast.error("Đã xảy ra lỗi bất ngờ");
+    }
+  };
+
+  return (
+    <div className="h-screen">
+      <AuthLayout>
+        <div className="mt-10 flex justify-center">
+          <div className="h-[500px] rounded-sm border border-stroke bg-white shadow-default dark:border-green-800 dark:bg-green-800">
+            <div className="flex items-center">
+              <div className="hidden w-full xl:block xl:w-1/2">
+                <div className="px-26 py-17.5 text-center">
+                  <Link href="/">
+                    <Image
+                      className="ml-20"
+                      src={"/images/logo/logo.png"}
+                      alt="Logo"
+                      width={100}
+                      height={100}
+                    />
+                  </Link>
+                  <p>Hệ thống đề xuất chế độ ăn uống lành mạnh.</p>
+                </div>
+              </div>
+
+              <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
+                <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
+                  <h2 className="mb-2 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
+                    Đăng nhập
+                  </h2>
+                  <div className="mb-7">Quản trị viên được quyền đăng nhập</div>
+
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <Form.Item
+                      label="Email"
+                      validateStatus={errors.email ? "error" : ""}
+                      help={errors.email?.message}
+                    >
+                      <Controller
+                        name="email"
+                        control={control}
+                        render={({ field }) => (
+                          <Input
+                            {...field}
+                            type="email"
+                            placeholder="Enter your email"
+                          />
+                        )}
+                      />
+                    </Form.Item>
+
+                    <Form.Item
+                      label="Mật khẩu"
+                      validateStatus={errors.password ? "error" : ""}
+                      help={errors.password?.message}
+                    >
+                      <Controller
+                        name="password"
+                        control={control}
+                        render={({ field }) => (
+                          <Input.Password
+                            {...field}
+                            placeholder="6+ Characters, 1 Capital letter"
+                          />
+                        )}
+                      />
+                    </Form.Item>
+
+                    <Form.Item>
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="flex w-full items-center justify-center rounded-lg bg-green-800 py-2 text-sm font-semibold uppercase text-white hover:bg-green-900 active:bg-green-800 disabled:bg-green-900 sm:py-4 sm:text-xl"
+                      >
+                        {isSubmitting && (
+                          <Image
+                            src="/images/icon/loading.svg"
+                            alt="Loading"
+                            width={30}
+                            height={30}
+                            className="sm:h-5 sm:w-5"
+                          />
+                        )}
+                        <span>Đăng nhập</span>
+                      </button>
+                    </Form.Item>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </AuthLayout>
+    </div>
+  );
+};
+
+export default SignIn;
