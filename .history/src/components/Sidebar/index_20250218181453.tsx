@@ -77,7 +77,7 @@ const menuGroups = [
           { label: ["Bữa ăn"], route: "/admin/meal" },
           { label: ["Bệnh nền"], route: "/admin/disease" },
           { label: ["Dị ứng"], route: "/admin/allergy" },
-          { label: ["Khách hàng"], route: "/admin/customer" },
+           { label: ["Khách hàng"], route: "/admin/customer" },
          
 
         

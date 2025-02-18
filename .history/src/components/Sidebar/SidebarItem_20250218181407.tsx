@@ -56,6 +56,7 @@ const SidebarItem = ({ item, pageName, setPageName }: any) => {
         )}
       </Link>
 
+      {/* Render dropdown menu items only if the current page matches the parent label */}
       {item.children && (
         <div
           className={`${

@@ -5,7 +5,7 @@ import Link from "next/link";
 // SidebarItem Component for rendering individual menu items
 const SidebarItem = ({ item, pageName, setPageName }: any) => {
   const handleClick = () => {
-
+    // Toggle page name between active and inactive states
     const updatedPageName =
       pageName !== item.label.toLowerCase() ? item.label.toLowerCase() : "";
     setPageName(updatedPageName);
@@ -56,6 +56,7 @@ const SidebarItem = ({ item, pageName, setPageName }: any) => {
         )}
       </Link>
 
+      {/* Render dropdown menu items only if the current page matches the parent label */}
       {item.children && (
         <div
           className={`${
