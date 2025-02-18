@@ -1,42 +1,53 @@
 import { Button, Modal, Form } from 'antd';
 import { useState } from 'react';
-import AddAllergyForm from './Form/AddAllergyForm';
 
+import { createAllergy } from "@/app/data/allergy";  
+import { useQueryClient } from "@tanstack/react-query"; 
+import AddAllergyForm from './Form/AddAllergyForm';
 
 const AddAllergyModal: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const [form] = Form.useForm();
-
+  const queryClient = useQueryClient(); 
   const showModal = () => {
     setOpen(true);
   };
 
   const handleOk = () => {
     form
-      .validateFields() 
-      .then((values) => {
-        console.log('Form Values:', values); 
-        setConfirmLoading(true); 
-        setTimeout(() => {
+      .validateFields()
+      .then(async (values) => {
+        console.log('Form Values:', values);
+        setConfirmLoading(true);
+        
+        try {
+          
+          await createAllergy(values, 'your-token-here'); 
+          
+          
           setOpen(false);
           setConfirmLoading(false);
-        }, 2000); 
+          form.resetFields();
+          queryClient.invalidateQueries({ queryKey: ["allergies"] }); 
+        } catch (error) {
+          console.error("Error adding allergy:", error);
+          setConfirmLoading(false);
+        }
       })
       .catch((errorInfo) => {
-        console.log('Validate Failed:', errorInfo); 
-        setConfirmLoading(false); 
+        console.log('Validate Failed:', errorInfo);
+        setConfirmLoading(false);
       });
   };
 
   const handleCancel = () => {
-    console.log('Clicked cancel button');
-    setOpen(false); // Đóng modal
+    setOpen(false);
   };
 
   const handleReset = () => {
-    form.resetFields(); // Reset tất cả các trường của form
+    form.resetFields(); 
   };
 
   return (
@@ -48,7 +59,7 @@ const AddAllergyModal: React.FC = () => {
         title="Thêm dị ứng"
         open={open}
         onOk={handleOk}
-        confirmLoading={confirmLoading} // Đảm bảo confirmLoading được truyền vào Modal
+        confirmLoading={confirmLoading}
         onCancel={handleCancel}
         footer={[
           <Button key="reset" onClick={handleReset} style={{ marginRight: 10 }}>
@@ -59,7 +70,7 @@ const AddAllergyModal: React.FC = () => {
           </Button>,
           <Button key="submit" type="primary" loading={confirmLoading} onClick={handleOk}>
             Submit
-          </Button>, // Thêm loading cho nút submit khi confirmLoading là true
+          </Button>,
         ]}
       >
         <AddAllergyForm form={form} />

@@ -1,13 +1,39 @@
 "use client";
+
 import AddMealDaily from "@/components/AddMealPLan/AddMealDaily";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import { MealPlan, MealPlanDetail } from "@/types/types";
+
 import { DownOutlined } from "@ant-design/icons";
 import { Button, Form, Input, InputNumber, Select, Space } from "antd";
 import { Option } from "antd/es/mentions";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React from "react";
+interface MealPlanDetail {
+  MealPlanDetailID: number;
+  MealPlanID: number;
+  MealType: string;
+  FoodID: number;
+  FoodName: string;
+  Quantity: number;
+  DayNumber: number;
+  TotalCalories: number;
+}
+
+interface MealPlan {
+  MealPlanID: number;
+  UserID: number;
+  PlanName: string;
+  HealthGoal: string;
+  Duration: number;
+  Status: string;
+  CreatedBy: string;
+  CreatedAt: string;
+  UpdatedBy: string;
+  UpdatedAt: string;
+  MealPlanDetails: number[];
+}
+
 const dataDetail: MealPlanDetail[] = [
   {
     MealPlanDetailID: 1,
