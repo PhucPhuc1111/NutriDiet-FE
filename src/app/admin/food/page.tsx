@@ -3,7 +3,7 @@ import React, { Key, useState } from "react";
 import { Table, Space, Button, Input, TableColumnsType } from "antd";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import AddFoodModal from "@/components/FoodModal/AddFoodModal";
-import { Food, Ingredient } from "@/types/types";
+// import { Food, Ingredient } from "@/types/types";
 import Link from "next/link";
 import DeleteFoodModal from "@/components/FoodModal/DeleteFoodModal";
 import UpdateFoodModal from "@/components/FoodModal/UpdateFoodModal";

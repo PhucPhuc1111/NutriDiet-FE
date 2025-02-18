@@ -1,1 +1,0 @@
-npm install next typescript @types/node
