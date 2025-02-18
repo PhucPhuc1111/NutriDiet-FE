@@ -1,1 +1,0 @@
-taok cho tui get
