@@ -1,40 +1,43 @@
 import { Button, Modal, Form } from 'antd';
 import { useState } from 'react';
-import UpdateAllergyForm from './Form/UpdateAllergyForm'; // Ensure this import is correct
+import { updateAllergy } from '@/app/data/allergy';
+import UpdateAllergyForm from './Form/UpdateAllergyForm';
 
-const UpdateAllergyModal: React.FC = () => {
+const UpdateAllergyModal: React.FC<{ allergyId: number }> = ({ allergyId }) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
-  const [form] = Form.useForm(); // Initialize form here
+  const [form] = Form.useForm();
 
   const showModal = () => {
-    setOpen(true); // Open the modal
+    setOpen(true);
   };
 
   const handleOk = () => {
     form
-      .validateFields() // Validate form fields
-      .then((values) => {
-        console.log('Form Values:', values); // Process the values (e.g., send to server)
-        setConfirmLoading(true); // Show loading while processing
-        setTimeout(() => {
-          setOpen(false); // Close the modal
-          setConfirmLoading(false); // Hide loading
-        }, 2000); 
+      .validateFields()
+      .then(async (values) => {
+        setConfirmLoading(true);
+
+        try {
+          
+          await updateAllergy(allergyId.toString(), values, 'your-token-here');  
+          setOpen(false);  
+          setConfirmLoading(false);
+          form.resetFields();  
+        } catch (error) {
+          console.error('Error updating allergy:', error);
+          setConfirmLoading(false);
+        }
       })
       .catch((errorInfo) => {
         console.log('Validate Failed:', errorInfo);
-        setConfirmLoading(false); 
+        setConfirmLoading(false);
       });
   };
 
   const handleCancel = () => {
-    setOpen(false); 
-  };
-
-  const handleReset = () => {
-    form.resetFields(); 
+    setOpen(false);
   };
 
   return (
@@ -49,7 +52,7 @@ const UpdateAllergyModal: React.FC = () => {
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
         footer={[
-          <Button key="reset" onClick={handleReset} style={{ marginRight: 10 }}>
+          <Button key="reset" onClick={() => form.resetFields()} style={{ marginRight: 10 }}>
             Reset
           </Button>,
           <Button key="cancel" onClick={handleCancel} style={{ marginRight: 10 }}>
@@ -60,7 +63,7 @@ const UpdateAllergyModal: React.FC = () => {
           </Button>,
         ]}
       >
-        <UpdateAllergyForm form={form} /> {/* Pass form to child component */}
+        <UpdateAllergyForm form={form} />
       </Modal>
     </>
   );

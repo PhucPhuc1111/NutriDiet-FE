@@ -8,7 +8,6 @@ export type Ingredient = {
   unit: string;             
   foodId: number;
   };
-  
   export type Role ={
     RoleID: number[];
     RoleName: string;
@@ -47,21 +46,24 @@ export type Ingredient = {
     role:string;
   };
   export type Food = {
-    FoodID: number;            
-    FoodName: string;          
-    MealType: string;          
-    ImageUrl: string;          
-    FoodType: string;          
-    Description: string;       
-    ServingSize: string;       
-    Ingredient: number[];  
-    Calories: number;          
-    Protein: number;           
-    Carbs: number;             
-    Fat: number;               
-    Glucid: number;            
-    Fiber: number;             
-    Others: string;            
+    foodId: number;            
+    foodName: string;          
+    mealType: string;          
+    imageUrl: string;          
+    foodType: string;          
+    description: string;       
+    servingSize: string;       
+   
+    calories: number;          
+    protein: number;           
+    carbs: number;             
+    fat: number;               
+    glucid: number;            
+    fiber: number;             
+    others: string;       
+    ingredients: number[];     
+    // allergies: number[],
+    // diseases: number[]  
   };
    export type MealPlan ={
     MealPlanID:number;
@@ -81,10 +83,10 @@ export type Ingredient = {
    export type MealPlanDetail ={
     MealPlanDetailID:number;
     MealPlanID: number;
-    FoodID: number;
-    FoodName: string;
+    foodId: number;
+    foodName: string;
     Quantity: number;
-    MealType: string;
+    mealType: string;
     DayNumber: number;
     TotalCalories: number
    }

@@ -11,7 +11,31 @@ import AddMealPlanModal from "@/components/MealPlanModel/AddMealPlanModal";
 import { Key } from "antd/es/table/interface";
 import DeleteMealPlanModal from "@/components/MealPlanModel/DeleteMealPlanModal";
 import Link from "next/link";
-import { MealPlan, MealPlanDetail } from "@/types/types";
+
+interface MealPlanDetail {
+  MealPlanDetailID: number;
+  MealPlanID: number;
+  MealType: string;
+  FoodID: number;
+  FoodName: string;
+  Quantity: number;
+  DayNumber: number;
+  TotalCalories: number;
+}
+
+interface MealPlan {
+  MealPlanID: number;
+  UserID: number;
+  PlanName: string;
+  HealthGoal: string;
+  Duration: number;
+  Status: string;
+  CreatedBy: string;
+  CreatedAt: string;
+  UpdatedBy: string;
+  UpdatedAt: string;
+  MealPlanDetails: number[];
+}
 
 
 const dataDetail: MealPlanDetail[] = [

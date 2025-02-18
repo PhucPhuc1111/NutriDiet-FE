@@ -1,38 +1,39 @@
-import React, { useState } from 'react';
+"use client"
 import { Button, Popconfirm } from 'antd';
+import { useSyncExternalStore } from 'react';
+import { deleteAllergyById } from '@/app/data/allergy';  // Hàm gọi API xóa dị ứng
+import { useState } from 'react';
 
-const DeleteAllergyModal: React.FC = () => {
-  const [open, setOpen] = useState(false);
+const DeleteAllergyModal: React.FC<{ allergyId: number }> = ({ allergyId }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
 
-  const showPopconfirm = () => {
-    setOpen(true);
-  };
-
-  const handleOk = () => {
+  const handleDelete = async () => {
     setConfirmLoading(true);
-
-    setTimeout(() => {
-      setOpen(false);
+    try {
+     
+      await deleteAllergyById(allergyId.toString(), 'your-token-here'); 
       setConfirmLoading(false);
-    }, 2000);
+  
+      console.log('Allergy deleted successfully');
+    } catch (error) {
+      console.error('Error deleting allergy:', error);
+      setConfirmLoading(false);
+    }
   };
 
   const handleCancel = () => {
     console.log('Clicked cancel button');
-    setOpen(false);
   };
 
   return (
     <Popconfirm
-      title="Title"
-      description="xóa"
-      open={open}
-      onConfirm={handleOk}
-      okButtonProps={{ loading: confirmLoading }}
+      title="Bạn có chắc chắn muốn xóa dị ứng này?"
+      onConfirm={handleDelete}
       onCancel={handleCancel}
+      okButtonProps={{ loading: confirmLoading }}
+      cancelButtonProps={{ disabled: confirmLoading }}
     >
-      <Button type='primary' danger onClick={showPopconfirm}>
+      <Button type="primary" danger>
         Xóa
       </Button>
     </Popconfirm>
