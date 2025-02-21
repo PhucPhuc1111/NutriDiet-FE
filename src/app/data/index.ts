@@ -5,3 +5,10 @@ export * from "./disease";
 export * from "./food";
 export * from "./ingredient";
 export * from "./mealPlan";
+export interface ApiResponse<T> {
+  statusCode: number;
+  message: string;
+  data: T;
+  total:T;
+  items:T;
+}

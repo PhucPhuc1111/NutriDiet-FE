@@ -1,41 +1,90 @@
 import { Button, Modal, Form } from 'antd';
-import { useState } from 'react';
-import UpdateAllergyForm from './Form/UpdateDiseaseForm'; // Ensure this import is correct
+import { useState, useEffect } from 'react';
+import { getDiseaseById, updateDisease, useGetAllDiseases } from '@/app/data/disease';
+import UpdateDiseaseForm from './Form/UpdateDiseaseForm';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const UpdateDiseaseModal: React.FC = () => {
+const UpdateDiseaseModal: React.FC<{ diseaseId: number; refetch: () => void }> = ({ diseaseId, refetch }) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-
-  const [form] = Form.useForm(); // Initialize form here
+  const [form] = Form.useForm();
+  const [currentDisease, setCurrentDisease] = useState<any>(null);
 
   const showModal = () => {
-    setOpen(true); // Open the modal
+    setOpen(true);
   };
 
+  const { data: allDiseasesData } = useGetAllDiseases(1, 100, 'your-token-here');
+
   const handleOk = () => {
-    form
-      .validateFields() // Validate form fields
-      .then((values) => {
-        console.log('Form Values:', values); // Process the values (e.g., send to server)
-        setConfirmLoading(true); // Show loading while processing
-        setTimeout(() => {
-          setOpen(false); // Close the modal
-          setConfirmLoading(false); // Hide loading
-        }, 2000); 
-      })
-      .catch((errorInfo) => {
-        console.log('Validate Failed:', errorInfo);
-        setConfirmLoading(false); 
-      });
+    form.validateFields().then(async (values) => {
+      setConfirmLoading(true);
+
+      try {
+      
+        const allDiseases = allDiseasesData || [];
+        const isDuplicate =
+  values.diseaseName.toLowerCase() !== currentDisease?.diseaseName.toLowerCase() && // Kiểm tra nếu tên đã thay đổi
+  allDiseases.some(
+    (disease: any) =>
+      disease.diseaseName.toLowerCase() === values.diseaseName.toLowerCase() &&
+      disease.id !== diseaseId
+  );
+
+
+        if (isDuplicate) {
+          form.setFields([
+            {
+              name: 'diseaseName',
+              errors: ['Tên bệnh đã tồn tại'],
+            },
+          ]);
+          toast.error('Tên bệnh đã tồn tại!', { position: 'top-right' });
+          setConfirmLoading(false);
+          return;
+        }
+
+        // Cập nhật bệnh
+        await updateDisease(diseaseId, values, 'your-token-here');
+        refetch(); // Làm mới danh sách
+        setOpen(false);
+        setConfirmLoading(false);
+        form.resetFields();
+        toast.success('Cập nhật bệnh thành công!', { position: 'top-right' });
+
+      } catch (error) {
+        console.error('Error updating disease:', error);
+        toast.error('Lỗi khi cập nhật bệnh!', { position: 'top-right' });
+        setConfirmLoading(false);
+      }
+    }).catch((errorInfo) => {
+      console.log('Validate Failed:', errorInfo);
+      setConfirmLoading(false);
+    });
   };
 
   const handleCancel = () => {
-    setOpen(false); 
+    setOpen(false);
   };
 
-  const handleReset = () => {
-    form.resetFields(); 
-  };
+  useEffect(() => {
+    if (open) {
+      const fetchDiseaseData = async () => {
+        try {
+          const response = await getDiseaseById(diseaseId);
+          setCurrentDisease(response?.data);
+          form.setFieldsValue({
+            diseaseName: response.data?.diseaseName,
+            description: response.data?.description,
+          });
+        } catch (error) {
+          console.error('Error fetching disease data:', error);
+        }
+      };
+      fetchDiseaseData();
+    }
+  }, [open, diseaseId, form]);
 
   return (
     <>
@@ -43,24 +92,21 @@ const UpdateDiseaseModal: React.FC = () => {
         Sửa
       </Button>
       <Modal
-        title="Sửa Allergy"
+        title="Sửa Bệnh"
         open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
         footer={[
-          <Button key="reset" onClick={handleReset} style={{ marginRight: 10 }}>
-            Reset
-          </Button>,
           <Button key="cancel" onClick={handleCancel} style={{ marginRight: 10 }}>
-            Cancel
+            Hủy
           </Button>,
           <Button key="submit" type="primary" loading={confirmLoading} onClick={handleOk}>
-            Submit
+            Xác nhận
           </Button>,
         ]}
       >
-        <UpdateAllergyForm form={form} /> {/* Pass form to child component */}
+        <UpdateDiseaseForm form={form} />
       </Modal>
     </>
   );

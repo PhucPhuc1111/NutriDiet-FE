@@ -1,28 +1,31 @@
-"use client"
-import { Button, Popconfirm } from 'antd';
-import { useSyncExternalStore } from 'react';
-import { deleteAllergyById } from '@/app/data/allergy';  // Hàm gọi API xóa dị ứng
-import { useState } from 'react';
+"use client";
+import { Button, Popconfirm } from "antd";
+import { deleteAllergyById } from "@/app/data/allergy"; // Hàm gọi API xóa dị ứng
+import { useState } from "react";
+import { toast } from "react-toastify";
 
-const DeleteAllergyModal: React.FC<{ allergyId: number }> = ({ allergyId }) => {
+const DeleteAllergyModal: React.FC<{
+  allergyId: number;
+  refetch: () => void;
+}> = ({ allergyId, refetch }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const handleDelete = async () => {
     setConfirmLoading(true);
     try {
-     
-      await deleteAllergyById(allergyId.toString(), 'your-token-here'); 
+      await deleteAllergyById(allergyId.toString(), "your-token-here");
+      refetch();
       setConfirmLoading(false);
-  
-      console.log('Allergy deleted successfully');
+
+      toast.success("Xóa dị ứng thành công");
     } catch (error) {
-      console.error('Error deleting allergy:', error);
+      toast.error("Xóa dị ứng không thành công");
       setConfirmLoading(false);
     }
   };
 
   const handleCancel = () => {
-    console.log('Clicked cancel button');
+    console.log("Clicked cancel button");
   };
 
   return (

@@ -10,108 +10,109 @@ import AddAllergyModal from "@/components/AllergyModal/AddAllergyModal";
 import UpdateDiseaseModal from "@/components/DiseaseModal/UpdateDiseaseModal";
 import DeleteDiseaseModal from "@/components/DiseaseModal/DeleteDiseaseModal";
 import AddDiseaseModal from "@/components/DiseaseModal/AddDiseaseModal";
+import { format, parseISO } from "date-fns";
+import { Disease } from "@/app/data/types";
+import { useGetAllDiseases } from "@/app/data/disease";
 
-interface DataType {
-    DiseaseID: number;
-  // UserID: number;
-  DiseaseName: string;
-  Description: string;
-  CreatedAt:string;
-  UpdatedAt: number;
 
-}
+function formatDate(dateString?: string): string {
+  if (!dateString) return ""; 
+  try {
+    return format(parseISO(dateString), "hh:mm dd/MM/yyyy");
+  } catch (error) {
+    console.error("Error formatting date:", error);
+    return dateString;
+  }}
 
-const data: DataType[] = [
-  {
-    DiseaseID: 1,
-    DiseaseName: "Bệnh béo phì",
-    Description: "Thức ăn nhanh, đồ ngọt, thực phẩm nhiều dầu mỡ",
-    CreatedAt: new Date().toISOString(),
-    UpdatedAt: Date.now()
-  },
-  {
-    DiseaseID: 2,
-    DiseaseName: "Benh cao huyet ap",
-    Description: "Thức ăn chứa nhiều muối, thực phẩm nhiều chất béo bão hòa, đồ uống có cồn",
-    CreatedAt: new Date().toISOString(),
-    UpdatedAt: Date.now()
-  },
-  {
-    DiseaseID: 3,
-    DiseaseName: "Benh tieu duong",
-    Description: "Tránh thực phẩm chứa nhiều đường, chứa tinh bột nhanh (carbohydrates) dễ tiêu hóa, chiên rán dầu mỡ nhiều chất béo",
-    CreatedAt: new Date().toISOString(),
-    UpdatedAt: Date.now()
-  }
-];
-const columns: TableColumnsType<DataType> = [
+
+
+const DiseasePage: React.FC = () => {
+
+  const [searchText, setSearchText] = useState<string>("");
+  const pageIndex = 1;
+  const pageSize = 100;
+
+  const { data, isLoading, isError, error, refetch } = useGetAllDiseases(
+    pageIndex,
+    pageSize,
+    searchText,
+  );
+  const onChange: TableProps<Disease>["onChange"] = (
+    pagination,
+    filters,
+    sorter,
+    extra
+  ) => {
+    console.log("params", pagination, filters, sorter, extra);
+  };
+const columns: TableColumnsType<Disease> = [
   {
     title: "Id",
-    dataIndex: "DiseaseID",
+    dataIndex: "diseaseId",
     
-    sorter: (a, b) => a.DiseaseID - b.DiseaseID,
+    sorter: (a, b) => a.diseaseId - b.diseaseId,
   },
   {
     title: "Tên bệnh",
-    dataIndex: "DiseaseName",
-    sorter: (a, b) => a.DiseaseName.localeCompare(b.DiseaseName),
+    dataIndex: "diseaseName",
+    sorter: (a, b) => a.diseaseName.localeCompare(b.diseaseName),
   },
   {
     title: "Mô tả",
-    dataIndex: "Description",
+    dataIndex: "description",
     
     
   },
   {
     title: "Ngày tạo",
-    dataIndex: "CreatedAt",
-    sorter: (a, b) => a.CreatedAt.localeCompare(b.CreatedAt),
-    
+    dataIndex: "createdAt",
+    sorter: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    render: (text) => formatDate(text), 
   },
   {
-    title: "UpdatedAt ",
-    dataIndex: "UpdatedAt",
-    sorter: (a, b) => a.UpdatedAt - b.UpdatedAt,
+    title: "Ngày cập nhật",
+    dataIndex: "updatedAt",
+    sorter: (a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
+    render: (text) => formatDate(text), 
   },
  
   {
     title: "Sửa/Xóa",
     dataIndex: "action",
-    render: (_: any, record: DataType) => (
+    render: (_: any, record: Disease) => (
       <Space size="middle">
-        <UpdateDiseaseModal/>
-        <DeleteDiseaseModal/>
+        <UpdateDiseaseModal diseaseId={record.diseaseId} refetch={refetch}/>
+        <DeleteDiseaseModal diseaseId={record.diseaseId} refetch={refetch}/>
       </Space>
     ),
   },
 ];
 
 
-const onChange: TableProps<DataType>["onChange"] = (
-  pagination,
-  filters,
-  sorter,
-  extra
-) => {
-  console.log("params", pagination, filters, sorter, extra);
-};
-
-const DiseasePage: React.FC = () => {
-  const [searchText, setSearchText] = useState<string>('');
+ const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+  };
   
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);};
+  
+const filteredData = Array.isArray(data)
+? data.filter((item) =>
+    item.diseaseName.toLowerCase().includes(searchText.toLowerCase()),
+  )
+: [];
 
+if (isLoading) {
+return <div>Loading...</div>;
+}
 
-  const filteredData = data.filter((item) => {
-    return item.DiseaseName.toLowerCase().includes(searchText.toLowerCase());
-  });
+if (isError) {
+return <div>Error: {error?.message}</div>;
+}
   return (
     <DefaultLayout>
       <div className="">
         <div className="flex justify-between" >
         <div className="mb-2">
-          Tổng cộng: {data.length}
+          Tổng cộng: {data?.length}
         </div>
          <Input
           placeholder="Tìm kiếm thực phẩm"
@@ -126,7 +127,7 @@ const DiseasePage: React.FC = () => {
         </div>
         </div>
        
-        <Table<DataType> columns={columns} dataSource={filteredData} onChange={onChange} />
+        <Table<Disease> columns={columns} dataSource={filteredData} onChange={onChange} />
       </div>
     </DefaultLayout>
   );
