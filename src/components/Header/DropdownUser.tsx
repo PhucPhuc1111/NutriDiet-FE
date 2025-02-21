@@ -1,56 +1,24 @@
-"use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import ClickOutside from "@/components/ClickOutside";
-import { baseURL } from "@/services/apiClient";
-import { toast } from "react-toastify";
-import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 const DropdownUser = ({ handleLogout }: { handleLogout: () => void }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const router = useRouter();
+  const [user, setUser] = useState<{ name: string; email: string; role: string } | null>(null);
+
 
   useEffect(() => {
-    const token = localStorage.getItem("authToken");
-
-    if (!token) {
-      toast.error("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
-      router.push("/auth/signin");
-      return;
+    const name = Cookies.get("userName");
+    const email = Cookies.get("userEmail");
+    const role = Cookies.get("userRole");
+  
+    if (name && email && role) {
+      setUser({ name, email, role });
     }
-
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch(`${baseURL}/api/user/whoami`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          toast.error("Phiên đăng nhập đã hết hạn.");
-          localStorage.removeItem("authToken");
-          router.push("/auth/signin");
-        } else {
-          const data = await response.json();
-          setUser(data);
-        }
-      } catch (error) {
-        toast.error("Lỗi kết nối, vui lòng thử lại.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
   }, []);
-
-  if (loading) return <div>Đang tải...</div>;
+  
 
   return (
     <div>
@@ -58,7 +26,7 @@ const DropdownUser = ({ handleLogout }: { handleLogout: () => void }) => {
         <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
           <button onClick={() => setDropdownOpen(!dropdownOpen)} className="flex items-center gap-4">
             <span className="hidden text-right lg:block">
-              <span className="block text-sm font-medium text-black dark:text-white">{user.email}</span>
+              <span className="block text-sm font-medium text-black">{user.name}</span>
               <span className="block text-xs">{user.role}</span>
             </span>
             <span className="h-12 w-12 rounded-full">
@@ -77,8 +45,11 @@ const DropdownUser = ({ handleLogout }: { handleLogout: () => void }) => {
                 <li>
                   <button
                     onClick={() => {
-                      localStorage.removeItem("authToken");
-                      router.push("/auth/signin");
+                      Cookies.remove("authToken");
+                      Cookies.remove("userEmail");
+                      Cookies.remove("userRole");
+                  
+                      handleLogout();
                     }}
                     className="block w-full text-left px-4 py-2 hover:bg-gray-100"
                   >

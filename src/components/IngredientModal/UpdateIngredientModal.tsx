@@ -1,43 +1,89 @@
 import { Button, Modal, Form } from 'antd';
-import { useState } from 'react';
-import AddIngredientForm from './Form/AddIngredientForm';
+import { useState, useEffect } from 'react';
+import { getIngredientById, updateIngredient, useGetAllIngredients } from '@/app/data/ingredient';
 import UpdateIngredientForm from './Form/UpdateIngredientForm';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const UpdateIngredientModal: React.FC = () => {
+const UpdateIngredientModal: React.FC<{ ingredientId: number; refetch: () => void }> = ({ ingredientId, refetch }) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-
   const [form] = Form.useForm();
+  const [currentIngredient, setCurrentIngredient] = useState<any>(null);
 
   const showModal = () => {
     setOpen(true);
   };
 
+  const { data: allIngredientsData } = useGetAllIngredients(1, 100, 'your-token-here');
+
   const handleOk = () => {
-    form
-      .validateFields() 
-      .then((values) => {
-        console.log('Form Values:', values);
-        setConfirmLoading(true); 
-        setTimeout(() => {
-          setOpen(false); 
-          setConfirmLoading(false); 
-        }, 2000); 
-      })
-      .catch((errorInfo) => {
-        console.log('Validate Failed:', errorInfo);
-        setConfirmLoading(false); 
-      });
+    form.validateFields().then(async (values) => {
+      setConfirmLoading(true);
+
+      try {
+        const allIngredients = allIngredientsData || [];
+        
+        const isDuplicate = 
+          values.ingredientName.toLowerCase() !== currentIngredient?.ingredientName.toLowerCase() &&
+          allIngredients.some(
+            (ingredient: any) => 
+              ingredient.ingredientName.toLowerCase() === values.ingredientName.toLowerCase() &&
+              ingredient.id !== ingredientId
+          );
+
+        if (isDuplicate) {
+          form.setFields([
+            {
+              name: 'ingredientName',
+              errors: ['Tên nguyên liệu đã tồn tại'],
+            },
+          ]);
+          toast.error('Tên nguyên liệu đã tồn tại!', { position: 'top-right' });
+          setConfirmLoading(false);
+          return;
+        }
+
+        await updateIngredient(ingredientId, values, 'your-token-here');
+        refetch();
+        setOpen(false);
+        setConfirmLoading(false);
+        form.resetFields();
+        toast.success('Cập nhật nguyên liệu thành công!', { position: 'top-right' });
+      } catch (error) {
+        console.error('Lỗi khi cập nhật nguyên liệu:', error);
+        toast.error('Lỗi khi cập nhật nguyên liệu!', { position: 'top-right' });
+        setConfirmLoading(false);
+      }
+    }).catch((errorInfo) => {
+      console.log('Validate Failed:', errorInfo);
+      setConfirmLoading(false);
+    });
   };
 
   const handleCancel = () => {
-    console.log('Clicked cancel button');
-    setOpen(false); // Đóng modal
+    setOpen(false);
   };
 
-  const handleReset = () => {
-    form.resetFields(); 
-  };
+  useEffect(() => {
+    if (open) {
+      const fetchIngredientData = async () => {
+        try {
+          const response = await getIngredientById(ingredientId);
+          setCurrentIngredient(response.data);
+          form.setFieldsValue({
+            ingredientName: response.data?.ingredientName,
+            category: response.data?.category,
+            unit: response.data?.unit,
+            calories: response.data?.calories,
+          });
+        } catch (error) {
+          console.error('Lỗi khi lấy dữ liệu nguyên liệu:', error);
+        }
+      };
+      fetchIngredientData();
+    }
+  }, [open, ingredientId, form]);
 
   return (
     <>
@@ -45,21 +91,18 @@ const UpdateIngredientModal: React.FC = () => {
         Sửa
       </Button>
       <Modal
-        title="Sửa"
+        title="Sửa Thành Phần"
         open={open}
         onOk={handleOk}
-        confirmLoading={confirmLoading} 
+        confirmLoading={confirmLoading}
         onCancel={handleCancel}
         footer={[
-          <Button key="reset" onClick={handleReset} style={{ marginRight: 10 }}>
-            Reset
-          </Button>,
           <Button key="cancel" onClick={handleCancel} style={{ marginRight: 10 }}>
-            Cancel
+            Hủy
           </Button>,
           <Button key="submit" type="primary" loading={confirmLoading} onClick={handleOk}>
-            Submit
-          </Button>, 
+            Xác nhận
+          </Button>,
         ]}
       >
         <UpdateIngredientForm form={form} />

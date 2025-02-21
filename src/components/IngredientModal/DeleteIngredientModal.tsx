@@ -1,41 +1,43 @@
 import React, { useState } from 'react';
 import { Button, Popconfirm } from 'antd';
+import { toast } from 'react-toastify';
+import { deleteIngredientById } from '@/app/data';
 
-const DeleteIngredientModal: React.FC = () => {
-  const [open, setOpen] = useState(false);
+const DeleteIngredientModal: React.FC<{
+  ingredientId: number;
+  refetch: () => void;
+}> = ({ ingredientId, refetch }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
 
-  const showPopconfirm = () => {
-    setOpen(true);
-  };
-
-  const handleOk = () => {
+  const handleDelete = async () => {
     setConfirmLoading(true);
-
-    setTimeout(() => {
-      setOpen(false);
+    try {
+      await deleteIngredientById(ingredientId);
+      refetch();
       setConfirmLoading(false);
-    }, 2000);
+
+      toast.success("Xóa dị ứng thành công");
+    } catch (error) {
+      toast.error("Xóa dị ứng không thành công");
+      setConfirmLoading(false);
+    }
   };
 
   const handleCancel = () => {
-    console.log('Clicked cancel button');
-    setOpen(false);
+    console.log("Clicked cancel button");
   };
-
   return (
     <Popconfirm
-      title="Title"
-      description="xóa"
-      open={open}
-      onConfirm={handleOk}
-      okButtonProps={{ loading: confirmLoading }}
-      onCancel={handleCancel}
-    >
-      <Button type='primary' danger onClick={showPopconfirm}>
-        Xóa
-      </Button>
-    </Popconfirm>
+    title="Bạn có chắc chắn muốn xóa dị ứng này?"
+    onConfirm={handleDelete}
+    onCancel={handleCancel}
+    okButtonProps={{ loading: confirmLoading }}
+    cancelButtonProps={{ disabled: confirmLoading }}
+  >
+    <Button type="primary" danger>
+      Xóa
+    </Button>
+  </Popconfirm>
   );
 };
 
