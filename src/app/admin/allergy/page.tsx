@@ -23,7 +23,14 @@ function formatDate(dateString?: string): string {
   }}
 
 const AllergyPage: React.FC = () => {
-  
+  // const router = useRouter(); 
+  // useEffect(() => {
+  //   const role = Cookies.get("userRole");
+  //   if (role !== "Admin") {
+  //     router.push("/");
+  //   }
+  // }, [])
+
   const [searchText, setSearchText] = useState<string>("");
   const pageIndex = 1;
   const pageSize = 100;

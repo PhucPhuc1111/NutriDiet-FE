@@ -1,5 +1,6 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import request, { baseURL }  from "@/services/apiClient";
+import Cookies from 'js-cookie';
 
 import { Disease } from "./types";
 import { ApiResponse } from ".";
@@ -21,6 +22,8 @@ export async function createDisease(
   token: string
 ): Promise<Disease> {
   try {
+    const token = Cookies.get("authToken"); // Lấy token từ Cookies
+    if (!token) throw new Error("Bạn chưa đăng nhập!");
     const form = new FormData();
     form.append("diseaseName", formData.diseaseName);
     form.append("description", formData.description);
@@ -42,6 +45,9 @@ export async function updateDisease(
   token: string
 ): Promise<Disease> {
   try {
+    const token = Cookies.get("authToken"); // Lấy token từ Cookies
+    if (!token) throw new Error("Bạn chưa đăng nhập!");
+
     const form = new FormData();
     form.append("diseaseName", formData.diseaseName);
     form.append("description", formData.description);
@@ -65,15 +71,21 @@ export async function updateDisease(
   }
 }
 
-export async function deleteDiseaseById(diseaseById: string, token: string): Promise<void> {
-  return await request.deleteWithOptions(`${baseURL}/api/disease/${diseaseById}`, {
-    headers: {
-      "Authorization": `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    }
-  });
-}
+export async function deleteDiseaseById(diseaseId: number): Promise<void> {
+  try {
+    const token = Cookies.get("authToken"); // Lấy token từ Cookies
+    if (!token) throw new Error("Bạn chưa đăng nhập!");
 
+    await request.deleteWithOptions(`${baseURL}/api/disease/${diseaseId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    console.error("Lỗi khi xóa bệnh:", error);
+    throw error;
+  }
+}
 export const useGetAllDiseases = (
   pageIndex: number,
   pageSize: number,

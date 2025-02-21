@@ -10,6 +10,7 @@ import AuthLayout from "@/components/Layouts/AuthLayout";
 import { useRouter } from "next/navigation";
 import { baseURL } from "@/services/apiClient";
 import { SigninFormSchema } from "@/app/auth/auth";
+import Cookies from "js-cookie";
 
 export type SigninFormData = z.infer<typeof SigninFormSchema>;
 
@@ -29,24 +30,41 @@ const SignIn: React.FC = () => {
       const response = await fetch(`${baseURL}/api/user/login`, {
         method: "POST",
         body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
       });
-
+  
       if (!response.ok) {
-        const result = await response.json();
-        throw new Error(result.message || "Sai email hoặc mật khẩu");
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Sai email hoặc mật khẩu");
       }
-
+  
       const result = await response.json();
+  
+      if (!result.data || !result.data.role || !result.data.token) {
+        throw new Error("Dữ liệu không hợp lệ từ máy chủ");
+      }
+  
+      if (result.data.role !== "Admin") {
+        toast.error("Bạn không có quyền truy cập vào trang quản trị!");
+        return;
+      }
+  
+      // **Lưu thông tin vào cookies**
+      Cookies.set("authToken", result.data.token, { expires: 7 });
+      Cookies.set("userEmail", result.data.email, { expires: 7 });
+      Cookies.set("userRole", result.data.role, { expires: 7 });
+      Cookies.set("userName", result.data.name, { expires: 7 });
+
+  
       toast.success("Đăng nhập thành công!");
-      localStorage.setItem("authToken", result.data?.token || "");
       router.push("/admin/dashboard");
-    } catch (error) {
-      toast.error("Đã xảy ra lỗi bất ngờ");
+  
+    } catch (error: any) {
+      toast.error(error.message || "Đã xảy ra lỗi không mong muốn");
     }
   };
+  
+
 
   return (
     <div className="h-screen">
@@ -69,7 +87,7 @@ const SignIn: React.FC = () => {
                 <h2 className="mb-2 text-2xl font-bold text-black dark:text-white">
                   Đăng nhập
                 </h2>
-                <p className="mb-7">Quản trị viên được quyền đăng nhập</p>
+                <p className="mb-7">Chỉ quản trị viên được phép đăng nhập</p>
 
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="mb-4">

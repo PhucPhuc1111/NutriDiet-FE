@@ -10,7 +10,7 @@ const DeleteDiseaseModal: React.FC<{ diseaseId: number; refetch: () => void }> =
   const handleDelete = async () => {
     setConfirmLoading(true);
     try {
-      await deleteDiseaseById(diseaseId.toString(), "your-token-here");
+      await deleteDiseaseById(diseaseId);
       refetch(); // Làm mới danh sách sau khi xóa
       setConfirmLoading(false);
       toast.success("Xóa bệnh nền thành công!");

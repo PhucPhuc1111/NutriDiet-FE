@@ -5,7 +5,8 @@ export type Ingredient = {
   ingredientId: number;     
   ingredientName: string;   
   category: string;         
-  unit: string;             
+  unit: string;      
+  calories: number;       
   foodId: number;
   };
   export type Role ={
@@ -53,7 +54,6 @@ export type Ingredient = {
     foodType: string;          
     description: string;       
     servingSize: string;       
-   
     calories: number;          
     protein: number;           
     carbs: number;             
@@ -61,9 +61,9 @@ export type Ingredient = {
     glucid: number;            
     fiber: number;             
     others: string;       
-    ingredients: number[];     
-    // allergies: number[],
-    // diseases: number[]  
+    ingredients: [];     
+    allergies: [],
+      diseases: []
   };
    export type MealPlan ={
     MealPlanID:number;
