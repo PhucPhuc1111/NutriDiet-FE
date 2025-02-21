@@ -69,14 +69,14 @@ axios.interceptors.response.use(
   },
   (error) => {
     if (error.response?.status === 401) {
-      // logout
+     
       window.location.href = '/logout';
     }
     return Promise.reject(error);
   }
 )
 
-const api = {
+const request = {
   get: _get,
   post: _post,
   postMultiPart: _postMultiPart,
@@ -87,4 +87,4 @@ const api = {
   patch: _patch,
 };
 
-export default api;
+export default request;

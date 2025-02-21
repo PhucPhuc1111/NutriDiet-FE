@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { createAllergy } from "@/app/data/allergy";  
 import { useQueryClient } from "@tanstack/react-query"; 
 import AddAllergyForm from './Form/AddAllergyForm';
+import { toast } from 'react-toastify';
 
 const AddAllergyModal: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -16,32 +17,45 @@ const AddAllergyModal: React.FC = () => {
   };
 
   const handleOk = () => {
-    form
-      .validateFields()
-      .then(async (values) => {
-        console.log('Form Values:', values);
-        setConfirmLoading(true);
+    form.validateFields().then(async (values) => {
+      console.log('Form Values:', values);
+      setConfirmLoading(true);
+  
+      try {
         
-        try {
-          
-          await createAllergy(values, 'your-token-here'); 
-          
-          
-          setOpen(false);
-          setConfirmLoading(false);
-          form.resetFields();
-          queryClient.invalidateQueries({ queryKey: ["allergies"] }); 
-        } catch (error) {
-          console.error("Error adding allergy:", error);
-          setConfirmLoading(false);
-        }
-      })
-      .catch((errorInfo) => {
-        console.log('Validate Failed:', errorInfo);
-        setConfirmLoading(false);
-      });
-  };
+        const existingAllergies: any[] = queryClient.getQueryData(["allergies"]) || [];
 
+        const isDuplicate = existingAllergies.some(
+          (allergy: any) => allergy.allergyName.toLowerCase() === values.allergyName.toLowerCase()
+        );
+  
+        if (isDuplicate) {
+          form.setFields([
+            {
+              name: "allergyName",
+              errors: ["Tên dị ứng đã tồn tại"],
+            },
+          ]);
+          setConfirmLoading(false);
+          return;
+        }
+  
+        await createAllergy(values, 'your-token-here');
+        toast.success("Thêm dị ứng thành công");
+        setOpen(false);
+        setConfirmLoading(false);
+        form.resetFields();
+        queryClient.invalidateQueries({ queryKey: ["allergies"] });
+      } catch (error) {
+        toast.error("Dị ứng đã tồn tại");
+        setConfirmLoading(false);
+      }
+    }).catch((errorInfo) => {
+      console.log('Validate Failed:', errorInfo);
+      setConfirmLoading(false);
+    });
+  };
+  
   const handleCancel = () => {
     setOpen(false);
   };
@@ -63,13 +77,13 @@ const AddAllergyModal: React.FC = () => {
         onCancel={handleCancel}
         footer={[
           <Button key="reset" onClick={handleReset} style={{ marginRight: 10 }}>
-            Reset
+            Tạo lại
           </Button>,
           <Button key="cancel" onClick={handleCancel} style={{ marginRight: 10 }}>
-            Cancel
+            Hủy
           </Button>,
           <Button key="submit" type="primary" loading={confirmLoading} onClick={handleOk}>
-            Submit
+            Xác nhận
           </Button>,
         ]}
       >

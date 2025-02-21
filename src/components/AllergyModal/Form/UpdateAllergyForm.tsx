@@ -3,7 +3,7 @@ import { Form, Input } from 'antd';
 
 const UpdateAllergyForm: React.FC<{ form: any }> = ({ form }) => {
   const onFinish = (values: any) => {
-    console.log('Received values:', values); 
+    console.log('Received values:', values);
   };
 
   return (
@@ -28,6 +28,8 @@ const UpdateAllergyForm: React.FC<{ form: any }> = ({ form }) => {
       >
         <Input />
       </Form.Item>
+     
+     
     </Form>
   );
 };

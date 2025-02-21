@@ -1,38 +1,38 @@
-import React, { useState } from 'react';
-import { Button, Popconfirm } from 'antd';
+"use client";
+import { Button, Popconfirm } from "antd";
+import { deleteDiseaseById } from "@/app/data/disease"; // API xóa bệnh nền
+import { useState } from "react";
+import { toast } from "react-toastify";
 
-const DeleteDiseaseModal: React.FC = () => {
-  const [open, setOpen] = useState(false);
+const DeleteDiseaseModal: React.FC<{ diseaseId: number; refetch: () => void }> = ({ diseaseId, refetch }) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
 
-  const showPopconfirm = () => {
-    setOpen(true);
-  };
-
-  const handleOk = () => {
+  const handleDelete = async () => {
     setConfirmLoading(true);
-
-    setTimeout(() => {
-      setOpen(false);
+    try {
+      await deleteDiseaseById(diseaseId.toString(), "your-token-here");
+      refetch(); // Làm mới danh sách sau khi xóa
       setConfirmLoading(false);
-    }, 2000);
+      toast.success("Xóa bệnh nền thành công!");
+    } catch (error) {
+      toast.error("Xóa bệnh nền không thành công!");
+      setConfirmLoading(false);
+    }
   };
 
   const handleCancel = () => {
-    console.log('Clicked cancel button');
-    setOpen(false);
+    console.log("Hủy xóa bệnh nền");
   };
 
   return (
     <Popconfirm
-      title="Title"
-      description="xóa"
-      open={open}
-      onConfirm={handleOk}
-      okButtonProps={{ loading: confirmLoading }}
+      title="Bạn có chắc chắn muốn xóa bệnh nền này?"
+      onConfirm={handleDelete}
       onCancel={handleCancel}
+      okButtonProps={{ loading: confirmLoading }}
+      cancelButtonProps={{ disabled: confirmLoading }}
     >
-      <Button type='primary' danger onClick={showPopconfirm}>
+      <Button type="primary" danger>
         Xóa
       </Button>
     </Popconfirm>
