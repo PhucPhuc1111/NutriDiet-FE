@@ -6,13 +6,17 @@ import AddFoodModal from "@/components/FoodModal/AddFoodModal";
 // import { Food, Food } from "@/types/types";
 import Link from "next/link";
 import DeleteFoodModal from "@/components/FoodModal/DeleteFoodModal";
-import UpdateFoodModal from "@/components/FoodModal/UpdateFoodModal";
-import {  Food, useGetAllFoods } from "@/app/data";
+import {  Food, useGetAllAllergies, useGetAllDiseases, useGetAllFoods } from "@/app/data";
+import DetailFoodModal from "@/components/FoodModal/DetailFoodModal";
+import FoodModal from "@/components/FoodModal/FoodModal";
 
 
 
 
 const FoodPage: React.FC = () => {
+  const { data: allergiesData } = useGetAllAllergies(1,100,"");
+const { data: diseasesData } = useGetAllDiseases(1,100,"");
+
     const [searchText, setSearchText] = useState<string>("");
     const pageIndex = 1;
     const pageSize = 200;
@@ -36,6 +40,11 @@ const FoodPage: React.FC = () => {
       sorter: (a, b) => a.foodId - b.foodId,
     },
     {
+      title: "Hình ảnh",
+      dataIndex: "imageUrl",
+    
+    },
+    {
       title: "Tên thực phẩm",
       dataIndex: "foodName",
       sorter: (a, b) => a.foodName.localeCompare(b.foodName),
@@ -44,10 +53,9 @@ const FoodPage: React.FC = () => {
       title: "Bữa",
       dataIndex: "mealType",
       filters: [
-        { text: "Bữa sáng", value: "Bữa sáng" },
-        { text: "Bữa trưa", value: "Bữa trưa" },
-        { text: "Bữa chiều", value: "Bữa chiều" },
-        { text: "Bữa tối", value: "Bữa tối" },
+        { text: "Bữa chính", value: "Main" },
+        { text: "Bữa phụ", value: "Dessert" },
+      
       ],
       onFilter: (value: string | boolean | Key, record: Food): boolean => {
         
@@ -61,8 +69,14 @@ const FoodPage: React.FC = () => {
       title: "Loại",
       dataIndex: "foodType",
       filters: [
-        { text: "Mặn", value: "Mặn" },
-        { text: "Chay", value: "Chay" },
+        { text: "Rau củ quả", value: "Vegetable" },
+        { text: "Trái cây", value: "Fruit" },
+        { text: "Thịt", value: "Meat" },
+        { text: "Nước", value: "Broth" },  
+        { text: "Gia vị", value: "Spice" },
+        { text: "Mì", value: "Noodle" },
+        { text: "Bánh mì", value: "Bread" },
+        { text: "Khác", value: "Others" },
       ],
       onFilter: (value: string | boolean | Key, record: Food): boolean => {
         
@@ -77,15 +91,15 @@ const FoodPage: React.FC = () => {
       
     },
     {
-      title: "calories(cal)",
+      title: "Calories(cal)",
       dataIndex: "calories",
       sorter: (a, b) => a.calories - b.calories,
     },
-    {
-      title: "protein(g)",
-      dataIndex: "protein",
-      sorter: (a, b) => a.protein - b.protein,
-    },
+    // {
+    //   title: "protein(g)",
+    //   dataIndex: "protein",
+    //   sorter: (a, b) => a.protein - b.protein,
+    // },
     // {
     //   title: "carbs(g)",
     //   dataIndex: "carbs",
@@ -125,18 +139,41 @@ const FoodPage: React.FC = () => {
     //     );
     //   },
     // },
-    {
-      title: "Mô tả cách nấu",
-      dataIndex: "description",
+    // {
+    //   title: "Mô tả ",
+    //   dataIndex: "description",
       
+    // },
+    {
+      title: "Dị ứng cần tránh",
+      dataIndex: "allergyIds",
+      render: (allergyIds: number[]) => {
+        if (!allergyIds || allergyIds.length === 0) return "Không có";
+        return allergyIds.map((id) => {
+          const allergy = allergiesData?.find((a) => a.allergyId === id);
+          return allergy ? allergy.allergyName : "Không xác định";
+        }).join(", ");
+      }
     },
     {
-      title: "Sửa/Xóa",
+      title: "Bệnh cần tránh",
+      dataIndex: "diseaseIds",
+      render: (diseaseIds: number[]) => {
+        if (!diseaseIds || diseaseIds.length === 0) return "Không có";
+        return diseaseIds.map((id) => {
+          const disease = diseasesData?.find((d) => d.diseaseId === id);
+          return disease ? disease.diseaseName : "Không xác định";
+        }).join(", ");
+      }
+    },
+    {
+      title: "Chi tiết/Sửa/Xóa",
       dataIndex: "action",
       render: (_, record) => (
         <Space size="middle">
-          <UpdateFoodModal/>
-            <DeleteFoodModal />
+          <FoodModal foodId={record.foodId}  />
+          
+            <DeleteFoodModal  foodId={record.foodId} refetch={refetch} />
           
         </Space>
       ),

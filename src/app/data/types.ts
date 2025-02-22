@@ -61,9 +61,9 @@ export type Ingredient = {
     glucid: number;            
     fiber: number;             
     others: string;       
-    ingredients: [];     
-    allergies: [],
-      diseases: []
+      
+    allergies: Allergy[],
+    diseases: Disease[]
   };
    export type MealPlan ={
     MealPlanID:number;

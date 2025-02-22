@@ -9,6 +9,5 @@ export interface ApiResponse<T> {
   statusCode: number;
   message: string;
   data: T;
-  total:T;
-  items:T;
+
 }
