@@ -1,5 +1,8 @@
 import { Button, Modal, Form } from 'antd';
 import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+import { createFood } from '@/app/data';
 import AddFoodForm from './Form/AddFoodForm';
 
 
@@ -9,30 +12,63 @@ const AddFoodModal: React.FC = () => {
 
   const [form] = Form.useForm();
 
+  const queryClient = useQueryClient(); 
   const showModal = () => {
     setOpen(true);
   };
-
   const handleOk = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        console.log('Form Values:', values); 
-        setConfirmLoading(true); 
-        setTimeout(() => {
-          setOpen(false); 
-          setConfirmLoading(false); 
-        }, 2000); 
+    form.validateFields()
+      .then(async (values) => {
+        setConfirmLoading(true);
+  
+        try {
+          const existingFoods: any[] = queryClient.getQueryData(["foods"]) || [];
+          const isDuplicate = existingFoods.some(
+            (food) => food.foodName.toLowerCase() === values.foodName.toLowerCase()
+          );
+  
+          if (isDuplicate) {
+            form.setFields([{ name: "foodName", errors: ["Tên thực phẩm đã tồn tại"] }]);
+            setConfirmLoading(false);
+            return;
+          }
+  
+          const formattedData = {
+            FoodName: values.foodName,
+            MealType: values.mealType,
+            FoodType: values.foodType,
+            Description: values.description,
+            ServingSize: values.servingSize,
+            Calories: Number(values.calories),
+            Protein: Number(values.protein),
+            Carbs: Number(values.carbs),
+            Fat: Number(values.fat),
+            Glucid: Number(values.glucid),
+            Fiber: Number(values.fiber),
+            Others: values.other || "",
+            AllergyId: values.allergies || [],
+            DiseaseId: values.diseases || [],
+            FoodImageUrl: values.imgUrl, // Nếu API yêu cầu File, cần thay đổi cách lấy ảnh
+          };
+  
+          await createFood(formattedData);
+          toast.success("Thêm thực phẩm thành công");
+          setOpen(false);
+          setConfirmLoading(false);
+          form.resetFields();
+          queryClient.invalidateQueries({ queryKey: ["foods"] });
+        } catch (error) {
+          toast.error("Lỗi khi thêm thực phẩm");
+          setConfirmLoading(false);
+        }
       })
-      .catch((errorInfo) => {
-        console.log('Validate Failed:', errorInfo); 
-        setConfirmLoading(false); 
+      .catch(() => {
+        setConfirmLoading(false);
       });
   };
-
+  
   const handleCancel = () => {
-    console.log('Clicked cancel button');
-    setOpen(false); 
+    setOpen(false);
   };
 
   const handleReset = () => {
@@ -47,6 +83,7 @@ const AddFoodModal: React.FC = () => {
       <Modal
         title="Thêm thực phẩm"
         open={open}
+       width={800}
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
