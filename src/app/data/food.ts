@@ -44,7 +44,7 @@ export async function createFood(
     const form = new FormData();
     form.append("FoodName", formData.FoodName);
     form.append("MealType", formData.MealType);
-    form.append("FoodImageUrl", formData.FoodImageUrl);
+
     form.append("FoodType", formData.FoodType);
     form.append("Description", formData.Description);
     form.append("ServingSize", formData.ServingSize);
@@ -55,8 +55,11 @@ export async function createFood(
     form.append("Glucid", formData.Glucid.toString());
     form.append("Fiber", formData.Fiber.toString());
     form.append("Others", formData.Others);
+   
+    if (formData.FoodImageUrl) {
+      form.append("FoodImageUrl", formData.FoodImageUrl);
+    }
 
-    // Gửi danh sách dị ứng & bệnh dưới dạng mảng
     formData.AllergyId.forEach(id => form.append("AllergyId[]", id));
     formData.DiseaseId.forEach(id => form.append("DiseaseId[]", id));
 
@@ -78,58 +81,71 @@ export async function createFood(
 
 export async function updateFood(formData: {
   FoodId: number;
-  FoodName: string;
-  MealType: string;
-  FoodImageUrl: string | File;
-  FoodType: string;
-  Description: string;
-  ServingSize: string;
-  Calories: number;
-  Protein: number;
-  Carbs: number;
-  Fat: number;
-  Glucid: number;
-  Fiber: number;
-  Others: string;
-  AllergyId: number[];
-  DiseaseId: number[];
+  FoodName?: string;
+  MealType?: string;
+  FoodImageUrl?: string | File; // Có thể là string (URL cũ) hoặc File (ảnh mới)
+  FoodType?: string;
+  Description?: string;
+  ServingSize?: string;
+  Calories?: number;
+  Protein?: number;
+  Carbs?: number;
+  Fat?: number;
+  Glucid?: number;
+  Fiber?: number;
+  Others?: string;
+  AllergyId?: any[];
+  DiseaseId?: any[];
 }): Promise<Food> {
   try {
     const token = Cookies.get("authToken");
     if (!token) throw new Error("Bạn chưa đăng nhập!");
 
     if (!formData.FoodId) {
-      throw new Error("FoodId không được bỏ trống!");
+      throw new Error("FoodId không hợp lệ!");
     }
+
+    // Lấy dữ liệu cũ
+    const oldDataResponse = await getFoodById(formData.FoodId);
+    const oldData = oldDataResponse.data;
 
     const form = new FormData();
-    form.append("FoodId", formData.FoodId.toString()); // 🔥 Chắc chắn gửi FoodId
-    console.log("FoodId khi gửi API:", formData.FoodId); // Debug kiểm tra
+    form.append("FoodId", formData.FoodId.toString());
+    form.append("FoodName", formData.FoodName ?? oldData.foodName);
+    form.append("MealType", formData.MealType ?? oldData.mealType);
+    form.append("FoodType", formData.FoodType ?? oldData.foodType);
+    form.append("Description", formData.Description ?? oldData.description);
+    form.append("ServingSize", formData.ServingSize ?? oldData.servingSize);
 
-    form.append("FoodName", formData.FoodName);
-    form.append("MealType", formData.MealType);
+    form.append("Calories", formData.Calories !== undefined ? formData.Calories.toString() : oldData.calories.toString());
+    form.append("Protein", formData.Protein !== undefined ? formData.Protein.toString() : oldData.protein.toString());
+    form.append("Carbs", formData.Carbs !== undefined ? formData.Carbs.toString() : oldData.carbs.toString());
+    form.append("Fat", formData.Fat !== undefined ? formData.Fat.toString() : oldData.fat.toString());
+    form.append("Glucid", formData.Glucid !== undefined ? formData.Glucid.toString() : oldData.glucid.toString());
+    form.append("Fiber", formData.Fiber !== undefined ? formData.Fiber.toString() : oldData.fiber.toString());
 
+    form.append("Others", formData.Others ?? oldData.others);
+
+    
     if (formData.FoodImageUrl instanceof File) {
       form.append("FoodImageUrl", formData.FoodImageUrl);
-    } else {
-      form.append("FoodImageUrl", formData.FoodImageUrl);
+    } else if (formData.FoodImageUrl === "") {
+      form.append("FoodImageUrl", ""); // Gửi rỗng nếu ảnh bị xóa
+    } else if (oldData.imageUrl) {
+      form.append("FoodImageUrl", oldData.imageUrl);
     }
 
-    form.append("FoodType", formData.FoodType);
-    form.append("Description", formData.Description);
-    form.append("ServingSize", formData.ServingSize);
-    form.append("Calories", formData.Calories.toString());
-    form.append("Protein", formData.Protein.toString());
-    form.append("Carbs", formData.Carbs.toString());
-    form.append("Fat", formData.Fat.toString());
-    form.append("Glucid", formData.Glucid.toString());
-    form.append("Fiber", formData.Fiber.toString());
-    form.append("Others", formData.Others);
+    if (formData.AllergyId) {
+      formData.AllergyId.forEach(id => form.append("AllergyId", id));
+    } else {
+      oldData.allergies.forEach(id => form.append("AllergyId", id.toString()));
+    }
 
-    formData.AllergyId.forEach(id => form.append("AllergyId", id.toString()));
-    formData.DiseaseId.forEach(id => form.append("DiseaseId", id.toString()));
-
-    console.log("Dữ liệu gửi lên API:", Object.fromEntries(form)); // Debug kiểm tra dữ liệu
+    if (formData.DiseaseId) {
+      formData.DiseaseId.forEach(id => form.append("DiseaseId", id));
+    } else {
+      oldData.diseases.forEach(id => form.append("DiseaseId", id.toString()));
+    }
 
     const response = await request.putMultiPart(`${baseURL}/api/food`, form, {
       headers: {
@@ -137,7 +153,7 @@ export async function updateFood(formData: {
       },
     });
 
-    console.log("API Response:", response); // Debug kiểm tra phản hồi API
+    console.log("API Response:", response);
     return response;
   } catch (error) {
     console.error("Lỗi khi cập nhật thực phẩm:", error);
