@@ -1,6 +1,8 @@
-import React from "react";
-import { Form, Input, Select } from "antd";
-import { useGetAllAllergies, useGetAllDiseases } from "@/app/data";
+import React, { useState } from "react";
+import { Form, GetProp, Input, Select, UploadProps } from "antd";
+import { useGetAllAllergies, useGetAllDiseases, useGetAllFoods } from "@/app/data";
+import { toast } from "react-toastify";
+import ImageUpload from "./imageUpload";
 
 const { Option } = Select;
 
@@ -17,11 +19,17 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
     label: allergy.allergyName,
     value: allergy.allergyId
   })) || [];
+  const { data: allFoods } = useGetAllFoods(1,100,"")
+  const onFinish = async (values: any) => {
+  
+    const isDuplicate = allFoods?.some((food) => food.foodName === values.foodName);
+  
+    if (isDuplicate) {
+      toast.error("Tên thực phẩm đã tồn tại, vui lòng chọn tên khác!");
+      return;
+    }}
 
-  const onFinish = (values: any) => {
-    console.log("Received values:", values);
-  };
-
+    
   return (
     <Form form={form} name="add-food-form" onFinish={onFinish}>
       <div className="flex space-x-2">
@@ -130,7 +138,7 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
             name="imgUrl"
             label="Hình ảnh"
           >
-            <Input />
+          <ImageUpload />
           </Form.Item>
         </div>
       </div>

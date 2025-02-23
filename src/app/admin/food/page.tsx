@@ -1,13 +1,12 @@
 "use client";
 import React, { Key, useState } from "react";
-import { Table, Space, Button, Input, TableColumnsType, TableProps } from "antd";
+import { Table, Space, Button, Input, TableColumnsType, TableProps, Image } from "antd";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import AddFoodModal from "@/components/FoodModal/AddFoodModal";
 // import { Food, Food } from "@/types/types";
 import Link from "next/link";
 import DeleteFoodModal from "@/components/FoodModal/DeleteFoodModal";
 import {  Food, useGetAllAllergies, useGetAllDiseases, useGetAllFoods } from "@/app/data";
-import DetailFoodModal from "@/components/FoodModal/DetailFoodModal";
 import FoodModal from "@/components/FoodModal/FoodModal";
 
 
@@ -42,7 +41,13 @@ const { data: diseasesData } = useGetAllDiseases(1,100,"");
     {
       title: "Hình ảnh",
       dataIndex: "imageUrl",
-    
+      render: (imageUrl: string) => (
+        <Image
+          src={imageUrl}
+          alt="Food"
+          style={{ width: 70, height: 70, borderRadius: "5px", objectFit: "cover" }}
+        />
+      ),
     },
     {
       title: "Tên thực phẩm",
@@ -95,58 +100,10 @@ const { data: diseasesData } = useGetAllDiseases(1,100,"");
       dataIndex: "calories",
       sorter: (a, b) => a.calories - b.calories,
     },
-    // {
-    //   title: "protein(g)",
-    //   dataIndex: "protein",
-    //   sorter: (a, b) => a.protein - b.protein,
-    // },
-    // {
-    //   title: "carbs(g)",
-    //   dataIndex: "carbs",
-    //   sorter: (a, b) => a.carbs - b.carbs,
-    // },
-    // {
-    //   title: "fat(g)",
-    //   dataIndex: "fat",
-    //   sorter: (a, b) => a.fat - b.fat,
-    // },
-    // {
-    //   title: "glucid(g)",
-    //   dataIndex: "glucid",
-    //   sorter: (a, b) => a.glucid - b.glucid,
-    // },
-    // {
-    //   title: "Nguyên liệu",
-    //   dataIndex: "Food",
-    //   width:"40",
-    //   render: (ingredientIds: number[]) => {
-    //     if (!ingredientIds || ingredientIds.length === 0) {
-    //       return <div>Vui lòng cập nhật nguyên liệu</div>;
-    //     }
-  
-    //     const ingredientNames = ingredients.filter(ingredient => ingredientIds.includes(ingredient.ingredientId))
-    //       .map(ingredient => ingredient.foodName);
-  
-    //     return (
-    //       <div>
-    //         {ingredientNames.length === 0 ? (
-    //           <div>Vui lòng cập nhật nguyên liệu</div>
-    //         ) : (
-    //           ingredientNames.map((name, index) => (
-    //             <div key={index}>{name},</div> 
-    //           )))}
-    //           </div>
-    //     );
-    //   },
-    // },
-    // {
-    //   title: "Mô tả ",
-    //   dataIndex: "description",
-      
-    // },
+    
     {
       title: "Dị ứng cần tránh",
-      dataIndex: "allergyIds",
+      dataIndex: "allergies",
       render: (allergyIds: number[]) => {
         if (!allergyIds || allergyIds.length === 0) return "Không có";
         return allergyIds.map((id) => {
@@ -157,7 +114,7 @@ const { data: diseasesData } = useGetAllDiseases(1,100,"");
     },
     {
       title: "Bệnh cần tránh",
-      dataIndex: "diseaseIds",
+      dataIndex: "diseases",
       render: (diseaseIds: number[]) => {
         if (!diseaseIds || diseaseIds.length === 0) return "Không có";
         return diseaseIds.map((id) => {
@@ -171,7 +128,7 @@ const { data: diseasesData } = useGetAllDiseases(1,100,"");
       dataIndex: "action",
       render: (_, record) => (
         <Space size="middle">
-          <FoodModal foodId={record.foodId}  />
+            <FoodModal foodId={record.foodId} refetch={refetch} /> 
           
             <DeleteFoodModal  foodId={record.foodId} refetch={refetch} />
           
@@ -191,17 +148,7 @@ const { data: diseasesData } = useGetAllDiseases(1,100,"");
       )
     : [];
   return (
-    // <DefaultLayout>
-    //   <div>
-    //     <div className="flex justify-between mb-2">
-    //       <div>Tổng cộng: {filteredData.length}</div>
-    //       <Input placeholder="Tìm kiếm thực phẩm" value={searchText} onChange={handleSearch} style={{ width: 300 }} />
-    //       <AddFoodModal />
-    //     </div>
 
-    //     <Table columns={columns} dataSource={filteredData} rowKey="foodId" />
-    //   </div>
-    // </DefaultLayout>
     <DefaultLayout>
       <div className="">
         <div className="flex justify-between" >

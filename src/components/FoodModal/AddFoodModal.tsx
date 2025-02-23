@@ -1,4 +1,4 @@
-import { Button, Modal, Form } from 'antd';
+import { Button, Modal, Form, message } from 'antd';
 import { useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
@@ -48,7 +48,7 @@ const AddFoodModal: React.FC = () => {
             Others: values.other || "",
             AllergyId: values.allergies || [],
             DiseaseId: values.diseases || [],
-            FoodImageUrl: values.imgUrl, // Nếu API yêu cầu File, cần thay đổi cách lấy ảnh
+            FoodImageUrl: values.imgUrl, 
           };
   
           await createFood(formattedData);
@@ -58,7 +58,7 @@ const AddFoodModal: React.FC = () => {
           form.resetFields();
           queryClient.invalidateQueries({ queryKey: ["foods"] });
         } catch (error) {
-          toast.error("Lỗi khi thêm thực phẩm");
+          toast.error("Thực phẩm đã tồn tại");
           setConfirmLoading(false);
         }
       })
