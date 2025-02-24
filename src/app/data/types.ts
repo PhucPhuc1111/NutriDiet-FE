@@ -66,23 +66,20 @@ export type Ingredient = {
     diseases: Disease[]
   };
    export type MealPlan ={
-    MealPlanID:number;
-    UserID: number; 
-    PlanName:string;
-    HealthGoal:string;
-    Duration: number;
-    Status: string;
-    CreatedBy: string;
-    CreatedAt:string;
-    UpdatedBy: string;
-    UpdatedAt: string
-    MealPlanDetails:number[]
+    mealPlanId:number;
+    planName:string;
+    healthGoal:string;
+    duration: number;
+    status: string;
+    createdBy: string;
+    createdAt:string;
+    mealPlanDetails:[]
     
    }
 
    export type MealPlanDetail ={
     MealPlanDetailID:number;
-    MealPlanID: number;
+    mealPlanId: number;
     foodId: number;
     foodName: string;
     Quantity: number;
