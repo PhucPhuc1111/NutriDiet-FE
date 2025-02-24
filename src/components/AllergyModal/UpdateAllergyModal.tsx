@@ -15,7 +15,7 @@ const UpdateAllergyModal: React.FC<{ allergyId: number; refetch: () => void }> =
     setOpen(true);
   };
 
-  const { data: allAllergiesData } = useGetAllAllergies(1, 10, 'your-token-here');
+  const { data: allAllergiesData } = useGetAllAllergies(1, 10,"");
 
   const handleOk = () => {
     form.validateFields().then(async (values) => {
@@ -47,7 +47,7 @@ const UpdateAllergyModal: React.FC<{ allergyId: number; refetch: () => void }> =
         }
 
        
-        await updateAllergy(allergyId, values, 'your-token-here');
+        await updateAllergy(allergyId, values);
         refetch();
         setOpen(false);
         setConfirmLoading(false);

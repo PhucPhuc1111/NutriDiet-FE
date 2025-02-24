@@ -4,21 +4,14 @@ import Image from "next/image";
 import ClickOutside from "@/components/ClickOutside";
 import Cookies from "js-cookie";
 
-const DropdownUser = ({ handleLogout }: { handleLogout: () => void }) => {
+const DropdownUser = ({
+  user,
+  handleLogout,
+}: {
+  user: { name: string; email: string; role: string } | null;
+  handleLogout: () => void;
+}) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [user, setUser] = useState<{ name: string; email: string; role: string } | null>(null);
-
-
-  useEffect(() => {
-    const name = Cookies.get("userName");
-    const email = Cookies.get("userEmail");
-    const role = Cookies.get("userRole");
-  
-    if (name && email && role) {
-      setUser({ name, email, role });
-    }
-  }, []);
-  
 
   return (
     <div>
@@ -44,13 +37,7 @@ const DropdownUser = ({ handleLogout }: { handleLogout: () => void }) => {
                 </li>
                 <li>
                   <button
-                    onClick={() => {
-                      Cookies.remove("authToken");
-                      Cookies.remove("userEmail");
-                      Cookies.remove("userRole");
-                  
-                      handleLogout();
-                    }}
+                    onClick={handleLogout}
                     className="block w-full text-left px-4 py-2 hover:bg-gray-100"
                   >
                     Đăng xuất

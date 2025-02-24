@@ -17,7 +17,7 @@ interface Day {
   totalCalories: number;
 }
 
-interface AddMealDailyProps {
+interface UpdateMealDailyProps {
   isEditing: boolean;
   mealPlanDetails: Day[];
 }
@@ -56,7 +56,7 @@ const MealSelectionForm: React.FC<{ day: Day; editMode: boolean }> = ({ day, edi
     );
   };
 
-const AddMealDaily: React.FC<AddMealDailyProps> = ({ isEditing, mealPlanDetails }) => {
+const UpdateMealDaily: React.FC<UpdateMealDailyProps> = ({ isEditing, mealPlanDetails }) => {
   const [open, setOpen] = useState<string | null>(null);
   const [editMode, setEditMode] = useState<Record<string, boolean>>({});
   const [days, setDays] = useState<Day[]>([]);
@@ -156,4 +156,4 @@ const AddMealDaily: React.FC<AddMealDailyProps> = ({ isEditing, mealPlanDetails 
   );
 };
 
-export default AddMealDaily;
+export default UpdateMealDaily;

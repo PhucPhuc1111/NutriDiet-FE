@@ -15,7 +15,7 @@ const UpdateIngredientModal: React.FC<{ ingredientId: number; refetch: () => voi
     setOpen(true);
   };
 
-  const { data: allIngredientsData } = useGetAllIngredients(1, 100, 'your-token-here');
+  const { data: allIngredientsData } = useGetAllIngredients(1, 100, "");
 
   const handleOk = () => {
     form.validateFields().then(async (values) => {
@@ -44,7 +44,7 @@ const UpdateIngredientModal: React.FC<{ ingredientId: number; refetch: () => voi
           return;
         }
 
-        await updateIngredient(ingredientId, values, 'your-token-here');
+        await updateIngredient(ingredientId, values,"");
         refetch();
         setOpen(false);
         setConfirmLoading(false);

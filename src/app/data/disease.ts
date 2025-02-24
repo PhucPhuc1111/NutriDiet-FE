@@ -1,91 +1,49 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import request, { baseURL }  from "@/services/apiClient";
-import Cookies from 'js-cookie';
-
+import request, { baseURL } from "@/services/apiClient";
 import { Disease } from "./types";
 import { ApiResponse } from ".";
 
-
-export async function getAllDiseases(pageIndex: number, pageSize: number): Promise<ApiResponse<Disease[]>> {
-  const response = await request.get(
-    `${baseURL}/api/disease?pageIndex=${pageIndex}&pageSize=${pageSize}`
-  );
-  return response as ApiResponse<Disease[]>; 
+export async function getAllDiseases(
+  pageIndex: number,
+  pageSize: number
+): Promise<ApiResponse<Disease[]>> {
+  return await request.get(`${baseURL}/api/disease?pageIndex=${pageIndex}&pageSize=${pageSize}`);
 }
 
 export async function getDiseaseById(diseaseId: number): Promise<ApiResponse<Disease>> {
   return await request.get(`${baseURL}/api/disease/${diseaseId}`);
 }
 
-export async function createDisease(
-  formData: { diseaseName: string; description: string },
-  token: string
-): Promise<Disease> {
-  try {
-    const token = Cookies.get("authToken"); // Lấy token từ Cookies
-    if (!token) throw new Error("Bạn chưa đăng nhập!");
-    const form = new FormData();
-    form.append("diseaseName", formData.diseaseName);
-    form.append("description", formData.description);
- const response = await request.postMultiPart(`${baseURL}/api/disease`, form, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response;
-  } catch (error) {
-    console.error("Error creating disease:", error);
-    throw error;
-  }
+// ✅ createDisease: multipart/form-data (cho nhiều dữ liệu)
+export async function createDisease(formData: { diseaseName: string; description: string }): Promise<Disease> {
+  const form = new FormData();
+  form.append("diseaseName", formData.diseaseName);
+  form.append("description", formData.description);
+
+  return await request.postMultiPart(`${baseURL}/api/disease`, form);
 }
 
+// ✅ updateDisease: application/json (dữ liệu dạng JSON)
 export async function updateDisease(
   diseaseId: number,
-  formData: { diseaseName: string; description: string}, 
-  token: string
+  formData: { diseaseName: string; description: string }
 ): Promise<Disease> {
   try {
-    const token = Cookies.get("authToken"); // Lấy token từ Cookies
-    if (!token) throw new Error("Bạn chưa đăng nhập!");
-
-    const form = new FormData();
-    form.append("diseaseName", formData.diseaseName);
-    form.append("description", formData.description);
- 
-
-    const response = await request.putMultiPart(
+    const response = await request.put(
       `${baseURL}/api/disease?diseaseId=${diseaseId}`,
-      form,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-      }
+      formData
     );
-    
     return response;
   } catch (error) {
-    console.error('Error updating allergy:', error);
+    console.error("Lỗi khi cập nhật dị ứng:", error);
     throw error;
   }
 }
 
 export async function deleteDiseaseById(diseaseId: number): Promise<void> {
-  try {
-    const token = Cookies.get("authToken"); // Lấy token từ Cookies
-    if (!token) throw new Error("Bạn chưa đăng nhập!");
-
-    await request.deleteWithOptions(`${baseURL}/api/disease/${diseaseId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  } catch (error) {
-    console.error("Lỗi khi xóa bệnh:", error);
-    throw error;
-  }
+  await request.delete(`${baseURL}/api/disease/${diseaseId}`);
 }
+
 export const useGetAllDiseases = (
   pageIndex: number,
   pageSize: number,

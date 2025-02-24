@@ -40,7 +40,7 @@ const AddAllergyModal: React.FC = () => {
           return;
         }
   
-        await createAllergy(values, 'your-token-here');
+        await createAllergy(values,);
         toast.success("Thêm dị ứng thành công");
         setOpen(false);
         setConfirmLoading(false);

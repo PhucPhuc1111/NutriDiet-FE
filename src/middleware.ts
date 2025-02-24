@@ -1,13 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(req: NextRequest) {
-  const token = req.cookies.get("authToken")?.value;
+export async function middleware(req: NextRequest) {
+  let token = req.cookies.get("accessToken")?.value;
+  const refreshToken = req.cookies.get("refreshToken")?.value;
   const role = req.cookies.get("userRole")?.value;
 
-  // Nếu không có token hoặc không phải admin → Redirect về trang chủ
-  if (!token || role !== "Admin") {
-    const url = new URL("/", req.url);
-    return NextResponse.redirect(url);
+
+  if (!token && !refreshToken) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  if (role !== "Admin") {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  if (!token && refreshToken) {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/user/refresh`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken }),
+      });
+
+      if (!response.ok) {
+        return NextResponse.redirect(new URL("/", req.url));
+      }
+
+      const data = await response.json();
+      token = data.accessToken;
+
+      // Tạo Response mới và cập nhật Cookie Access Token
+      const res = NextResponse.next();
+      if (token) {
+        res.cookies.set("accessToken", token, { httpOnly: true, secure: true, path: "/" });
+      }
+      return res;
+    } catch (error) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
   }
 
   return NextResponse.next();

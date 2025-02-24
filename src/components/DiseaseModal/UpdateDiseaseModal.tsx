@@ -15,7 +15,7 @@ const UpdateDiseaseModal: React.FC<{ diseaseId: number; refetch: () => void }> =
     setOpen(true);
   };
 
-  const { data: allDiseasesData } = useGetAllDiseases(1, 100, 'your-token-here');
+  const { data: allDiseasesData } = useGetAllDiseases(1, 100, "");
 
   const handleOk = () => {
     form.validateFields().then(async (values) => {
@@ -46,7 +46,7 @@ const UpdateDiseaseModal: React.FC<{ diseaseId: number; refetch: () => void }> =
         }
 
         // Cập nhật bệnh
-        await updateDisease(diseaseId, values, 'your-token-here');
+        await updateDisease(diseaseId, values);
         refetch(); // Làm mới danh sách
         setOpen(false);
         setConfirmLoading(false);

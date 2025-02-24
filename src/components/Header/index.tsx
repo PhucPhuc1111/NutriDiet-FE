@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -7,47 +6,83 @@ import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { baseURL } from "@/services/apiClient";
 
-const Header = (props: {
-  sidebarOpen: string | boolean | undefined;
-  setSidebarOpen: (arg0: boolean) => void;
-}) => {
+const Header = (props: { sidebarOpen: boolean; setSidebarOpen: (arg0: boolean) => void }) => {
   const [user, setUser] = useState<{ email: string; role: string; name: string } | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    const token = Cookies.get("authToken");
+    const accessToken = Cookies.get("accessToken");
 
-    if (!token) return;
+    if (!accessToken) {
+      refreshAccessToken();
+      return;
+    }
 
-    // Gọi API lấy thông tin user
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch(`${baseURL}/api/user/whoami`, {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-    
-        if (response.ok) {
-          const data = await response.json();
-          console.log("User Data:", data); // Kiểm tra phản hồi API
-          setUser({ email: data.email, role: data.role, name: data.name });
-          Cookies.set("userName", data.name, { expires: 7 }); // Lưu vào cookies
-        } else {
-          Cookies.remove("authToken");
-        }
-      } catch (error) {
-        console.error("Lỗi khi lấy thông tin người dùng", error);
-      }
-    };
-    
-
-    fetchUserData();
+    fetchUserData(accessToken);
   }, []);
 
+  const fetchUserData = async (token: string) => {
+    try {
+      const response = await fetch(`${baseURL}/api/user/whoami`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        setUser({ email: data.email, role: data.role, name: data.name });
+  
+        // ✅ Lưu tất cả thông tin vào Cookies
+        Cookies.set("userName", data.name, { expires: 7 });
+        Cookies.set("userEmail", data.email, { expires: 7 });
+        Cookies.set("userRole", data.role, { expires: 7 });
+      } else {
+        refreshAccessToken();
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin người dùng", error);
+    }
+  };
+  
+
+  // Hàm làm mới Access Token
+  const refreshAccessToken = async () => {
+    const refreshToken = Cookies.get("refreshToken");
+
+    if (!refreshToken) {
+      handleLogout();
+      return;
+    }
+
+    try {
+      const response = await fetch(`${baseURL}/api/user/refresh`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken }),
+      });
+
+      if (!response.ok) {
+        handleLogout();
+        return;
+      }
+
+      const result = await response.json();
+      Cookies.set("accessToken", result.accessToken, { expires: 1 / 24 });
+      fetchUserData(result.accessToken);
+    } catch (error) {
+      handleLogout();
+    }
+  };
+
+  
   const handleLogout = () => {
-    Cookies.remove("authToken");
+    Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
+    Cookies.remove("userEmail");
+    Cookies.remove("userRole");
+    Cookies.remove("userName");
     setUser(null);
-    router.push("/");
+    router.push("/auth/signin");
   };
 
   return (
@@ -71,10 +106,8 @@ const Header = (props: {
         </div>
         <div className="flex items-center gap-3">
           {user ? (
-            <div className="flex items-center gap-2">
-              {/* <span className="text-sm text-gray-700">{user.email} ({user.role})</span> */}
-              <DropdownUser handleLogout={handleLogout} />
-            </div>
+           <DropdownUser user={user} handleLogout={handleLogout} />
+
           ) : (
             <Link href="/auth/signin">
               <button className="w-48 rounded-md p-2 text-white bg-green-800 hover:bg-white hover:text-green-800">

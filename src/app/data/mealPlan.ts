@@ -4,15 +4,10 @@ import Cookies from 'js-cookie';
 import { MealPlan } from "./types";
 import { ApiResponse } from ".";
 
-export async function getAllMealplans(
-  pageIndex: number,
-  pageSize: number
-): Promise<ApiResponse<MealPlan[]>> {
-  const response = await request.get(
-    `${baseURL}/api/meal-plan?pageIndex=${pageIndex}&pageSize=${pageSize}`
-  );
-  return response as ApiResponse<MealPlan[]>; 
+export async function getAllMealPlans(pageIndex: number, pageSize: number): Promise<ApiResponse<MealPlan[]>> {
+  return await request.get(`${baseURL}/api/meal-plan?pageIndex=${pageIndex}&pageSize=${pageSize}`);
 }
+
 
 export async function getMealPlanById(mealplanId: number): Promise<ApiResponse<MealPlan>> {
   return await request.get(`${baseURL}/api/meal-plan/${mealplanId}`);
@@ -77,7 +72,7 @@ export const useGetAllMealPlans = (
   return useQuery<MealPlan[]>({
      queryKey: ["mealplans", pageIndex, pageSize],
      queryFn: async () => {
-       const response = await getAllMealplans(pageIndex, pageSize);
+       const response = await getAllMealPlans(pageIndex, pageSize);
        return response.data;
      },
      ...config,
