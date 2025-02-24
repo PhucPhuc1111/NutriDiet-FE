@@ -1,15 +1,24 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import request  from "@/services/apiClient";
-import baseURL from "@/services/apiClient";
+import request, { baseURL }  from "@/services/apiClient";
+
 import { MealPlan } from "./types";
+import { ApiResponse } from ".";
 
-export async function getAllMealPlans(pageIndex: number, pageSize: number, search: string): Promise<MealPlan[]> {
-  return await request.get(`${baseURL}/api/meal-plan?pageIndex=${pageIndex}&pageSize=${pageSize}&search=${search}`);
+export async function getAllMealplans(
+  pageIndex: number,
+  pageSize: number
+): Promise<ApiResponse<MealPlan[]>> {
+  const response = await request.get(
+    `${baseURL}/api/meal-plan?pageIndex=${pageIndex}&pageSize=${pageSize}`
+  );
+  return response as ApiResponse<MealPlan[]>; 
 }
 
-export async function getMealPlanById(id: string): Promise<MealPlan> {
-  return await request.get(`${baseURL}/api/meal-plan/${id}`);
+export async function getMealplanById(mealplanId: number): Promise<ApiResponse<MealPlan>> {
+  return await request.get(`${baseURL}/api/meal-plan/${mealplanId}`);
 }
+
+
 
 export async function createMealPlan(formData: FormData, token: string): Promise<MealPlan> {
     try {
@@ -58,9 +67,12 @@ export const useGetAllMealPlans = (
   search: string,
   config?: UseQueryOptions<MealPlan[]>
 ) => {
-  return useQuery({
-    queryKey: ["products", pageIndex, pageSize, search],
-    queryFn: () => getAllMealPlans(pageIndex, pageSize, search),
-    ...config,
-  });
-}
+  return useQuery<MealPlan[]>({
+     queryKey: ["mealplans", pageIndex, pageSize],
+     queryFn: async () => {
+       const response = await getAllMealplans(pageIndex, pageSize);
+       return response.data;
+     },
+     ...config,
+   });
+ };

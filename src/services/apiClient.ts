@@ -70,7 +70,7 @@ axios.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
      
-      window.location.href = '/logout';
+      window.location.href = '/auth/signin';
     }
     return Promise.reject(error);
   }
