@@ -4,17 +4,26 @@ import { Button, Form, Input, Select, InputNumber, Spin } from "antd";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { useParams } from "next/navigation";
 
-import AddMealDaily from "@/components/AddMealPLan/AddMealDaily";
+import AddMealDaily from "@/components/MealPlan/UpdateMealDaily";
 import Link from "next/link";
-import { Day, DayFoodDetails, MealPlanDetail, useGetMealPlanById } from "@/app/data";
+import {
+  Day,
+  DayFoodDetails,
+  MealPlanDetail,
+  useGetMealPlanById,
+} from "@/app/data";
+import UpdateMealDaily from "@/components/MealPlan/UpdateMealDaily";
 
 const MealPlanDetailPage = () => {
-  const { mealPlanId } = useParams(); 
+  const { mealPlanId } = useParams();
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
-
-  const { data: mealPlan, isLoading, isError } = useGetMealPlanById(Number(mealPlanId));
+  const {
+    data: mealPlan,
+    isLoading,
+    isError,
+  } = useGetMealPlanById(Number(mealPlanId));
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -29,7 +38,7 @@ const MealPlanDetailPage = () => {
   if (isLoading) {
     return (
       <DefaultLayout>
-        <div className="flex justify-center items-center h-screen">
+        <div className="flex h-screen items-center justify-center">
           <Spin size="large" />
         </div>
       </DefaultLayout>
@@ -43,9 +52,14 @@ const MealPlanDetailPage = () => {
       </DefaultLayout>
     );
   }
-  const transformMealPlanDetails = (mealPlanDetails: MealPlanDetail[]): Day[] => {
-    const groupedDays: Record<string, DayFoodDetails & { totalCalories: number }> = {};
-  
+  const transformMealPlanDetails = (
+    mealPlanDetails: MealPlanDetail[],
+  ): Day[] => {
+    const groupedDays: Record<
+      string,
+      DayFoodDetails & { totalCalories: number }
+    > = {};
+
     mealPlanDetails.forEach((detail) => {
       if (!groupedDays[detail.dayNumber]) {
         groupedDays[detail.dayNumber] = {
@@ -56,7 +70,7 @@ const MealPlanDetailPage = () => {
           totalCalories: 0,
         };
       }
-  
+
       // Mapping từ tiếng Việt sang key chuẩn
       const mealTypeMap: Record<string, keyof DayFoodDetails> = {
         "Bữa sáng": "breakfast",
@@ -64,45 +78,47 @@ const MealPlanDetailPage = () => {
         "Bữa tối": "dinner",
         "Bữa phụ": "evening",
       };
-  
-      const mealType = mealTypeMap[detail.mealType]; 
-  
+
+      const mealType = mealTypeMap[detail.mealType];
+
       if (mealType) {
-        groupedDays[detail.dayNumber][mealType].push(detail.foodName.toString());
+        groupedDays[detail.dayNumber][mealType].push(
+          detail.foodName.toString(),
+        );
       } else {
         console.warn(`⚠️ Meal type không hợp lệ: ${detail.mealType}`);
       }
-  
+
       groupedDays[detail.dayNumber].totalCalories += detail.totalCalories;
     });
-  
-    return Object.entries(groupedDays).map(([dayNumber, { totalCalories, ...foodDetails }]) => ({
-      dayNumber,
-      foodDetails,
-      totalCalories,
-    }));
+
+    return Object.entries(groupedDays).map(
+      ([dayNumber, { totalCalories, ...foodDetails }]) => ({
+        dayNumber,
+        foodDetails,
+        totalCalories,
+      }),
+    );
   };
-  
-  
-  
+
   return (
     <DefaultLayout>
       <div className="flex justify-between">
         <Link href="/admin/meal">
-          <div className="p-3 cursor-pointer">Trở về</div>
+          <div className="cursor-pointer p-3">Trở về</div>
         </Link>
         <div className="flex space-x-4">
           {isEditing ? (
             <>
-              <Button className="p-3 h-10" onClick={handleCancel}>
+              <Button className="h-10 p-3" onClick={handleCancel}>
                 Hủy
               </Button>
-              <Button className="p-3 h-10" type="primary">
+              <Button className="h-10 p-3" type="primary">
                 Lưu kế hoạch bữa ăn
               </Button>
             </>
           ) : (
-            <Button className="p-3 h-10" onClick={handleEdit}>
+            <Button className="h-10 p-3" onClick={handleEdit}>
               Sửa kế hoạch bữa ăn
             </Button>
           )}
@@ -116,35 +132,54 @@ const MealPlanDetailPage = () => {
         <div className="px-10">
           <Form name="mealPlanForm">
             <Form.Item name="planName" label="Tên kế hoạch">
-              <Input defaultValue={mealPlan.planName} disabled={componentDisabled} />
+              <Input
+                defaultValue={mealPlan.planName}
+                disabled={componentDisabled}
+              />
             </Form.Item>
 
             <Form.Item name="healthGoal" label="Mục tiêu sức khỏe">
-              <Select defaultValue={mealPlan.healthGoal} disabled={componentDisabled}>
+              <Select
+                defaultValue={mealPlan.healthGoal}
+                disabled={componentDisabled}
+              >
                 <Select.Option value="Tăng cân">Tăng cân</Select.Option>
                 <Select.Option value="Giảm cân">Giảm cân</Select.Option>
                 <Select.Option value="Giữ cân">Giữ cân</Select.Option>
-                <Select.Option value="Tăng cân giảm mỡ">Tăng cân giảm mỡ</Select.Option>
+                <Select.Option value="Tăng cân giảm mỡ">
+                  Tăng cân giảm mỡ
+                </Select.Option>
               </Select>
             </Form.Item>
 
             <Form.Item name="duration" label="Thời gian hoàn thành">
-              <InputNumber defaultValue={mealPlan.duration} disabled={componentDisabled} />
+              <InputNumber
+                defaultValue={mealPlan.duration}
+                disabled={componentDisabled}
+              />
             </Form.Item>
 
             <Form.Item name="createdBy" label="Tạo bởi">
-              <Input defaultValue={mealPlan.createdBy} disabled={componentDisabled} />
+              <Input
+                defaultValue={mealPlan.createdBy}
+                disabled={componentDisabled}
+              />
             </Form.Item>
 
             <Form.Item name="createdAt" label="Tạo vào">
-              <Input defaultValue={mealPlan.createdAt} disabled={componentDisabled} />
+              <Input
+                defaultValue={mealPlan.createdAt}
+                disabled={componentDisabled}
+              />
             </Form.Item>
           </Form>
         </div>
 
         <div className="space-y-5 p-10">
-        <AddMealDaily isEditing={isEditing} mealPlanDetails={transformMealPlanDetails(mealPlan.mealPlanDetails)} />
-
+          <UpdateMealDaily
+            isEditing={isEditing}
+            mealPlanDetails={transformMealPlanDetails(mealPlan.mealPlanDetails)}
+          />
         </div>
       </div>
     </DefaultLayout>

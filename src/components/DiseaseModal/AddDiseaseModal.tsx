@@ -41,7 +41,7 @@ const AddDiseaseModal: React.FC = () => {
         }
   
         // Gọi API để tạo bệnh mới
-        await createDisease(values, 'your-token-here');
+        await createDisease(values);
         toast.success("Thêm bệnh nền thành công");
         setOpen(false);
         setConfirmLoading(false);

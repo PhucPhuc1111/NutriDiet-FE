@@ -13,7 +13,7 @@ const DeleteAllergyModal: React.FC<{
   const handleDelete = async () => {
     setConfirmLoading(true);
     try {
-      await deleteAllergyById(allergyId.toString(), "your-token-here");
+      await deleteAllergyById(allergyId.toString());
       refetch();
       setConfirmLoading(false);
 

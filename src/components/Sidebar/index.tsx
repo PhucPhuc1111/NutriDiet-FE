@@ -92,9 +92,13 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const router = useRouter();
   const [pageName, setPageName] = useLocalStorage("selectedMenu", "dashboard");
   const handleLogout = () => {
-    Cookies.remove("authToken");
+    Cookies.remove("accessToken");
+    Cookies.remove("refreshToken");
+    Cookies.remove("userEmail");
+    Cookies.remove("userRole");
+    Cookies.remove("userName");
     setUser(null);
-    router.push("/");
+    router.push("/auth/signin");
   };
   return (
     <ClickOutside onClick={() => setSidebarOpen(false)}>
