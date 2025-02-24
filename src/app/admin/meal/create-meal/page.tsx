@@ -9,101 +9,9 @@ import { Option } from "antd/es/mentions";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React from "react";
-interface MealPlanDetail {
-  MealPlanDetailID: number;
-  MealPlanID: number;
-  MealType: string;
-  FoodID: number;
-  FoodName: string;
-  Quantity: number;
-  DayNumber: number;
-  TotalCalories: number;
-}
 
-interface MealPlan {
-  MealPlanID: number;
-  UserID: number;
-  PlanName: string;
-  HealthGoal: string;
-  Duration: number;
-  Status: string;
-  CreatedBy: string;
-  CreatedAt: string;
-  UpdatedBy: string;
-  UpdatedAt: string;
-  MealPlanDetails: number[];
-}
 
-const dataDetail: MealPlanDetail[] = [
-  {
-    MealPlanDetailID: 1,
-    MealPlanID: 1,
-    MealType: "bữa sáng",
-    FoodID: 101,
-    FoodName: "Cơm trắng",
-    Quantity: 150,
-    DayNumber: 1,
-    TotalCalories: 200,
-  },
-  {
-    MealPlanID: 1,
-    MealPlanDetailID: 2,
-    MealType: "bữa chiều",
-    FoodID: 102,
-    FoodName: "Thịt gà",
-    Quantity: 100,
-    DayNumber: 1,
-    TotalCalories: 250,
-  },
-  {
-    MealPlanDetailID: 3,
-    MealPlanID: 2,
-    MealType: "bữa chiều",
-    FoodID: 106,
-    FoodName: "Khoai tây",
-    Quantity: 200,
-    DayNumber: 1,
-    TotalCalories: 180,
-  },
-  {
-    MealPlanDetailID: 4,
-    MealPlanID: 2,
-    MealType: "bữa chiều",
-    FoodID: 107,
-    FoodName: "Thịt bò",
-    Quantity: 150,
-    DayNumber: 1,
-    TotalCalories: 350,
-  },
-];
-const data: MealPlan[] = [
-  {
-    MealPlanID: 1,
-    UserID: 1,
-    PlanName: "Kế hoạch ăn kiêng giảm cân",
-    HealthGoal: "Giảm cân",
-    Duration: 30,
-    Status: "Active",
-    CreatedBy: "Admin",
-    CreatedAt: "2023-01-01T10:00:00",
-    UpdatedBy: "Admin",
-    UpdatedAt: "2023-01-02T10:00:00",
-    MealPlanDetails: [1, 2, 3, 4],
-  },
-  {
-    MealPlanID: 2,
-    UserID: 2,
-    PlanName: "Kế hoạch ăn tăng cơ",
-    HealthGoal: "Tăng cơ",
-    Duration: 45,
-    Status: "Active",
-    CreatedBy: "Admin",
-    CreatedAt: "2023-01-01T10:00:00",
-    UpdatedBy: "Admin",
-    UpdatedAt: "2023-01-02T10:00:00",
-    MealPlanDetails: [1, 2, 3, 4],
-  },
-];
+
 const CreateMealPlanPage= ({ form }:any) => {
   const { MealPLanID } = useParams();
   const onFinish = (values: any) => {
@@ -184,7 +92,7 @@ const CreateMealPlanPage= ({ form }:any) => {
           </div>
 
           <div className="space-y-5 p-10">
-            <AddMealDaily />
+            <AddMealDaily isEditing={false} mealPlanDetails={[]} />
           </div>
         
         </div>

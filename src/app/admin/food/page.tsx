@@ -15,6 +15,9 @@ import FoodModal from "@/components/FoodModal/FoodModal";
 const FoodPage: React.FC = () => {
   const { data: allergiesData } = useGetAllAllergies(1,100,"");
 const { data: diseasesData } = useGetAllDiseases(1,100,"");
+console.log("Allergies Data:", allergiesData);
+console.log("Diseases Data:", diseasesData);
+
 
     const [searchText, setSearchText] = useState<string>("");
     const pageIndex = 1;
@@ -100,29 +103,28 @@ const { data: diseasesData } = useGetAllDiseases(1,100,"");
       dataIndex: "calories",
       sorter: (a, b) => a.calories - b.calories,
     },
+    {
+      title: "Protein(g)",
+      dataIndex: "protein",
+      sorter: (a, b) => a.calories - b.calories,
+    },
+    {
+      title: "Carbs (g)",
+      dataIndex: "carbs",
+      sorter: (a, b) => a.calories - b.calories,
+    },
+    {
+      title: "Glucid(g)",
+      dataIndex: "glucid",
+      sorter: (a, b) => a.calories - b.calories,
+    },
+    {
+      title: "Fiber (g)",
+      dataIndex: "fiber",
+      sorter: (a, b) => a.calories - b.calories,
+    },
     
-    {
-      title: "Dị ứng cần tránh",
-      dataIndex: "allergies",
-      render: (allergyIds: number[]) => {
-        if (!allergyIds || allergyIds.length === 0) return "Không có";
-        return allergyIds.map((id) => {
-          const allergy = allergiesData?.find((a) => a.allergyId === id);
-          return allergy ? allergy.allergyName : "Không xác định";
-        }).join(", ");
-      }
-    },
-    {
-      title: "Bệnh cần tránh",
-      dataIndex: "diseases",
-      render: (diseaseIds: number[]) => {
-        if (!diseaseIds || diseaseIds.length === 0) return "Không có";
-        return diseaseIds.map((id) => {
-          const disease = diseasesData?.find((d) => d.diseaseId === id);
-          return disease ? disease.diseaseName : "Không xác định";
-        }).join(", ");
-      }
-    },
+
     {
       title: "Chi tiết/Sửa/Xóa",
       dataIndex: "action",

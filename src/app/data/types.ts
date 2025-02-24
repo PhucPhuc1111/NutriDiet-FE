@@ -66,19 +66,31 @@ export type Ingredient = {
     status: string;
     createdBy: string;
     createdAt:string;
-    mealPlanDetails:[]
+    mealPlanDetails:MealPlanDetail[]
     
    }
-
+   export interface DayFoodDetails {
+    breakfast: string[];
+    lunch: string[];
+    dinner: string[];
+    evening: string[];
+  }
+  
+  export interface Day {
+    dayNumber: string;
+    foodDetails: DayFoodDetails;
+    totalCalories: number;
+  }
    export type MealPlanDetail ={
-    MealPlanDetailID:number;
-    mealPlanId: number;
-    foodId: number;
-    foodName: string;
-    Quantity: number;
+    mealPlanDetailId:number;
+    foodName: number;
+    quantity: number;
     mealType: string;
-    DayNumber: number;
-    TotalCalories: number
+    dayNumber: string;
+    totalCalories: number;
+    totalCarbs: number
+    totalFat: number
+    totalProtein: number
    }
 
    export type Allergy ={
