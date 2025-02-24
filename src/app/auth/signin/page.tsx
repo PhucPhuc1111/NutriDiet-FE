@@ -49,7 +49,7 @@ const SignIn: React.FC = () => {
         return;
       }
   
-      // **Lưu thông tin vào cookies**
+
       Cookies.set("authToken", result.data.token, { expires: 7 });
       Cookies.set("userEmail", result.data.email, { expires: 7 });
       Cookies.set("userRole", result.data.role, { expires: 7 });

@@ -1,188 +1,136 @@
 
 "use client"
+import { Account, useGetAllAccounts } from '@/app/data'
 import AddAllergyModal from '@/components/AllergyModal/AddAllergyModal'
 import DeleteAllergyModal from '@/components/AllergyModal/DeleteAllerfyModal'
 import UpdateAllergyModal from '@/components/AllergyModal/UpdateAllergyModal'
 import AuthLayout from '@/components/Layouts/AuthLayout'
 import DefaultLayout from '@/components/Layouts/DefaultLayout'
-import { Button, Input, Pagination, PaginationProps, Space, Table, TableColumnsType, TableProps } from 'antd'
-import { format } from 'date-fns'
-import Image from 'next/image'
+import { Button, Image, Input, Pagination, PaginationProps, Space, Table, TableColumnsType, TableProps } from 'antd'
+
 import Link from 'next/link'
-import { useRouter } from 'next/router'
+
 import React, { useMemo, useState } from 'react'
-import { IoSearchOutline } from 'react-icons/io5'
-import { isError } from 'react-query'
 
 
 
-interface DataType {
-  UserID: number;
-
-  FullName: string;
-   Email: string;
-  Phone:string;
-  Age: number;
-  Gender: string;
-  Location: string;
-  Avartar: string;
-  Status: string;
 
 
-}
 
-const data: DataType[] = [
-  {
-    UserID: 1,
-    FullName: "Nguyễn Văn A",
-    Email: "nguyenvana@example.com",
-    Phone: "0123456789",
-    Age: 30,
-    Gender: "Nam",
-    Location: "Hà Nội",
-    Avartar: "https://example.com/avatar1.jpg",
-    Status: "Active"
-  },
-  {
-    UserID: 2,
-    FullName: "Trần Thị B",
-    Email: "tranthib@example.com",
-    Phone: "0987654321",
-    Age: 25,
-    Gender: "Nữ",
-    Location: "TP. Hồ Chí Minh",
-    Avartar: "https://example.com/avatar2.jpg",
-    Status: "Inactive"
-  },
-  {
-    UserID: 3,
-    FullName: "Lê Minh C",
-    Email: "leminhc@example.com",
-    Phone: "0912345678",
-    Age: 28,
-    Gender: "Nam",
-    Location: "Đà Nẵng",
-    Avartar: "https://example.com/avatar3.jpg",
-    Status: "Active"
-  },
-  {
-    UserID: 4,
-    FullName: "Phạm Thị D",
-    Email: "phamthid@example.com",
-    Phone: "0934567890",
-    Age: 22,
-    Gender: "Nữ",
-    Location: "Cần Thơ",
-    Avartar: "https://example.com/avatar4.jpg",
-    Status: "Active"
-  },
-  {
-    UserID: 5,
-    FullName: "Võ Văn E",
-    Email: "vovanE@example.com",
-    Phone: "0961234567",
-    Age: 35,
-    Gender: "Nam",
-    Location: "Hải Phòng",
-    Avartar: "https://example.com/avatar5.jpg",
-    Status: "Inactive"
-  }
-];
-const columns: TableColumnsType<DataType> = [
+const CustomerPage: React.FC = () => {
+  const [searchText, setSearchText] = useState<string>("");
+  const pageIndex = 1;
+  const pageSize = 100;
+    
+  
+     const { data, isLoading, isError, error, refetch } = useGetAllAccounts(
+       pageIndex,
+       pageSize,
+       searchText
+     );
+    const onChange: TableProps<Account>["onChange"] = (
+      pagination,
+      filters,
+      sorter,
+      extra,
+    ) => {
+      console.log("params", pagination, filters, sorter, extra);
+    };
+   
+const columns: TableColumnsType<Account> = [
   {
     title: "Id",
-    dataIndex: "UserID",
-    sorter: (a, b) => a.UserID - b.UserID,
+    dataIndex: "userId",
+    sorter: (a,b) => a.userId - b.userId,
+    render: (text) => text || "Chưa có dữ liệu",
   },
   {
-    title: "Hình ảnh ",
-    dataIndex: "Avartar",
-
+    title: "Hình ảnh",
+    dataIndex: "avatar",
+    render: (avatar) => avatar ? <Image src={avatar} alt="Avatar" className="w-10 h-10 rounded-full" /> : "Chưa có dữ liệu",
   },
   {
     title: "Tên khách hàng",
-    dataIndex: "FullName",
-    sorter: (a, b) => a.FullName.localeCompare(b.FullName),
+    dataIndex: "fullName",
+    sorter: (a, b) => a.fullName.localeCompare(b.fullName),
+    render: (text) => text || "Chưa có dữ liệu",
   },
   {
     title: "Email",
-    dataIndex: "Email",
-    
-    
+    dataIndex: "email",
+    render: (text) => text || "Chưa có dữ liệu",
   },
   {
     title: "Số điện thoại",
-    dataIndex: "Phone",
-    sorter: (a, b) => a.Phone.localeCompare(b.Phone),
+    dataIndex: "phone",
+    render: (text) => text || "Chưa có dữ liệu",
   },
   {
-    title: "Tuổi ",
-    dataIndex: "Age",
-    sorter: (a, b) => a.Age - b.Age,
+    title: "Tuổi",
+    dataIndex: "age",
+    sorter: (a, b) => a.age - b.age,
+    render: (text) => (text !== null && text !== undefined ? text : "Chưa có dữ liệu"),
   },
   {
-    title: "Địa chỉ ",
-    dataIndex: "Location",
-   
+    title: "Địa chỉ",
+    dataIndex: "location",
+    render: (text) => text || "Chưa có dữ liệu",
   },
-  
- 
   {
-    title: "Chi tiết",
-    dataIndex: "action",
-    render: (_: any, record: DataType) => (
-      <Space size="middle">
-    <Link href={`/admin/customer/${record.UserID}`}>
-       
-        <Button style={{ backgroundColor: '#2f855a', color: 'white' }}>Chi tiết</Button> </Link>
-      </Space>
+    title: "Trạng thái",
+    dataIndex: "status",
+    render: (status) => (
+      status === "Active" ? <span className="text-green-500">Active</span> : 
+      status === "Inactive" ? <span className="text-red-500">Inactive</span> : 
+      "Chưa có dữ liệu"
     ),
   },
 ];
 
-
-const onChange: TableProps<DataType>["onChange"] = (
-  pagination,
-  filters,
-  sorter,
-  extra
-) => {
-  console.log("params", pagination, filters, sorter, extra);
-};
-
-const CustomerPage: React.FC = () => {
-  const [searchText, setSearchText] = useState<string>('');
-
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);};
+    setSearchText(e.target.value);
+  };
+  const filteredData = Array.isArray(data)
+  ? data.filter((item) =>
+      item.fullName.toLowerCase().includes(searchText.toLowerCase()),
+    )
+  : [];
+
+if (isLoading) {
+  return <div>Loading...</div>;
+}
+
+if (isError) {
+  return <div>Error: {error?.message}</div>;
+}
 
 
-  const filteredData = data.filter((item) => {
-    return item.FullName.toLowerCase().includes(searchText.toLowerCase());
-  });
+
+  
   return (
     <DefaultLayout>
-      <div className="">
-        <div className="flex justify-between" >
-        <div className="mb-2">
-          Tổng cộng: {data.length}
-        </div>
-         <Input
-          placeholder="Tìm kiếm khách hàng"
+    <div className="">
+      <div className="flex justify-between">
+        <div className="mb-2">Tổng cộng: {data?.length}</div>
+        <Input
+          placeholder="Tìm kiếm dị ứng"
           value={searchText}
-          onChange={handleSearch} 
+          onChange={handleSearch}
           style={{ marginBottom: 20, width: 300 }}
         />
-
-        <div className="flex space-x-3 mb-2">
-       
-          
+        <div className="mb-2 flex space-x-3">
+          <AddAllergyModal />
         </div>
-        </div>
-       
-        <Table<DataType> columns={columns} dataSource={filteredData} onChange={onChange} />
       </div>
-    </DefaultLayout>
+
+      <Table<Account>
+        columns={columns}
+        dataSource={filteredData}
+        onChange={onChange}
+      />
+      
+    </div>
+  </DefaultLayout>
   );
 };
 
