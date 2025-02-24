@@ -21,7 +21,11 @@ const AddMealDaily = () => {
   const [open, setOpen] = useState<string | null>(null);
   const [editMode, setEditMode] = useState<{ [key: string]: boolean }>({});
   const [days, setDays] = useState<Day[]>([
-    { dayNumber: "Ngày 1", foodDetails: { breakfast: [], lunch: [], dinner: [], evening: [] }, totalCalories: 0 },
+    {
+      dayNumber: "Ngày 1",
+      foodDetails: { breakfast: [], lunch: [], dinner: [], evening: [] },
+      totalCalories: 0,
+    },
   ]);
 
   const onFinish = (dayNumber: string) => {
@@ -32,7 +36,11 @@ const AddMealDaily = () => {
   const addDay = () => {
     setDays([
       ...days,
-      { dayNumber: `Ngày ${days.length + 1}`, foodDetails: { breakfast: [], lunch: [], dinner: [], evening: [] }, totalCalories: 0 },
+      {
+        dayNumber: `Ngày ${days.length + 1}`,
+        foodDetails: { breakfast: [], lunch: [], dinner: [], evening: [] },
+        totalCalories: 0,
+      },
     ]);
   };
 
@@ -52,17 +60,24 @@ const AddMealDaily = () => {
       "Cơm sườn": 300,
       "Bún bò huế": 250,
     };
-    return foodItems.reduce((total, food) => total + (calorieValues[food] || 0), 0);
+    return foodItems.reduce(
+      (total, food) => total + (calorieValues[food] || 0),
+      0,
+    );
   };
 
   // Update food selection for each day and calculate total calories
-  const updateFoodSelection = (dayNumber: string, mealType: keyof DayFoodDetails, selectedFood: string[]) => {
+  const updateFoodSelection = (
+    dayNumber: string,
+    mealType: keyof DayFoodDetails,
+    selectedFood: string[],
+  ) => {
     const newDays = days.map((day) => {
       if (day.dayNumber === dayNumber) {
         const newFoodDetails = { ...day.foodDetails, [mealType]: selectedFood };
         const totalCalories = Object.values(newFoodDetails).reduce(
           (total, meal) => total + calculateMealCalories(meal),
-          0
+          0,
         );
         return {
           ...day,
@@ -99,23 +114,38 @@ const AddMealDaily = () => {
           >
             <div>{day.dayNumber}</div>
             <div className="flex space-x-3">
-              <DownOutlined className={`${open === day.dayNumber ? "rotate-180" : ""}`} />
+              <DownOutlined
+                className={`${open === day.dayNumber ? "rotate-180" : ""}`}
+              />
               {editMode[day.dayNumber] ? (
                 <>
-                  <Button className="" type="primary" onClick={() => onFinish(day.dayNumber)}>
+                  <Button
+                    className=""
+                    type="primary"
+                    onClick={() => onFinish(day.dayNumber)}
+                  >
                     Lưu
                   </Button>
-                  <Button className="" onClick={() => toggleEditMode(day.dayNumber)}>
+                  <Button
+                    className=""
+                    onClick={() => toggleEditMode(day.dayNumber)}
+                  >
                     Hủy
                   </Button>
                 </>
               ) : (
-                <Button className="" onClick={() => toggleEditMode(day.dayNumber)}>
+                <Button
+                  className=""
+                  onClick={() => toggleEditMode(day.dayNumber)}
+                >
                   Sửa
                 </Button>
               )}
 
-              <Button className="bg-red-600 text-white " onClick={() => deleteDay(day.dayNumber)}>
+              <Button
+                className="bg-red-600 text-white "
+                onClick={() => deleteDay(day.dayNumber)}
+              >
                 Xóa
               </Button>
             </div>
@@ -134,29 +164,43 @@ const AddMealDaily = () => {
                     style={{ maxWidth: 600 }}
                     disabled={!editMode[day.dayNumber]} // Disable form if not in edit mode
                   >
-                    {["breakfast", "lunch", "dinner", "evening"].map((mealType) => (
-                      <Form.Item
-                        key={mealType}
-                        name={mealType}
-                        label={`Bữa ${mealType}`}
-                        rules={[{ required: true, message: `Bữa ${mealType} là bắt buộc` }]}
-                      >
-                        <Select
-                          placeholder={`Chọn bữa ${mealType}`}
-                          allowClear
-                          mode="multiple"
-                         
-                          onChange={(selectedFood) =>
-                            updateFoodSelection(day.dayNumber, mealType as keyof DayFoodDetails, selectedFood)
-                          }
+                    {["breakfast", "lunch", "dinner", "evening"].map(
+                      (mealType) => (
+                        <Form.Item
+                          key={mealType}
+                          name={mealType}
+                          label={`Bữa ${mealType}`}
+                          rules={[
+                            {
+                              required: true,
+                              message: `Bữa ${mealType} là bắt buộc`,
+                            },
+                          ]}
                         >
-                          <Select.Option value="Phở bò">Phở bò</Select.Option>
-                          <Select.Option value="Phở gà">Phở gà</Select.Option>
-                          <Select.Option value="Cơm sườn">Cơm sườn</Select.Option>
-                          <Select.Option value="Bún bò huế">Bún bò huế</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    ))}
+                          <Select
+                            placeholder={`Chọn bữa ${mealType}`}
+                            allowClear
+                            mode="multiple"
+                            onChange={(selectedFood) =>
+                              updateFoodSelection(
+                                day.dayNumber,
+                                mealType as keyof DayFoodDetails,
+                                selectedFood,
+                              )
+                            }
+                          >
+                            <Select.Option value="Phở bò">Phở bò</Select.Option>
+                            <Select.Option value="Phở gà">Phở gà</Select.Option>
+                            <Select.Option value="Cơm sườn">
+                              Cơm sườn
+                            </Select.Option>
+                            <Select.Option value="Bún bò huế">
+                              Bún bò huế
+                            </Select.Option>
+                          </Select>
+                        </Form.Item>
+                      ),
+                    )}
                   </Form>
                 </div>
                 <div className="w-1/4 space-y-3">
@@ -172,10 +216,18 @@ const AddMealDaily = () => {
                         <p>Bữa tối:</p>
                       </div>
                       <div className="space-y-3 pb-2">
-                        <p>{calculateMealCalories(day.foodDetails.breakfast)} cal</p>
-                        <p>{calculateMealCalories(day.foodDetails.lunch)} cal</p>
-                        <p>{calculateMealCalories(day.foodDetails.dinner)} cal</p>
-                        <p>{calculateMealCalories(day.foodDetails.evening)} cal</p>
+                        <p>
+                          {calculateMealCalories(day.foodDetails.breakfast)} cal
+                        </p>
+                        <p>
+                          {calculateMealCalories(day.foodDetails.lunch)} cal
+                        </p>
+                        <p>
+                          {calculateMealCalories(day.foodDetails.dinner)} cal
+                        </p>
+                        <p>
+                          {calculateMealCalories(day.foodDetails.evening)} cal
+                        </p>
                       </div>
                     </div>
                     <div className="flex justify-between">
