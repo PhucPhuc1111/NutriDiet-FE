@@ -14,22 +14,15 @@ export type Ingredient = {
     RoleName: string;
   };
   export type Account = {
- 
-    accountId:number;
-    name: string;
-    password: string;
+    userId: number,
+    fullName: string;
     avatar: string;
-    gender:string
-    dob:string;
-    email:string;
-    roleId: number
-    address:string;
-    phoneNumber:string;
-    createAt:string;
-    status:string;
-    orders:[];
-    productStocks:[];
-    role:string;
+    email: string;
+    phone: number;
+    age: number;
+    gender: "Male" | "Female" | "Other"; 
+    location: string; 
+    status: "Active" | "Inactive"; 
   }
   
   export type User = {
