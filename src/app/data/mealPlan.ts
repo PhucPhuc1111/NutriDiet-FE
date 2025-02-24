@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import request, { baseURL }  from "@/services/apiClient";
-
+import Cookies from 'js-cookie';
 import { MealPlan } from "./types";
 import { ApiResponse } from ".";
 
@@ -14,7 +14,7 @@ export async function getAllMealplans(
   return response as ApiResponse<MealPlan[]>; 
 }
 
-export async function getMealplanById(mealplanId: number): Promise<ApiResponse<MealPlan>> {
+export async function getMealPlanById(mealplanId: number): Promise<ApiResponse<MealPlan>> {
   return await request.get(`${baseURL}/api/meal-plan/${mealplanId}`);
 }
 
@@ -52,13 +52,20 @@ export async function updateMealPlan(id: string, formData: FormData, token: stri
   }
 }
 
-export async function deleteMealPlanById(id: string, token: string): Promise<void> {
-  return await request.deleteWithOptions(`${baseURL}/api/meal-plan/${id}`, {
-    headers: {
-      "Authorization": `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    }
-  });
+export async function deleteMealPlanById(mealPlanId: number): Promise<void> {
+  try {
+    const token = Cookies.get("authToken"); 
+    if (!token) throw new Error("Bạn chưa đăng nhập!");
+
+    await request.deleteWithOptions(`${baseURL}/api/meal-plan/${mealPlanId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (error) {
+    console.error("Lỗi khi xóa thực đơn:", error);
+    throw error;
+  }
 }
 
 export const useGetAllMealPlans = (
@@ -76,3 +83,15 @@ export const useGetAllMealPlans = (
      ...config,
    });
  };
+export const useGetMealPlanById = (mealPlanId: number, config?: UseQueryOptions<MealPlan>) => {
+  return useQuery<MealPlan>({
+    queryKey: ["mealPlan", mealPlanId],
+    queryFn: async () => {
+      const response = await getMealPlanById(mealPlanId);
+      console.log("Meal Plan by ID:", response);
+      return response.data;
+    },
+    enabled: !!mealPlanId,
+    ...config,
+  });
+};

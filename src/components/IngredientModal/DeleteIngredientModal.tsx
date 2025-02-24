@@ -28,7 +28,7 @@ const DeleteIngredientModal: React.FC<{
   };
   return (
     <Popconfirm
-    title="Bạn có chắc chắn muốn xóa dị ứng này?"
+    title="Bạn có chắc chắn muốn xóa nguyên liệu này?"
     onConfirm={handleDelete}
     onCancel={handleCancel}
     okButtonProps={{ loading: confirmLoading }}

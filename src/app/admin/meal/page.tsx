@@ -14,26 +14,26 @@ import Link from "next/link";
 import { MealPlan, useGetAllMealPlans } from "@/app/data";
 import { format, parseISO } from "date-fns";
 function formatDate(dateString?: string): string {
-  if (!dateString) return ""; 
+  if (!dateString) return "";
   try {
     return format(parseISO(dateString), "hh:mm dd/MM/yyyy");
   } catch (error) {
     console.error("Error formatting date:", error);
     return dateString;
-  }}
-
+  }
+}
 
 const MealPage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
 
-    const pageIndex = 1;
-    const pageSize = 100;
-  
-    const { data, isLoading, isError, error, refetch } = useGetAllMealPlans(
-      pageIndex,
-      pageSize,
-      searchText,
-    );
+  const pageIndex = 1;
+  const pageSize = 100;
+
+  const { data, isLoading, isError, error, refetch } = useGetAllMealPlans(
+    pageIndex,
+    pageSize,
+    searchText,
+  );
   const columns: TableColumnsType<MealPlan> = [
     {
       title: "Id",
@@ -54,8 +54,12 @@ const MealPage: React.FC = () => {
         { text: "Giữ cân", value: "Giữ cân" },
       ],
       onFilter: (value: string | boolean | Key, record: MealPlan) => {
-        if (typeof record.healthGoal === "string" && typeof value === "string") {
-          return record.healthGoal.toLowerCase()
+        if (
+          typeof record.healthGoal === "string" &&
+          typeof value === "string"
+        ) {
+          return record.healthGoal
+            .toLowerCase()
             .trim()
             .includes(value.toLowerCase().trim());
         }
@@ -76,8 +80,9 @@ const MealPage: React.FC = () => {
     {
       title: "Ngày tạo",
       dataIndex: "createdAt",
-      sorter: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-      render: (text) => formatDate(text), 
+      sorter: (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+      render: (text) => formatDate(text),
     },
     {
       title: "Status ",
@@ -88,7 +93,8 @@ const MealPage: React.FC = () => {
       ],
       onFilter: (value: string | boolean | Key, record: MealPlan) => {
         if (typeof record.status === "string" && typeof value === "string") {
-          return record.status.toLowerCase()
+          return record.status
+            .toLowerCase()
             .trim()
             .includes(value.toLowerCase().trim());
         }
@@ -96,7 +102,7 @@ const MealPage: React.FC = () => {
       },
       width: "30",
     },
-  
+
     {
       title: "Sửa/Xóa",
       dataIndex: "action",
@@ -105,14 +111,16 @@ const MealPage: React.FC = () => {
           <Link href={`/admin/meal/${record.mealPlanId}`}>
             <Button style={{ backgroundColor: "#2f855a", color: "white" }}>
               Chi tiết
-            </Button>{" "}
+            </Button>
           </Link>
-          <DeleteMealPlanModal />
+
+          <DeleteMealPlanModal mealPlanId={record.mealPlanId} refetch={refetch} />
+
         </Space>
       ),
     },
   ];
-  
+
   const onChange: TableProps<MealPlan>["onChange"] = (
     pagination,
     filters,
@@ -121,25 +129,25 @@ const MealPage: React.FC = () => {
   ) => {
     console.log("params", pagination, filters, sorter, extra);
   };
-  
-    const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchText(e.target.value);
-    };
-  
-    const filteredData = Array.isArray(data)
-      ? data.filter((item) =>
-          item.planName.toLowerCase().includes(searchText.toLowerCase()),
-        )
-      : [];
-  
-    if (isLoading) {
-      return <div>Loading...</div>;
-    }
-  
-    if (isError) {
-      return <div>Error: {error?.message}</div>;
-    }
-  
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchText(e.target.value);
+  };
+
+  const filteredData = Array.isArray(data)
+    ? data.filter((item) =>
+        item.planName.toLowerCase().includes(searchText.toLowerCase()),
+      )
+    : [];
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error: {error?.message}</div>;
+  }
+
   return (
     <DefaultLayout>
       <div className="">

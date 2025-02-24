@@ -119,7 +119,7 @@ if (isError) {
           style={{ marginBottom: 20, width: 300 }}
         />
         <div className="mb-2 flex space-x-3">
-          <AddAllergyModal />
+          {/* <AddAllergyModal /> */}
         </div>
       </div>
 

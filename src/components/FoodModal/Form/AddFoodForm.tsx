@@ -146,7 +146,6 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
       <Form.Item
         name="allergies"
         label="Dị ứng cần tránh"
-        rules={[{ required: true, message: "Dị ứng là bắt buộc" }]}
       >
         <Select
           mode="multiple"
@@ -160,7 +159,6 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
       <Form.Item
         name="diseases"
         label="Bệnh cần tránh"
-        rules={[{ required: true, message: "Bệnh là bắt buộc" }]}
       >
         <Select
           mode="multiple"
