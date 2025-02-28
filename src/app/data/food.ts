@@ -118,9 +118,9 @@ export async function updateFood(formData: {
     oldData.diseases.forEach((id) => form.append("DiseaseId", id.toString()));
   }
 
-  return await request.putMultiPart(`${baseURL}/api/food`, form);
+  return await request.putMultiPart(`${baseURL}/api/food/${formData.FoodId}`, form);
 }
-
+;
 
 export async function deleteFoodById(foodId: number): Promise<void> {
   await request.delete(`${baseURL}/api/food/${foodId}`);
