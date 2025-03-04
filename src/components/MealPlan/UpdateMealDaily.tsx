@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { DownOutlined } from "@ant-design/icons";
-import { Button, Form, Select } from "antd";
+import { Button, Form, Select, message } from "antd";
 import { useGetAllFoods } from "@/app/data";
 
-// Định nghĩa kiểu dữ liệu
 interface DayFoodDetails {
   breakfast: string[];
   lunch: string[];
@@ -17,143 +16,149 @@ interface Day {
   totalCalories: number;
 }
 
-interface UpdateMealDailyProps {
-  isEditing: boolean;
+interface UpdateMealPlanProps {
   mealPlanDetails: Day[];
+  onUpdateMealPlan: (updatedDays: Day[]) => Promise<void>;
 }
 
-// Component Form chọn bữa ăn
-const MealSelectionForm: React.FC<{ day: Day; editMode: boolean }> = ({ day, editMode }) => {
-  const { data: foodList, isLoading } = useGetAllFoods(1, 100, ""); // Lấy danh sách món ăn
+const MealSelectionForm: React.FC<{
+  day: Day;
+  editMode: boolean;
+  updateDay: (dayNumber: string, foodDetails: DayFoodDetails) => void;
+}> = ({ day, editMode, updateDay }) => {
+  const { data: foodList, isLoading } = useGetAllFoods(1, 100, "");
+
+  const handleChange = (
+    mealType: keyof DayFoodDetails,
+    selectedFoods: string[],
+  ) => {
+    updateDay(day.dayNumber, { ...day.foodDetails, [mealType]: selectedFoods });
+  };
 
   return (
-    <Form name={`form_${day.dayNumber}`} style={{ maxWidth: 600 }} disabled={!editMode}>
+    <Form name={`form_${day.dayNumber}`} style={{ maxWidth: 600 }}>
       {["breakfast", "lunch", "dinner", "evening"].map((mealType) => (
         <Form.Item key={mealType} label={`Bữa ${mealType}`}>
           <Select
-            placeholder={`Chọn bữa ${mealType}`}
-            allowClear
             mode="multiple"
+            allowClear
             value={day.foodDetails[mealType as keyof DayFoodDetails]}
             disabled={!editMode || isLoading}
             loading={isLoading}
+            onChange={(values) =>
+              handleChange(mealType as keyof DayFoodDetails, values)
+            }
           >
-            {editMode
-              ? foodList?.map((food) => (
-                  <Select.Option key={food.foodId} value={food.foodName}>
-                    {food.foodName}
-                  </Select.Option>
-                ))
-              : day.foodDetails[mealType as keyof DayFoodDetails].map((food) => (
-                  <Select.Option key={food} value={food}>
-                    {food}
-                  </Select.Option>
-                ))}
+            {foodList?.map((food) => (
+              <Select.Option key={food.foodId} value={food.foodId}>
+                {food.foodName}
+              </Select.Option>
+            ))}
           </Select>
         </Form.Item>
       ))}
-      </Form>
-    );
-  };
+    </Form>
+  );
+};
 
-const UpdateMealDaily: React.FC<UpdateMealDailyProps> = ({ isEditing, mealPlanDetails }) => {
+const UpdateMealPlan: React.FC<UpdateMealPlanProps> = ({
+  mealPlanDetails,
+  onUpdateMealPlan,
+}) => {
+  const [days, setDays] = useState<Day[]>([]);
   const [open, setOpen] = useState<string | null>(null);
   const [editMode, setEditMode] = useState<Record<string, boolean>>({});
-  const [days, setDays] = useState<Day[]>([]);
 
-  // Cập nhật danh sách ngày khi có mealPlanDetails mới
   useEffect(() => {
     if (mealPlanDetails?.length > 0) {
-      setDays(mealPlanDetails.map((day, index) => ({ ...day, dayNumber: `Ngày ${index + 1}` })));
+      setDays(mealPlanDetails);
     }
   }, [mealPlanDetails]);
 
-  // Thêm ngày mới
-  const addDay = useCallback(() => {
-    setDays((prevDays) => [
-      ...prevDays,
-      {
-        dayNumber: `Ngày ${prevDays.length + 1}`,
-        foodDetails: { breakfast: [], lunch: [], dinner: [], evening: [] },
-        totalCalories: 0,
-      },
-    ]);
-  }, []);
+  const updateDay = (dayNumber: string, foodDetails: DayFoodDetails) => {
+    setDays((prevDays) =>
+      prevDays.map((day) =>
+        day.dayNumber === dayNumber ? { ...day, foodDetails } : day,
+      ),
+    );
+  };
 
-  // Xóa ngày
-  const deleteDay = useCallback((dayNumber: string) => {
-    setDays((prevDays) => prevDays.filter((day) => day.dayNumber !== dayNumber));
-  }, []);
-
-  // Bật/tắt chế độ chỉnh sửa
-  const toggleEditMode = useCallback((dayNumber: string) => {
-    setEditMode((prev) => ({ ...prev, [dayNumber]: !prev[dayNumber] }));
-  }, []);
-
-  // Lưu chỉnh sửa
-  const onSave = useCallback((dayNumber: string) => {
-    console.log("Lưu thay đổi cho:", dayNumber, days);
-    setEditMode((prev) => ({ ...prev, [dayNumber]: false }));
-  }, [days]);
+  const saveChanges = async () => {
+    try {
+      await onUpdateMealPlan(days);
+      message.success("Cập nhật thực đơn thành công!");
+    } catch (error) {
+      message.error("Lỗi khi cập nhật thực đơn!");
+    }
+  };
 
   return (
     <div>
       <div className="mb-3 flex items-center justify-between">
-        <div className="text-lg font-semibold">Danh sách các ngày</div>
-        {isEditing && <Button className="bg-green-800 text-white" onClick={addDay}>Thêm ngày</Button>}
+        <div className="text-lg font-semibold">Cập nhật thực đơn</div>
       </div>
-
       {days.map((day) => (
         <div key={day.dayNumber} className="pt-10">
-          {/* Header ngày */}
           <div
             className="flex w-full justify-between rounded-t-xl bg-green-800 p-3 font-semibold text-white"
-            onClick={(e) => {
-              if (!(e.target as HTMLElement).closest(".action-buttons")) {
-                setOpen(open === day.dayNumber ? null : day.dayNumber);
-              }
-            }}
+            onClick={() =>
+              setOpen(open === day.dayNumber ? null : day.dayNumber)
+            }
           >
             <div>{day.dayNumber}</div>
-            <div className="flex space-x-3 action-buttons">
-              <DownOutlined className={`${open === day.dayNumber ? "rotate-180" : ""}`} />
-              {isEditing && (
-                <>
-                  {editMode[day.dayNumber] ? (
-                    <>
-                      <Button type="primary" onClick={() => onSave(day.dayNumber)}>Lưu</Button>
-                      <Button onClick={() => toggleEditMode(day.dayNumber)}>Hủy</Button>
-                    </>
-                  ) : (
-                    <Button onClick={() => toggleEditMode(day.dayNumber)}>Sửa</Button>
-                  )}
-                  <Button className="bg-red-600 text-white" onClick={() => deleteDay(day.dayNumber)}>Xóa</Button>
-                </>
+            <div className="action-buttons flex space-x-3">
+              <DownOutlined
+                className={`${open === day.dayNumber ? "rotate-180" : ""}`}
+              />
+              {editMode[day.dayNumber] ? (
+                <Button
+                  type="primary"
+                  onClick={() =>
+                    setEditMode((prev) => ({
+                      ...prev,
+                      [day.dayNumber]: false,
+                    }))
+                  }
+                >
+                  Lưu
+                </Button>
+              ) : (
+                <Button
+                  onClick={() =>
+                    setEditMode((prev) => ({
+                      ...prev,
+                      [day.dayNumber]: true,
+                    }))
+                  }
+                >
+                  Sửa
+                </Button>
               )}
             </div>
           </div>
 
-          {/* Nội dung ngày */}
           {open === day.dayNumber && (
             <div className="border-2 border-green-800 p-10">
-              <div className="flex">
-                {/* Form chọn bữa ăn */}
-                <div className="w-3/4 border-r-2 border-green-800">
-                  <MealSelectionForm day={day} editMode={!!editMode[day.dayNumber]} />
-                </div>
-                {/* Tổng calories */}
-                <div className="w-1/4 space-y-3">
-                  <div className="bg-green-800 p-5 text-center text-lg font-semibold text-white">
-                    Tổng calo: {day.totalCalories} cal
-                  </div>
-                </div>
+              <MealSelectionForm
+                day={day}
+                editMode={!!editMode[day.dayNumber]}
+                updateDay={updateDay}
+              />
+              <div className="bg-green-800 p-5 text-center text-lg font-semibold text-white">
+                Tổng calo: {day.totalCalories} cal
               </div>
             </div>
           )}
         </div>
       ))}
+
+      <div className="mt-5 flex justify-end">
+        <Button type="primary" onClick={saveChanges}>
+          Cập nhật thực đơn
+        </Button>
+      </div>
     </div>
   );
 };
 
-export default UpdateMealDaily;
+export default UpdateMealPlan;

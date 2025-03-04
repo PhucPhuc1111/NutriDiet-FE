@@ -15,7 +15,9 @@ import {
 import UpdateMealDaily from "@/components/MealPlan/UpdateMealDaily";
 
 const MealPlanDetailPage = () => {
-  const { mealPlanId } = useParams();
+  const { MealPlanID } = useParams();
+  const mealPlanId = MealPlanID;
+  console.log(mealPlanId);
   const [componentDisabled, setComponentDisabled] = useState<boolean>(true);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
