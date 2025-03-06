@@ -1,13 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import AddMealDaily from "@/components/MealPlan/AddMealDaily";
 import { Button, Form, Input, Select, message } from "antd";
 import Link from "next/link";
-import Cookies from "js-cookie";
 import React, { useState } from "react";
-
+import { createMealPlan } from "@/app/data";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 interface MealDetail {
   foodId: number;
   quantity: number;
@@ -25,18 +25,12 @@ interface FormValues {
 }
 
 const CreateMealPlanPage: React.FC = () => {
+  const router = useRouter();
   const [form] = Form.useForm<FormValues>();
   const [mealPlanDetails, setMealPlanDetails] = useState<DayMeal[]>([]);
   const [loading, setLoading] = useState(false);
 
   const onFinish = async (values: FormValues) => {
-    const token = Cookies.get("accessToken");
-
-    if (!token) {
-      message.error("Bạn chưa đăng nhập!");
-      return;
-    }
-
     const formattedMealPlanDetails: MealDetail[] = mealPlanDetails.flatMap(
       (day, index) =>
         Object.entries(day.foodDetails).flatMap(([mealType, foodIds]) =>
@@ -61,22 +55,9 @@ const CreateMealPlanPage: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(
-        "https://nutridietapi-be.azurewebsites.net/api/meal-plan",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(requestData),
-        },
-      );
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Có lỗi xảy ra");
-
-      message.success("Tạo kế hoạch thành công!");
+      await createMealPlan(requestData);
+      toast.success("Create meal plan successfully.");
+      router.push("/admin/meal");
     } catch (error: unknown) {
       console.error("Error:", error);
       if (error instanceof Error) {
@@ -88,7 +69,6 @@ const CreateMealPlanPage: React.FC = () => {
       setLoading(false);
     }
   };
-
   return (
     <DefaultLayout>
       <div className="flex justify-between">

@@ -3,6 +3,7 @@ import request, { baseURL }  from "@/services/apiClient";
 import Cookies from 'js-cookie';
 import { MealPlan } from "./types";
 import { ApiResponse } from ".";
+import {CreateMealPlanParams} from "./types";
 
 export async function getAllMealPlans(pageIndex: number, pageSize: number): Promise<ApiResponse<MealPlan[]>> {
   return await request.get(`${baseURL}/api/meal-plan?pageIndex=${pageIndex}&pageSize=${pageSize}`);
@@ -14,38 +15,49 @@ export async function getMealPlanById(mealplanId: number): Promise<ApiResponse<M
 }
 
 
+export const createMealPlan = async (params: CreateMealPlanParams) => {
+  const token = Cookies.get("accessToken");
 
-export async function createMealPlan(formData: FormData, token: string): Promise<MealPlan> {
-    try {
-      const response = await request.postMultiPart(`${baseURL}/api/meal-plan`, formData, {
-        headers: {
-          "Authorization": `Bearer ${token}`,
-        }
-      });
-      return response;
-    } catch (error) {
-      console.error("Error creating meal plan:", error);
-      throw error;
-    }
+  if (!token) {
+    throw new Error("Bạn chưa đăng nhập!");
   }
 
-export async function updateMealPlan(id: string, formData: FormData, token: string) {
   try {
-  
-    const response = await request.putMultiPart(`${baseURL}/api/meal-plan/${id}`, formData, {
+    const response = await request.post(`${baseURL}/api/meal-plan`, params, {
       headers: {
-        "Authorization": `Bearer ${token}`,
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
 
-    
     return response;
-
   } catch (error) {
-    console.error("Error updating product:", error);
+    console.error("Lỗi khi tạo thực đơn:", error);
     throw error;
   }
-}
+};
+
+
+export const updateMealPlan = async (id: number, params: CreateMealPlanParams) => {
+  const token = Cookies.get("accessToken");
+
+  if (!token) {
+    throw new Error("Bạn chưa đăng nhập!");
+  }
+
+  try {
+    const response = await request.put(`${baseURL}/api/meal-plan/${id}`, params, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Lỗi khi cập nhật thực đơn:", error);
+    throw error;
+  }
+};
+
 
 export async function deleteMealPlanById(mealPlanId: number): Promise<void> {
   try {

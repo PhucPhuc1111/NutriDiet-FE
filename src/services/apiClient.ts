@@ -103,7 +103,7 @@ async function _putMultiPart(url: string, formData: FormData, options?: AxiosReq
   return response.data;
 }
 
-async function _put(url: string, data?: any) {
+async function _put(url: string, data?: any, p0?: { headers: { Authorization: string; }; }) {
   const response = await apiClient.put(url, JSON.stringify(data));
   return response.data;
 }

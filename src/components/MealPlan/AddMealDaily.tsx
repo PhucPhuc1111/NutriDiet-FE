@@ -10,6 +10,9 @@ interface DayFoodDetails {
   evening: string[];
 }
 
+interface Props {
+  onChange: (days: Day[]) => void;
+}
 interface Day {
   dayNumber: string;
   foodDetails: DayFoodDetails;

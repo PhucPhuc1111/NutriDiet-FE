@@ -3,11 +3,6 @@ import React, { useState } from "react";
 import { Table, Space, Button, Input } from "antd"; // Import Space từ antd
 import type { TableColumnsType, TableProps } from "antd";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import AddIngredientModal from "@/components/IngredientModal/AddIngredientModal";
-import UpdateIngredientModal from "@/components/IngredientModal/UpdateIngredientModal";
-import { RiDeleteBack2Fill } from "react-icons/ri";
-import DeleteIngredientModal from "@/components/IngredientModal/DeleteIngredientModal";
-import AddMealPlanModal from "@/components/MealPlanModel/AddMealPlanModal";
 import { Key } from "antd/es/table/interface";
 import DeleteMealPlanModal from "@/components/MealPlanModel/DeleteMealPlanModal";
 import Link from "next/link";
@@ -114,8 +109,10 @@ const MealPage: React.FC = () => {
             </Button>
           </Link>
 
-          <DeleteMealPlanModal mealPlanId={record.mealPlanId} refetch={refetch} />
-
+          <DeleteMealPlanModal
+            mealPlanId={record.mealPlanId}
+            refetch={refetch}
+          />
         </Space>
       ),
     },

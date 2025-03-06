@@ -1,4 +1,15 @@
+interface MealDetail {
+  foodId: number;
+  quantity: number;
+  mealType: string;
+  dayNumber: number;
+}
 
+export interface CreateMealPlanParams {
+  planName: string;
+  healthGoal: string;
+  mealPlanDetails: MealDetail[];
+}
 
 
 export type Ingredient = {
