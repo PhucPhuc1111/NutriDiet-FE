@@ -46,7 +46,10 @@ const refreshAccessToken = async () => {
 };
 
 // Hàm gọi API có tự động làm mới Access Token khi bị lỗi 401
-const fetchWithAuth = async (url: string, options: { headers?: HeadersInit } = {}) => {
+const fetchWithAuth = async (
+  url: string,
+  options: { headers?: HeadersInit } = {},
+) => {
   let accessToken = Cookies.get("accessToken");
 
   let response = await fetch(url, {
@@ -100,7 +103,12 @@ const SignIn: React.FC = () => {
 
       const result = await response.json();
 
-      if (!result.data || !result.data.role || !result.data.accessToken || !result.data.refreshToken) {
+      if (
+        !result.data ||
+        !result.data.role ||
+        !result.data.accessToken ||
+        !result.data.refreshToken
+      ) {
         throw new Error("Dữ liệu không hợp lệ từ máy chủ");
       }
 
@@ -125,45 +133,91 @@ const SignIn: React.FC = () => {
   return (
     <div className="h-screen">
       <AuthLayout>
-        <div className="mt-10 flex justify-center">
-          <div className="h-[500px] rounded-sm border border-stroke bg-white shadow-default dark:border-green-800 dark:bg-green-800">
-            <div className="flex items-center">
-              <div className="hidden w-full p-10 text-center xl:block xl:w-1/2">
-                <Link href="/">
-                  <Image src="/images/logo/logo.png" alt="Logo" width={100} height={100} />
-                </Link>
-                <p>Hệ thống đề xuất chế độ ăn uống lành mạnh.</p>
-              </div>
-              <div className="w-full p-8 xl:w-1/2 xl:border-l-2">
-                <h2 className="mb-2 text-2xl font-bold text-black dark:text-white">Đăng nhập</h2>
-                <p className="mb-7">Chỉ quản trị viên được phép đăng nhập</p>
+        <div className="flex items-center justify-center bg-gray-100 pt-7 dark:bg-gray-900">
+          <div className="w-full max-w-md rounded-xl border border-gray-300 bg-white p-8 shadow-xl dark:border-green-700 dark:bg-green-800">
+            <div className="flex flex-col items-center">
+              {/* Logo */}
+              <Link href="/" className="mb-4">
+                <Image
+                  src="/images/logo/logo.png"
+                  alt="Logo"
+                  width={80}
+                  height={80}
+                  className="rounded-full shadow-lg"
+                />
+              </Link>
+              <p className="mb-4 text-center text-gray-600 dark:text-gray-300">
+                Hệ thống đề xuất chế độ ăn uống lành mạnh.
+              </p>
+            </div>
 
-                <form onSubmit={handleSubmit(onSubmit)}>
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium">Email</label>
-                    <Controller
-                      name="email"
-                      control={control}
-                      render={({ field }) => <input {...field} type="email" className="w-full rounded border p-2" />}
-                    />
-                    {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
-                  </div>
+            {/* Form */}
+            <div>
+              <h2 className="text-center text-2xl font-bold text-gray-900 dark:text-white">
+                Đăng nhập
+              </h2>
+              <p className="mb-6 text-center text-gray-500 dark:text-gray-300">
+                Chỉ quản trị viên được phép đăng nhập
+              </p>
 
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium">Mật khẩu</label>
-                    <Controller
-                      name="password"
-                      control={control}
-                      render={({ field }) => <input {...field} type="password" className="w-full rounded border p-2" />}
-                    />
-                    {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
-                  </div>
+              <form onSubmit={handleSubmit(onSubmit)}>
+                {/* Email Input */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Email
+                  </label>
+                  <Controller
+                    name="email"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        value={field.value ?? ""}
+                        type="email"
+                        className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+                      />
+                    )}
+                  />
+                  {errors.email && (
+                    <p className="text-sm text-red-500">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
 
-                  <button type="submit" disabled={isSubmitting} className="w-full rounded bg-green-800 py-2 text-white hover:bg-green-900 disabled:bg-gray-500">
-                    {isSubmitting ? "Đang xử lý..." : "Đăng nhập"}
-                  </button>
-                </form>
-              </div>
+                {/* Password Input */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Mật khẩu
+                  </label>
+                  <Controller
+                    name="password"
+                    control={control}
+                    render={({ field }) => (
+                      <input
+                        {...field}
+                        value={field.value ?? ""}
+                        type="password"
+                        className="w-full rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+                      />
+                    )}
+                  />
+                  {errors.password && (
+                    <p className="text-sm text-red-500">
+                      {errors.password.message}
+                    </p>
+                  )}
+                </div>
+
+                {/* Submit Button */}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full rounded-lg bg-green-700 py-3 text-white transition hover:bg-green-800 hover:shadow-lg disabled:bg-gray-400"
+                >
+                  {isSubmitting ? "Đang xử lý..." : "Đăng nhập"}
+                </button>
+              </form>
             </div>
           </div>
         </div>

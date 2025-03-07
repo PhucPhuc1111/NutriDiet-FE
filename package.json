@@ -23,7 +23,7 @@
     "js-cookie": "^3.0.5",
     "jsvectormap": "^1.6.0",
     "lodash": "^4.17.21",
-    "next": "^15.2.0-canary.41",
+    "next": "^15.2.1",
     "nookies": "^2.5.2",
     "npm": "^11.1.0",
     "react": "^18",
