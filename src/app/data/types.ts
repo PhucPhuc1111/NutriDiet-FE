@@ -1,3 +1,4 @@
+
 interface MealDetail {
   foodId: number;
   quantity: number;
@@ -12,17 +13,6 @@ export interface CreateMealPlanParams {
 }
 
 
-export type Ingredient = {
-  ingredientId: number;     
-  ingredientName: string;   
-  // category: string;         
-  // unit: string;     
-  carbs: number;
-  fat: number;
-  protein: number; 
-  calories: number;       
-  // foodId: number;
-  };
   export type Role ={
     RoleID: number[];
     RoleName: string;
@@ -54,11 +44,18 @@ export type Ingredient = {
     role:string;
   };
 
-  export type FoodIngredient ={
-    ingredientId: number,
-    quantity: number,
-    unit: string
-  }
+  
+export type Ingredient = {
+  ingredientId: number;     
+  ingredientName: string;   
+  // category: string;         
+  // unit: string;     
+  carbs: number;
+  fat: number;
+  protein: number; 
+  calories: number;       
+  // foodId: number;
+  };
   export type Food = {
     foodId: number;            
     foodName: string;          
@@ -74,9 +71,9 @@ export type Ingredient = {
     glucid: number;            
     fiber: number;             
     others: string;       
-    foodIngredients: FoodIngredient[]
     allergies: Allergy[],
-    diseases: Disease[]
+    diseases: Disease[],
+    ingredients: Ingredient[]
   };
    export type MealPlan ={
     mealPlanId:number;
