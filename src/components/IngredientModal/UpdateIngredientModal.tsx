@@ -73,9 +73,12 @@ const UpdateIngredientModal: React.FC<{ ingredientId: number; refetch: () => voi
           setCurrentIngredient(response.data);
           form.setFieldsValue({
             ingredientName: response.data?.ingredientName,
-            category: response.data?.category,
-            unit: response.data?.unit,
+            // category: response.data?.category,
+            // unit: response.data?.unit,
             calories: response.data?.calories,
+            carbs: response.data?.carbs,
+            fat: response.data?.fat,
+            protein: response.data?.protein,
           });
         } catch (error) {
           console.error('Lỗi khi lấy dữ liệu nguyên liệu:', error);

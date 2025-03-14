@@ -15,10 +15,13 @@ export interface CreateMealPlanParams {
 export type Ingredient = {
   ingredientId: number;     
   ingredientName: string;   
-  category: string;         
-  unit: string;      
+  // category: string;         
+  // unit: string;     
+  carbs: number;
+  fat: number;
+  protein: number; 
   calories: number;       
-  foodId: number;
+  // foodId: number;
   };
   export type Role ={
     RoleID: number[];
@@ -50,6 +53,12 @@ export type Ingredient = {
     status: string | "Active" | "Inactive";
     role:string;
   };
+
+  export type FoodIngredient ={
+    ingredientId: number,
+    quantity: number,
+    unit: string
+  }
   export type Food = {
     foodId: number;            
     foodName: string;          
@@ -65,7 +74,7 @@ export type Ingredient = {
     glucid: number;            
     fiber: number;             
     others: string;       
-      
+    foodIngredients: FoodIngredient[]
     allergies: Allergy[],
     diseases: Disease[]
   };

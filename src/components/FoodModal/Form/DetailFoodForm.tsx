@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Button, Form, Image, Input, Select, Upload, UploadFile } from "antd";
-import { useGetAllAllergies, useGetAllDiseases } from "@/app/data";
+import { useGetAllAllergies, useGetAllDiseases, useGetAllIngredients } from "@/app/data";
 import { UploadOutlined } from "@ant-design/icons";
 
 
@@ -18,6 +18,8 @@ const DetailFoodForm: React.FC<{form:any,foodId: number,isEditing: boolean}> = (
     useGetAllDiseases(1, 100, "");
   const { data: allergiesData, isLoading: isLoadingAllergies } =
     useGetAllAllergies(1, 100, "");
+    const { data: ingredientsData, isLoading: isLoadingIngredients } =
+    useGetAllIngredients(1, 100, "");
     const [fileList, setFileList] = useState<UploadFile<any>[]>([]);
     const [imageUrl, setImageUrl] = useState(form.getFieldValue("imageUrl"));
     
@@ -25,6 +27,11 @@ const DetailFoodForm: React.FC<{form:any,foodId: number,isEditing: boolean}> = (
     diseasesData?.map((disease) => ({
       label: disease.diseaseName,
       value: disease.diseaseId,
+    })) || [];
+    const ingredientOptions =
+    ingredientsData?.map((ingredient) => ({
+      label: ingredient.ingredientName,
+      value: ingredient.ingredientId,
     })) || [];
 
   const allergyOptions =
@@ -134,6 +141,16 @@ const DetailFoodForm: React.FC<{form:any,foodId: number,isEditing: boolean}> = (
         </div>
       </div>
 
+      <Form.Item name="ingredients" label="Nguyên liệu">
+  <Select
+    mode="multiple"
+    placeholder="Chọn nguyên liệu"
+    options={ingredientOptions}
+    loading={isLoadingIngredients}
+    allowClear
+    disabled={!isEditing}
+  />
+</Form.Item>
       <Form.Item name="allergies" label="Dị ứng cần tránh">
   <Select
     mode="multiple"

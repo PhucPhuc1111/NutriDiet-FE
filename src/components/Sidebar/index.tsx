@@ -72,8 +72,9 @@ const menuGroups = [
           // { label: ["Nguyên liệu"], route: "/admin/ingredient" },
           { label: ["Bệnh nền"], route: "/admin/disease" }, 
           { label: ["Dị ứng"], route: "/admin/allergy" },
+          { label: ["Nguyên liệu"], route: "/admin/ingredient" },
           { label: ["Thực phẩm"], route: "/admin/food" },
-
+ 
           { label: ["Bữa ăn"], route: "/admin/meal" },
 
           { label: ["Khách hàng"], route: "/admin/customer" },

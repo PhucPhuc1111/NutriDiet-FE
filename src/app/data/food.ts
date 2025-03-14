@@ -1,3 +1,4 @@
+import { Ingredient } from '@/app/data';
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import request, { baseURL } from "@/services/apiClient";
 import { Food } from "./types";
@@ -12,6 +13,28 @@ export async function getAllFoods(pageIndex: number, pageSize: number): Promise<
 export async function getFoodById(foodId: number): Promise<ApiResponse<Food>> {
   return await request.get(`${baseURL}/api/food/${foodId}`);
 }
+// export async function createFoodIngredient(
+//   foodId: number, // Add foodId parameter
+//   formData: { 
+//     ingredientId: number;
+//     quantity: number;
+//     unit: string; // Change `unit` type to string
+//   }
+// ): Promise<Food> {
+//   const data = {
+//     ingredientId: formData.ingredientId,
+//     quantity: formData.quantity,
+//     unit: formData.unit, // Ensure unit is a string
+//   };
+
+//   const response = await request.post(`${baseURL}/api/food-ingredient/${foodId}`, data, {
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//   });
+
+//   return response;
+// }
 
 
 export async function createFood(
@@ -75,6 +98,8 @@ export async function updateFood(formData: {
   Others?: string;
   AllergyId?: string[];
   DiseaseId?: string[];
+
+
 }): Promise<Food> {
   if (!formData.FoodId) {
     throw new Error("FoodId không hợp lệ!");

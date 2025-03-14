@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, GetProp, Input, Select, UploadProps } from "antd";
-import { useGetAllAllergies, useGetAllDiseases, useGetAllFoods } from "@/app/data";
+import { useGetAllAllergies, useGetAllDiseases, useGetAllFoods, useGetAllIngredients } from "@/app/data";
 import { toast } from "react-toastify";
 import ImageUpload from "./imageUpload";
 
@@ -9,6 +9,7 @@ const { Option } = Select;
 const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
   const { data: diseasesData, isLoading: isLoadingDiseases } = useGetAllDiseases(1, 100, '');
   const { data: allergiesData, isLoading: isLoadingAllergies } = useGetAllAllergies(1, 100, '');
+  const { data: ingredientsData, isLoading: isLoadingIngredients} = useGetAllIngredients(1, 100, '');
 
   const diseaseOptions = diseasesData?.map(disease => ({
     label: disease.diseaseName,
@@ -18,6 +19,10 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
   const allergyOptions = allergiesData?.map(allergy => ({
     label: allergy.allergyName,
     value: allergy.allergyId
+  })) || [];
+  const ingredientOptions = ingredientsData?.map(ingredient => ({
+    label: ingredient.ingredientName,
+    value: ingredient.ingredientId
   })) || [];
   const { data: allFoods } = useGetAllFoods(1,100,"")
   const onFinish = async (values: any) => {
@@ -142,7 +147,18 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
           </Form.Item>
         </div>
       </div>
-
+      <Form.Item
+        name="ingredients"
+        label="Nguyên liệu "
+      >
+        <Select
+          mode="multiple"
+          placeholder="Chọn nguyên liệu"
+          options={ingredientOptions}
+          loading={isLoadingIngredients}
+          allowClear
+        />
+      </Form.Item>
       <Form.Item
         name="allergies"
         label="Dị ứng cần tránh"
@@ -152,6 +168,18 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
           placeholder="Chọn dị ứng"
           options={allergyOptions}
           loading={isLoadingAllergies}
+          allowClear
+        />
+      </Form.Item>
+      <Form.Item
+        name="ingredients"
+        label="Nguyên liệu"
+      >
+        <Select
+          mode="multiple"
+          placeholder="Chọn nguyên liệu"
+          options={ingredientOptions}
+          loading={isLoadingIngredients}
           allowClear
         />
       </Form.Item>

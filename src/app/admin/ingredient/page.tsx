@@ -42,41 +42,58 @@ const IngredientPage: React.FC = () => {
       dataIndex: "ingredientName",
       sorter: (a, b) => a.ingredientName.localeCompare(b.ingredientName),
     },
-    {
-      title: "Loại",
-      dataIndex: "category",
-      filters: [
-        { text: "Rau củ quả", value: "Vegetable" },
-        { text: "Trái cây", value: "Fruit" },
-        { text: "Thịt", value: "Meat" },
-        { text: "Nước", value: "Broth" },  
-        { text: "Gia vị", value: "Spice" },
-        { text: "Mì", value: "Noodle" },
-        { text: "Bánh mì", value: "Bread" },
-        { text: "Khác", value: "Others" },
+    // {
+    //   title: "Loại",
+    //   dataIndex: "category",
+    //   filters: [
+    //     { text: "Rau củ quả", value: "Vegetable" },
+    //     { text: "Trái cây", value: "Fruit" },
+    //     { text: "Thịt", value: "Meat" },
+    //     { text: "Nước", value: "Broth" },  
+    //     { text: "Gia vị", value: "Spice" },
+    //     { text: "Mì", value: "Noodle" },
+    //     { text: "Bánh mì", value: "Bread" },
+    //     { text: "Khác", value: "Others" },
      
-      ],
-     onFilter: (value: string | boolean | Key, record: Ingredient) => {
-           if (typeof record.category === "string" && typeof value === "string") {
-             return record.category.toLowerCase().trim().includes(value.toLowerCase().trim());
-           }
-           return false;
-         },
-         width: "30",
-       },
-    {
-      title: "Đơn vị",
-      dataIndex: "unit",
-      sorter: (a, b) => a.unit.localeCompare(b.unit),
+    //   ],
+    //  onFilter: (value: string | boolean | Key, record: Ingredient) => {
+    //        if (typeof record.category === "string" && typeof value === "string") {
+    //          return record.category.toLowerCase().trim().includes(value.toLowerCase().trim());
+    //        }
+    //        return false;
+    //      },
+    //      width: "30",
+    //    },
+    // {
+    //   title: "Đơn vị",
+    //   dataIndex: "unit",
+    //   sorter: (a, b) => a.unit.localeCompare(b.unit),
   
-    },
+    // },
     {
       title: "Calories",
       dataIndex: "calories",
       sorter: (a, b) => a.calories - b.calories,
   
     },
-    
+    {
+      title: "Protein",
+      dataIndex: "protein",
+      sorter: (a, b) => a.protein - b.protein,
+  
+    },
+    {
+      title: "Carbs",
+      dataIndex: "carbs",
+      sorter: (a, b) => a.carbs - b.carbs,
+  
+    },
+    {
+      title: "Fat",
+      dataIndex: "fat",
+      sorter: (a, b) => a.fat - b.fat,
+  
+    },
     {
       title: "Sửa/Xóa",
       dataIndex: "action",
@@ -104,27 +121,24 @@ const IngredientPage: React.FC = () => {
     : [];
   return (
     <DefaultLayout>
-      <div className="">
-        <div className="flex justify-between" >
-        <div className="mb-2">
-          Tổng cộng: {data?.length}
-        </div>
-         <Input
+    <div>
+      <div className="flex justify-between">
+        <div className="mb-2">Tổng cộng: {data?.length}</div>
+        <Input
           placeholder="Tìm kiếm thực phẩm"
           value={searchText}
-          onChange={handleSearch} 
+          onChange={handleSearch}
           style={{ marginBottom: 20, width: 300 }}
         />
-
         <div className="flex space-x-3 mb-2">
-        <AddIngredientModal/>
-        
+          <AddIngredientModal /> {/* Modal for adding new ingredient */}
         </div>
-        </div>
-       
-        <Table<Ingredient> columns={columns} dataSource={filteredData} onChange={onChange} />
       </div>
-    </DefaultLayout>
+  
+      <Table<Ingredient> columns={columns} dataSource={filteredData} onChange={onChange} />
+    </div>
+  </DefaultLayout>
+  
   );
 };
 
