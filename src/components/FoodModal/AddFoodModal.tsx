@@ -48,6 +48,7 @@ const AddFoodModal: React.FC = () => {
             Others: values.other || "",
             AllergyId: values.allergies || [],
             DiseaseId: values.diseases || [],
+            Ingredients: values.ingredients || [],
             FoodImageUrl: values.imgUrl, 
           };
   

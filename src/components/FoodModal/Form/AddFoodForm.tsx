@@ -1,47 +1,40 @@
 import React, { useState } from "react";
-import { Form, GetProp, Input, Select, UploadProps } from "antd";
-import { useGetAllAllergies, useGetAllDiseases, useGetAllFoods, useGetAllIngredients } from "@/app/data";
+import { Form, Input, Select } from "antd";
+import { useGetAllIngredients, useGetAllFoods } from "@/app/data";
 import { toast } from "react-toastify";
 import ImageUpload from "./imageUpload";
 
 const { Option } = Select;
 
 const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
-  const { data: diseasesData, isLoading: isLoadingDiseases } = useGetAllDiseases(1, 100, '');
-  const { data: allergiesData, isLoading: isLoadingAllergies } = useGetAllAllergies(1, 100, '');
-  const { data: ingredientsData, isLoading: isLoadingIngredients} = useGetAllIngredients(1, 100, '');
 
-  const diseaseOptions = diseasesData?.map(disease => ({
-    label: disease.diseaseName,
-    value: disease.diseaseId
-  })) || [];
+  // Fetching all ingredients
+  const { data: ingredientsData, isLoading: isLoadingIngredients } = useGetAllIngredients(1, 500, '');
 
-  const allergyOptions = allergiesData?.map(allergy => ({
-    label: allergy.allergyName,
-    value: allergy.allergyId
-  })) || [];
+  // Map the ingredients data to match the required format for the Select options
   const ingredientOptions = ingredientsData?.map(ingredient => ({
     label: ingredient.ingredientName,
-    value: ingredient.ingredientId
+    value: ingredient.ingredientId,
   })) || [];
-  const { data: allFoods } = useGetAllFoods(1,100,"")
+
+  const { data: allFoods } = useGetAllFoods(1, 100, "");
+
   const onFinish = async (values: any) => {
-  
     const isDuplicate = allFoods?.some((food) => food.foodName === values.foodName);
-  
+
     if (isDuplicate) {
       toast.error("Tên thực phẩm đã tồn tại, vui lòng chọn tên khác!");
       return;
-    }}
+    }
+  };
 
-    
   return (
     <Form form={form} name="add-food-form" onFinish={onFinish}>
       <div className="flex space-x-2">
         <div className="w-2/3">
           <Form.Item
             name="foodName"
-            label="Tên nguyên liệu"
+            label="Tên thực phẩm"
             rules={[{ required: true, message: "Tên thực phẩm là bắt buộc" }]}
           >
             <Input />
@@ -143,34 +136,12 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
             name="imgUrl"
             label="Hình ảnh"
           >
-          <ImageUpload />
+            <ImageUpload />
           </Form.Item>
         </div>
       </div>
-      <Form.Item
-        name="ingredients"
-        label="Nguyên liệu "
-      >
-        <Select
-          mode="multiple"
-          placeholder="Chọn nguyên liệu"
-          options={ingredientOptions}
-          loading={isLoadingIngredients}
-          allowClear
-        />
-      </Form.Item>
-      <Form.Item
-        name="allergies"
-        label="Dị ứng cần tránh"
-      >
-        <Select
-          mode="multiple"
-          placeholder="Chọn dị ứng"
-          options={allergyOptions}
-          loading={isLoadingAllergies}
-          allowClear
-        />
-      </Form.Item>
+
+      {/* Ingredients Field with Search */}
       <Form.Item
         name="ingredients"
         label="Nguyên liệu"
@@ -181,19 +152,14 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
           options={ingredientOptions}
           loading={isLoadingIngredients}
           allowClear
-        />
-      </Form.Item>
-
-      <Form.Item
-        name="diseases"
-        label="Bệnh cần tránh"
-      >
-        <Select
-          mode="multiple"
-          placeholder="Chọn bệnh"
-          options={diseaseOptions}
-          loading={isLoadingDiseases}
-          allowClear
+          showSearch
+          filterOption={(input, option) => {
+            if (option && option.label) {
+              // So sánh tên nguyên liệu với từ khóa tìm kiếm
+              return (option.label as string).toLowerCase().includes(input.toLowerCase());
+            }
+            return false;
+          }}
         />
       </Form.Item>
 

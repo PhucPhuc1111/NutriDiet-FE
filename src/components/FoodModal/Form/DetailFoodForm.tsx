@@ -19,7 +19,7 @@ const DetailFoodForm: React.FC<{form:any,foodId: number,isEditing: boolean}> = (
   const { data: allergiesData, isLoading: isLoadingAllergies } =
     useGetAllAllergies(1, 100, "");
     const { data: ingredientsData, isLoading: isLoadingIngredients } =
-    useGetAllIngredients(1, 100, "");
+    useGetAllIngredients(1, 500, "");
     const [fileList, setFileList] = useState<UploadFile<any>[]>([]);
     const [imageUrl, setImageUrl] = useState(form.getFieldValue("imageUrl"));
     
@@ -151,7 +151,7 @@ const DetailFoodForm: React.FC<{form:any,foodId: number,isEditing: boolean}> = (
     disabled={!isEditing}
   />
 </Form.Item>
-      <Form.Item name="allergies" label="Dị ứng cần tránh">
+      {/* <Form.Item name="allergies" label="Dị ứng cần tránh">
   <Select
     mode="multiple"
     placeholder="Chọn dị ứng"
@@ -171,7 +171,7 @@ const DetailFoodForm: React.FC<{form:any,foodId: number,isEditing: boolean}> = (
     allowClear
     disabled={!isEditing}
   />
-</Form.Item>
+</Form.Item> */}
 
 
 

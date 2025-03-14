@@ -18,6 +18,7 @@ const FoodModal: React.FC<{ foodId: number; refetch: () => void }> = ({ foodId, 
        
         allergies: currentFood.allergies?.map((item) => item.allergyId) || [],
         diseases: currentFood.diseases?.map((item) => item.diseaseId) || [],
+        ingredients: currentFood.ingredients?.map((item) => item.ingredientId) || [],
       });
     }
   }, [currentFood, form]);
@@ -81,8 +82,9 @@ const FoodModal: React.FC<{ foodId: number; refetch: () => void }> = ({ foodId, 
         FoodImageUrl: foodImageUrl || null,
         Description: values.description ?? currentFood?.description,
         Others: values.other ?? currentFood?.others,
-        AllergyId: values.allergies ? [...values.allergies] : [],
-        DiseaseId: values.diseases ? [...values.diseases] : [],
+        // AllergyId: values.allergies ? [...values.allergies] : [],
+        // DiseaseId: values.diseases ? [...values.diseases] : [],
+        Ingredients: values.ingredients ? [...values.ingredients] : [],
       };
   
       await updateFood(payload);
