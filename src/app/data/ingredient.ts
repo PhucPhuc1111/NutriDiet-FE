@@ -6,88 +6,77 @@ import { ApiResponse } from ".";
 
 
 export async function getAllIngredients(pageIndex: number, pageSize: number): Promise<ApiResponse<Ingredient[]>> {
-  const response = await request.get(
-    `${baseURL}/api/ingredients?pageIndex=${pageIndex}&pageSize=${pageSize}`
-  );
-  return response as ApiResponse<Ingredient[]>; 
+  return await request.get(`${baseURL}/api/ingredient?pageIndex=${pageIndex}&pageSize=${pageSize}`);
 }
 
+
 export async function getIngredientById(ingredientId: number): Promise<ApiResponse<Ingredient>> {
-  return await request.get(`${baseURL}/api/ingredients/${ingredientId}`);
+  return await request.get(`${baseURL}/api/ingredient/${ingredientId}`);
 }
 
 export async function createIngredient(
-  formData: { ingredientName: string; category: string; unit: string; calories: number }
+  formData: { 
+    ingredientName: string;
+     carbs: number; 
+     fat: number; 
+     protein: number;
+      calories: number }
 ): Promise<Ingredient> {
-  try {
-    const token = Cookies.get("authToken"); // Lấy token từ Cookies
-    if (!token) throw new Error("Bạn chưa đăng nhập!");
+ 
+    const data = {
+      ingredientName: formData.ingredientName,
+      carbs: formData.carbs,
+      fat: formData.fat,
+      protein: formData.protein,
+      calories: formData.calories,
+    };
 
-    const form = new FormData();
-    form.append("ingredientName", formData.ingredientName);
-    form.append("category", formData.category);
-    form.append("unit", formData.unit);
-    form.append("calories", formData.calories.toString());
-
-    const response = await request.postMultiPart(`${baseURL}/api/ingredients`, form, {
+    const response = await request.post(`${baseURL}/api/ingredient`, data, {
       headers: {
-        Authorization: `Bearer ${token}`,
+     
+        'Content-Type': 'application/json',
       },
     });
 
     return response;
-  } catch (error) {
-    console.error("Lỗi khi tạo ingredient:", error);
-    throw error;
-  }
+
 }
 
 export async function updateIngredient(
   ingredientId: number,
-  formData: { ingredientName: string; category: string; unit:string, calories:number}, 
-  token: string
-): Promise<Ingredient> {
-  try {
-    const token = Cookies.get("authToken"); // Lấy token từ Cookies
-    if (!token) throw new Error("Bạn chưa đăng nhập!");
-    const form = new FormData();
-    form.append("ingredientName", formData.ingredientName);
-    form.append("category", formData.category);
-    form.append("unit", formData.unit);
-    form.append("calories", formData.calories.toString());
-
-    const response = await request.putMultiPart(
-      `${baseURL}/api/ingredients?ingredientId=${ingredientId}`,
-      form,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-      }
-    );
-    
-    return response;
-  } catch (error) {
-    console.error('Error updating allergy:', error);
-    throw error;
+  formData: { 
+    ingredientName: string;
+    carbs: number; 
+    fat: number; 
+    protein: number; 
+    calories: number;
   }
+): Promise<Ingredient> {
+  const data = {
+    ingredientName: formData.ingredientName,
+    carbs: formData.carbs,
+    fat: formData.fat,
+    protein: formData.protein,
+    calories: formData.calories,
+  };
+
+  const response = await request.put(`${baseURL}/api/ingredient/${ingredientId}`, data, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  return response;
 }
 
-export async function deleteIngredientById(ingredientId: number): Promise<void> {
-  try {
-    const token = Cookies.get("authToken"); // Lấy token từ Cookies
-    if (!token) throw new Error("Bạn chưa đăng nhập!");
 
-    await request.deleteWithOptions(`${baseURL}/api/ingredients/${ingredientId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+export async function deleteIngredientById(ingredientId: number): Promise<void> {
+
+
+    await request.deleteWithOptions(`${baseURL}/api/ingredient/${ingredientId}`, {
+      
     });
-  } catch (error) {
-    console.error("Lỗi khi xóa ingredient:", error);
-    throw error;
-  }
+  
 }
 
 export const useGetAllIngredients = (
@@ -102,6 +91,17 @@ export const useGetAllIngredients = (
       const response = await getAllIngredients(pageIndex, pageSize);
       return response.data;
     },
+    ...config,
+  });
+};
+export const useGetIngredientById = (ingredientId: number, config?: UseQueryOptions<Ingredient>) => {
+  return useQuery<Ingredient>({
+    queryKey: ["ingredient", ingredientId],
+    queryFn: async () => {
+      const response = await getIngredientById(ingredientId);
+      return response.data;
+    },
+    enabled: !!ingredientId, // Chỉ gọi API khi có foodId
     ...config,
   });
 };
