@@ -60,19 +60,7 @@ export const updateMealPlan = async (id: number, params: CreateMealPlanParams) =
 
 
 export async function deleteMealPlanById(mealPlanId: number): Promise<void> {
-  try {
-    const token = Cookies.get("authToken"); 
-    if (!token) throw new Error("Bạn chưa đăng nhập!");
-
-    await request.deleteWithOptions(`${baseURL}/api/meal-plan/${mealPlanId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  } catch (error) {
-    console.error("Lỗi khi xóa thực đơn:", error);
-    throw error;
-  }
+  await request.delete(`${baseURL}/api/meal-plan/${mealPlanId}`);
 }
 
 export const useGetAllMealPlans = (
