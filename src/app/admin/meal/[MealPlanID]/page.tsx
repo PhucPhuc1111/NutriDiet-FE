@@ -177,8 +177,13 @@ const MealPlanDetailPage = () => {
 
         <div className="space-y-5 p-10">
           <UpdateMealDaily
-            isEditing={isEditing}
             mealPlanDetails={transformMealPlanDetails(mealPlan.mealPlanDetails)}
+            mealPlanId={0}
+            planName={""}
+            healthGoal={""}
+            duration={0}
+            createdBy={""}
+            createdAt={""}
           />
         </div>
       </div>

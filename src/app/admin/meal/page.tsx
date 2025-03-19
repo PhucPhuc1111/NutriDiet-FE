@@ -170,6 +170,7 @@ const MealPage: React.FC = () => {
           columns={columns}
           dataSource={filteredData}
           onChange={onChange}
+          rowKey={(record) => record.mealPlanId}
         />
       </div>
     </DefaultLayout>

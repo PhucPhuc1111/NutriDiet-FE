@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { DownOutlined } from "@ant-design/icons";
-import { Button, Form, Select, message } from "antd";
-import { useGetAllFoods } from "@/app/data";
+import { Button, Form, Select, message, Input, InputNumber } from "antd";
+import { useGetAllFoods, updateMealPlan } from "@/app/data";
+import Cookies from "js-cookie";
 
 interface DayFoodDetails {
   breakfast: string[];
@@ -17,8 +18,13 @@ interface Day {
 }
 
 interface UpdateMealPlanProps {
+  mealPlanId: number;
   mealPlanDetails: Day[];
-  onUpdateMealPlan: (updatedDays: Day[]) => Promise<void>;
+  planName: string;
+  healthGoal: string;
+  duration: number;
+  createdBy: string;
+  createdAt: string;
 }
 
 const MealSelectionForm: React.FC<{
@@ -62,8 +68,13 @@ const MealSelectionForm: React.FC<{
 };
 
 const UpdateMealPlan: React.FC<UpdateMealPlanProps> = ({
+  mealPlanId,
   mealPlanDetails,
-  onUpdateMealPlan,
+  planName,
+  healthGoal,
+  duration,
+  createdBy,
+  createdAt,
 }) => {
   const [days, setDays] = useState<Day[]>([]);
   const [open, setOpen] = useState<string | null>(null);
@@ -84,8 +95,25 @@ const UpdateMealPlan: React.FC<UpdateMealPlanProps> = ({
   };
 
   const saveChanges = async () => {
+    const mealPlanDetails = days.flatMap((day) =>
+      Object.entries(day.foodDetails).flatMap(([mealType, foodIds]) =>
+        foodIds.map((foodId: any) => ({
+          foodId: Number(foodId),
+          quantity: 1, // Điều chỉnh nếu cần
+          mealType,
+          dayNumber: Number(day.dayNumber),
+        })),
+      ),
+    );
+
+    const params = {
+      planName,
+      healthGoal,
+      mealPlanDetails,
+    };
+
     try {
-      await onUpdateMealPlan(days);
+      await updateMealPlan(mealPlanId, params);
       message.success("Cập nhật thực đơn thành công!");
     } catch (error) {
       message.error("Lỗi khi cập nhật thực đơn!");

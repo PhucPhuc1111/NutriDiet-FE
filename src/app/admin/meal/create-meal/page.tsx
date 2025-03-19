@@ -8,6 +8,8 @@ import React, { useState } from "react";
 import { createMealPlan } from "@/app/data";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+
+// Interface dùng cho chi tiết bữa ăn khi gửi lên API
 interface MealDetail {
   foodId: number;
   quantity: number;
@@ -15,8 +17,16 @@ interface MealDetail {
   dayNumber: number;
 }
 
-interface DayMeal {
-  foodDetails: Record<string, number[]>;
+// Sử dụng kiểu dữ liệu chung DayMeal
+export interface DayMeal {
+  dayNumber: number;
+  foodDetails: {
+    breakfast: number[];
+    lunch: number[];
+    dinner: number[];
+    snacks: number[];
+  };
+  totalCalories: number;
 }
 
 interface FormValues {
@@ -32,16 +42,14 @@ const CreateMealPlanPage: React.FC = () => {
 
   const onFinish = async (values: FormValues) => {
     const formattedMealPlanDetails: MealDetail[] = mealPlanDetails.flatMap(
-      (day, index) =>
+      (day) =>
         Object.entries(day.foodDetails).flatMap(([mealType, foodIds]) =>
-          Array.isArray(foodIds)
-            ? foodIds.map((foodId) => ({
-                foodId,
-                quantity: 1,
-                mealType,
-                dayNumber: index + 1,
-              }))
-            : [],
+          foodIds.map((foodId) => ({
+            foodId,
+            quantity: 1,
+            mealType,
+            dayNumber: day.dayNumber,
+          })),
         ),
     );
 
@@ -69,6 +77,7 @@ const CreateMealPlanPage: React.FC = () => {
       setLoading(false);
     }
   };
+
   return (
     <DefaultLayout>
       <div className="flex justify-between">

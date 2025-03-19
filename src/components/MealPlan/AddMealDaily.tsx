@@ -2,33 +2,24 @@ import React, { useState, useEffect, useCallback } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import { Button, Form, Select } from "antd";
 import { useGetAllFoods } from "@/app/data";
+import { DayMeal } from "@/app/admin/meal/create-meal/page";
 
-interface DayFoodDetails {
-  breakfast: string[];
-  lunch: string[];
-  dinner: string[];
-  evening: string[];
-}
-
-interface Props {
-  onChange: (days: Day[]) => void;
-}
-interface Day {
-  dayNumber: string;
-  foodDetails: DayFoodDetails;
-  totalCalories: number;
-}
-
-const MealSelectionForm: React.FC<{
-  day: Day;
+interface MealSelectionFormProps {
+  day: DayMeal;
   editMode: boolean;
-  updateDay: (dayNumber: string, foodDetails: DayFoodDetails) => void;
-}> = ({ day, editMode, updateDay }) => {
+  updateDay: (dayNumber: number, foodDetails: DayMeal["foodDetails"]) => void;
+}
+
+const MealSelectionForm: React.FC<MealSelectionFormProps> = ({
+  day,
+  editMode,
+  updateDay,
+}) => {
   const { data: foodList, isLoading } = useGetAllFoods(1, 100, "");
 
   const handleChange = (
-    mealType: keyof DayFoodDetails,
-    selectedFoods: string[],
+    mealType: keyof DayMeal["foodDetails"],
+    selectedFoods: number[],
   ) => {
     updateDay(day.dayNumber, { ...day.foodDetails, [mealType]: selectedFoods });
   };
@@ -39,18 +30,23 @@ const MealSelectionForm: React.FC<{
       style={{ maxWidth: 600 }}
       disabled={!editMode}
     >
-      {["breakfast", "lunch", "dinner", "snacks"].map((mealType) => (
+      {(
+        [
+          "breakfast",
+          "lunch",
+          "dinner",
+          "snacks",
+        ] as (keyof DayMeal["foodDetails"])[]
+      ).map((mealType) => (
         <Form.Item key={mealType} label={`Bữa ${mealType}`}>
           <Select
             placeholder={`Chọn bữa ${mealType}`}
             allowClear
             mode="multiple"
-            value={day.foodDetails[mealType as keyof DayFoodDetails]} // Giữ nguyên
+            value={day.foodDetails[mealType]}
             disabled={!editMode || isLoading}
             loading={isLoading}
-            onChange={(values) =>
-              handleChange(mealType as keyof DayFoodDetails, values)
-            }
+            onChange={(values) => handleChange(mealType, values as number[])}
           >
             {foodList?.map((food) => (
               <Select.Option key={food.foodId} value={food.foodId}>
@@ -64,10 +60,14 @@ const MealSelectionForm: React.FC<{
   );
 };
 
-const AddMealDaily: React.FC<Props> = ({ onChange = () => {} }) => {
-  const [days, setDays] = useState<Day[]>([]);
-  const [open, setOpen] = useState<string | null>(null);
-  const [editMode, setEditMode] = useState<Record<string, boolean>>({});
+interface AddMealDailyProps {
+  onChange: (days: DayMeal[]) => void;
+}
+
+const AddMealDaily: React.FC<AddMealDailyProps> = ({ onChange = () => {} }) => {
+  const [days, setDays] = useState<DayMeal[]>([]);
+  const [open, setOpen] = useState<number | null>(null);
+  const [editMode, setEditMode] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
     onChange(days);
@@ -77,24 +77,27 @@ const AddMealDaily: React.FC<Props> = ({ onChange = () => {} }) => {
     setDays((prevDays) => [
       ...prevDays,
       {
-        dayNumber: `Ngày ${prevDays.length + 1}`,
-        foodDetails: { breakfast: [], lunch: [], dinner: [], evening: [] },
+        dayNumber: prevDays.length + 1,
+        foodDetails: { breakfast: [], lunch: [], dinner: [], snacks: [] },
         totalCalories: 0,
       },
     ]);
   }, []);
 
-  const deleteDay = useCallback((dayNumber: string) => {
+  const deleteDay = useCallback((dayNumber: number) => {
     setDays((prevDays) =>
       prevDays.filter((day) => day.dayNumber !== dayNumber),
     );
   }, []);
 
-  const toggleEditMode = useCallback((dayNumber: string) => {
+  const toggleEditMode = useCallback((dayNumber: number) => {
     setEditMode((prev) => ({ ...prev, [dayNumber]: !prev[dayNumber] }));
   }, []);
 
-  const updateDay = (dayNumber: string, foodDetails: DayFoodDetails) => {
+  const updateDay = (
+    dayNumber: number,
+    foodDetails: DayMeal["foodDetails"],
+  ) => {
     setDays((prevDays) =>
       prevDays.map((day) =>
         day.dayNumber === dayNumber ? { ...day, foodDetails } : day,
@@ -119,7 +122,7 @@ const AddMealDaily: React.FC<Props> = ({ onChange = () => {} }) => {
               setOpen(open === day.dayNumber ? null : day.dayNumber)
             }
           >
-            <div>{day.dayNumber}</div>
+            <div>{`Ngày ${day.dayNumber}`}</div>
             <div className="action-buttons flex space-x-3">
               <DownOutlined
                 className={`${open === day.dayNumber ? "rotate-180" : ""}`}
