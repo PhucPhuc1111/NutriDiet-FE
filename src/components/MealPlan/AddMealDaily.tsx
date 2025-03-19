@@ -38,23 +38,48 @@ const MealSelectionForm: React.FC<MealSelectionFormProps> = ({
           "snacks",
         ] as (keyof DayMeal["foodDetails"])[]
       ).map((mealType) => (
+        // <Form.Item key={mealType} label={`Bữa ${mealType}`}>
+        //   <Select
+        //     placeholder={`Chọn bữa ${mealType}`}
+        //     allowClear
+        //     mode="multiple"
+        //     value={day.foodDetails[mealType]}
+        //     disabled={!editMode || isLoading}
+        //     loading={isLoading}
+        //     onChange={(values) => handleChange(mealType, values as number[])}
+        //   >
+        //     {foodList?.map((food) => (
+        //       <Select.Option key={food.foodId} value={food.foodId}>
+        //         {food.foodName}
+        //       </Select.Option>
+        //     ))}
+        //   </Select>
+        // </Form.Item>
         <Form.Item key={mealType} label={`Bữa ${mealType}`}>
-          <Select
-            placeholder={`Chọn bữa ${mealType}`}
-            allowClear
-            mode="multiple"
-            value={day.foodDetails[mealType]}
-            disabled={!editMode || isLoading}
-            loading={isLoading}
-            onChange={(values) => handleChange(mealType, values as number[])}
-          >
-            {foodList?.map((food) => (
-              <Select.Option key={food.foodId} value={food.foodId}>
-                {food.foodName}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
+  <Select
+    placeholder={`Chọn bữa ${mealType}`}
+    allowClear
+    mode="multiple"
+    value={day.foodDetails[mealType]}
+    disabled={!editMode || isLoading}
+    loading={isLoading}
+    onChange={(values) => handleChange(mealType, values as number[])}
+    showSearch // Bật tính năng tìm kiếm
+    filterOption={(input, option) => {
+      // Đảm bảo 'option?.label' là chuỗi trước khi so sánh
+      if (option?.label) {
+        return (option.label as string).toLowerCase().includes(input.toLowerCase());
+      }
+      return false;
+    }}
+  >
+    {foodList?.map((food) => (
+      <Select.Option key={food.foodId} value={food.foodId} label={food.foodName}>
+        {food.foodName}
+      </Select.Option>
+    ))}
+  </Select>
+</Form.Item>
       ))}
     </Form>
   );
