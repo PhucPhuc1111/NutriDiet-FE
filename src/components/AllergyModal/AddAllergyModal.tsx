@@ -39,8 +39,14 @@ const AddAllergyModal: React.FC = () => {
           setConfirmLoading(false);
           return;
         }
-  
-        await createAllergy(values,);
+        const formattedData = {
+          AllergyName: values.allergyName,
+          Notes: values.notes,
+          ingredientIds: values.ingredientIds || [],
+        
+        };
+
+        await createAllergy(formattedData);
         toast.success("Thêm dị ứng thành công");
         setOpen(false);
         setConfirmLoading(false);

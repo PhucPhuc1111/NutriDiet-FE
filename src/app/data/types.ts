@@ -116,6 +116,7 @@ export type Ingredient = {
     notes: string;
     createdAt: string;
     updatedAt: string;
+    ingredientIds: Ingredient[];
    }
 
    export type Disease ={
@@ -124,6 +125,7 @@ export type Ingredient = {
     description: string;
     createdAt: string;
     updatedAt: string;
+    ingredientIds: Ingredient[];
    }
    
 export type Profile = {

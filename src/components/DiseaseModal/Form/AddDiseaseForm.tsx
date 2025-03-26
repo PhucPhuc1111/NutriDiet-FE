@@ -1,13 +1,29 @@
 import React from 'react';
 import { Form, Input, Select, Space } from 'antd';
-
+import { useGetAllIngredients, useGetAllFoods, useGetAllAllergies, useGetAllDiseases } from "@/app/data";
+import { toast } from 'react-toastify';
 const { Option } = Select;
 
 const AddDiseaseForm: React.FC<{ form: any }> = ({ form }) => {
-  const onFinish = (values: any) => {
-    console.log('Received values:', values); // Xử lý khi form submit
-  };
-
+  // Fetching all ingredients
+    const { data: ingredientsData, isLoading: isLoadingIngredients } = useGetAllIngredients(1, 500, '');
+  
+    const { data: allDiseases } = useGetAllDiseases(1, 500, "");
+  
+    
+    const ingredientOptions = ingredientsData?.map(ingredient => ({
+      label: ingredient.ingredientName,
+      value: ingredient.ingredientId,
+    })) || [];
+    
+      const onFinish = async (values: any) => {
+        const isDuplicate = allDiseases?.some((disease) => disease.diseaseName === values.diseaseName);
+    
+        if (isDuplicate) {
+          toast.error("Tên bệnh đã tồn tại, vui lòng chọn tên khác!");
+          return;
+        }
+      };
   return (
     <Form
       form={form}
@@ -15,15 +31,41 @@ const AddDiseaseForm: React.FC<{ form: any }> = ({ form }) => {
       onFinish={onFinish}
       style={{ maxWidth: 600 }}
     >
-      <Form.Item name="diseaseName" label="Tên bệnh nền" rules={[{ required: true, message: 'Tên dị ứng là bắt buộc' }]}>
+      <Form.Item
+        name="diseaseName"
+        label="Tên bệnh"
+        rules={[{ required: true, message: 'Tên bệnh là bắt buộc' }]}
+      >
         <Input />
       </Form.Item>
-      
-      
-      <Form.Item name="description" label="Mô tả" rules={[{ required: true, message: 'Mô tả là bắt buộc' }]}>
-      <Input />
+
+      <Form.Item
+        name="description"
+        label="Mô tả"
+        rules={[{ required: true, message: ' Mô tả là bắt buộc' }]}
+      >
+        <Input />
       </Form.Item>
-      
+      <Form.Item
+        name="ingredientIds"
+        label="Nguyên liệu cần tránh"
+      >
+        <Select
+          mode="multiple"
+          placeholder="Chọn nguyên liệu"
+          options={ingredientOptions}
+          loading={isLoadingIngredients}
+          allowClear
+          showSearch
+          filterOption={(input, option) => {
+            if (option && option.label) {
+            
+              return (option.label as string).toLowerCase().includes(input.toLowerCase());
+            }
+            return false;
+          }}
+        />
+      </Form.Item>
     </Form>
   );
 };

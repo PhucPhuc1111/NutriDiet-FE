@@ -3,7 +3,7 @@
 import { Account, useGetAllAccounts } from '@/app/data'
 import AddAllergyModal from '@/components/AllergyModal/AddAllergyModal'
 import DeleteAllergyModal from '@/components/AllergyModal/DeleteAllerfyModal'
-import UpdateAllergyModal from '@/components/AllergyModal/UpdateAllergyModal'
+
 import AuthLayout from '@/components/Layouts/AuthLayout'
 import DefaultLayout from '@/components/Layouts/DefaultLayout'
 import { Button, Image, Input, Pagination, PaginationProps, Space, Table, TableColumnsType, TableProps } from 'antd'

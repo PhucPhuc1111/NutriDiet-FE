@@ -75,8 +75,7 @@ export async function createFood(
     form.append("FoodImageUrl", formData.FoodImageUrl);
   }
 
-  // formData.AllergyId.forEach((id) => form.append("AllergyId", id));
-  // formData.DiseaseId.forEach((id) => form.append("DiseaseId", id));
+  
   formData.Ingredients.forEach((id) => form.append("Ingredients", id));
   return await request.postMultiPart(`${baseURL}/api/food`, form);
 }
@@ -97,8 +96,6 @@ export async function updateFood(formData: {
   Glucid?: number;
   Fiber?: number;
   Others?: string;
-  // AllergyId?: string[];
-  // DiseaseId?: string[];
   Ingredients?: string [];
 
 
@@ -132,25 +129,11 @@ export async function updateFood(formData: {
   } else {
     form.append("FoodImageUrl", oldData.imageUrl ?? "");
   }
-
-  // if (formData.AllergyId) {
-  //   formData.AllergyId.forEach((id) => form.append("AllergyId", id));
-  // } else {
-  //   oldData.allergies.forEach((id) => form.append("AllergyId", id.toString()));
-  // }
-  
-  if (formData.Ingredients) {
+    if (formData.Ingredients) {
     formData.Ingredients.forEach((id) => form.append("Ingredients", id));
   } else {
     oldData.allergies.forEach((id) => form.append("Ingredients", id.toString()));
   }
-
-  // if (formData.DiseaseId) {
-  //   formData.DiseaseId.forEach((id) => form.append("DiseaseId", id));
-  // } else {
-  //   oldData.diseases.forEach((id) => form.append("DiseaseId", id.toString()));
-  // }
-
   return await request.putMultiPart(`${baseURL}/api/food/${formData.FoodId}`, form);
 }
 ;

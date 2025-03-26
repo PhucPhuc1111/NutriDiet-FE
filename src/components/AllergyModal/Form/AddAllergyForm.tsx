@@ -1,11 +1,34 @@
 import React from 'react';
-import { Form, Input, Space } from 'antd';
+import { Form, Input, Select, Space } from 'antd';
+import { useGetAllIngredients, useGetAllFoods, useGetAllAllergies } from "@/app/data";
+import { toast } from 'react-toastify';
+const { Option } = Select;
 
 const AddAllergyForm: React.FC<{ form: any }> = ({ form }) => {
+  // Fetching all ingredients
+    const { data: ingredientsData, isLoading: isLoadingIngredients } = useGetAllIngredients(1, 500, '');
+  
+    const { data: allAllergies } = useGetAllAllergies(1, 500, "");
+  
+    
+    const ingredientOptions = ingredientsData?.map(ingredient => ({
+      label: ingredient.ingredientName,
+      value: ingredient.ingredientId,
+    })) || [];
+    
+      const onFinish = async (values: any) => {
+        const isDuplicate = allAllergies?.some((allergy) => allergy.allergyName === values.allergyName);
+    
+        if (isDuplicate) {
+          toast.error("Tên dị ứng đã tồn tại, vui lòng chọn tên khác!");
+          return;
+        }
+      };
   return (
     <Form
       form={form}
       name="control-hooks"
+      onFinish={onFinish}
       style={{ maxWidth: 600 }}
     >
       <Form.Item
@@ -23,6 +46,27 @@ const AddAllergyForm: React.FC<{ form: any }> = ({ form }) => {
       >
         <Input />
       </Form.Item>
+      <Form.Item
+        name="ingredientIds"
+        label="Nguyên liệu cần tránh"
+      >
+        <Select
+          mode="multiple"
+          placeholder="Chọn nguyên liệu"
+          options={ingredientOptions}
+          loading={isLoadingIngredients}
+          allowClear
+          showSearch
+          filterOption={(input, option) => {
+            if (option && option.label) {
+            
+              return (option.label as string).toLowerCase().includes(input.toLowerCase());
+            }
+            return false;
+          }}
+        />
+      </Form.Item>
+      
     </Form>
   );
 };

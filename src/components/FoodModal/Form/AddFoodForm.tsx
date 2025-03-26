@@ -155,7 +155,7 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
           showSearch
           filterOption={(input, option) => {
             if (option && option.label) {
-              // So sánh tên nguyên liệu với từ khóa tìm kiếm
+   
               return (option.label as string).toLowerCase().includes(input.toLowerCase());
             }
             return false;
