@@ -9,6 +9,7 @@ import {
   TableProps,
   Image,
 } from "antd";
+import * as XLSX from "xlsx";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import AddFoodModal from "@/components/FoodModal/AddFoodModal";
 // import { Food, Food } from "@/types/types";
@@ -147,7 +148,51 @@ const FoodPage: React.FC = () => {
       ),
     },
   ];
+ const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        if (!evt.target) return;
+        const ab = evt.target.result;
+        const workbook = XLSX.read(ab, { type: "array" });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        console.log("Imported data", json);
+        // Set the imported data to your state
+        // You may want to map the Excel data to match your ingredient structure
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  };
 
+  // Export file handler
+    // Export file handler
+    const handleFileExport = () => {
+      const ws = XLSX.utils.aoa_to_sheet([
+        ["Id", "Tên thực phẩm", "Bữa","Loại","Khẩu phần", "Calories (g)", "Protein (g)", "Carbs (g)","Glucide (g)", "Fiber (g)","Mô tả",'Khác'], // Header row
+        ...filteredData.map((item) => [
+          item.foodId,
+          item.foodName,
+          item.mealType,
+          item.foodType,
+          item.servingSize,
+          item.calories,
+          item.protein,
+          item.carbs,
+          item.glucid,
+          item.fiber,
+          item.description,
+          item.others,
+         
+        
+        ]), // Data rows
+      ]);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Food");
+      XLSX.writeFile(wb, "foods_export.xlsx");
+    };
+  
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };
@@ -169,8 +214,19 @@ const FoodPage: React.FC = () => {
             style={{ marginBottom: 20, width: 300 }}
           />
 
-          <div className="mb-2 flex space-x-3">
-            <AddFoodModal />
+<div className="flex space-x-3 mb-2">
+            <div>
+              <AddFoodModal /> {/* Modal for adding new ingredient */}
+            </div>
+            <input
+              type="file"
+              accept=".xlsx, .xls"
+              style={{ display: "none" }}
+              id="fileInput"
+              onChange={handleFileUpload}
+            />
+            <Button onClick={() => document.getElementById('fileInput')?.click()}>Import Excel</Button>
+            <Button onClick={handleFileExport}>Export Excel</Button>
           </div>
         </div>
 
