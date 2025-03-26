@@ -1,6 +1,7 @@
 "use client"
 import React, { useState } from "react";
 import { Table, Space, Button, Input } from "antd"; // Import Space từ antd
+import * as XLSX from "xlsx";
 import type { TableColumnsType, TableProps } from "antd";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import AddIngredientModal from "@/components/IngredientModal/AddIngredientModal";
@@ -71,25 +72,25 @@ const IngredientPage: React.FC = () => {
   
     // },
     {
-      title: "Calories",
+      title: "Calories (g)",
       dataIndex: "calories",
       sorter: (a, b) => a.calories - b.calories,
   
     },
     {
-      title: "Protein",
+      title: "Protein (g)",
       dataIndex: "protein",
       sorter: (a, b) => a.protein - b.protein,
   
     },
     {
-      title: "Carbs",
+      title: "Carbs (g)",
       dataIndex: "carbs",
       sorter: (a, b) => a.carbs - b.carbs,
   
     },
     {
-      title: "Fat",
+      title: "Fat (g)",
       dataIndex: "fat",
       sorter: (a, b) => a.fat - b.fat,
   
@@ -106,7 +107,40 @@ const IngredientPage: React.FC = () => {
     },
   ];
   
-  
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        if (!evt.target) return;
+        const ab = evt.target.result;
+        const workbook = XLSX.read(ab, { type: "array" });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+        console.log("Imported data", json);
+   
+      };
+      reader.readAsArrayBuffer(file);
+    }
+  };
+
+  // Export file handler
+  const handleFileExport = () => {
+    const ws = XLSX.utils.aoa_to_sheet([
+      ["Id", "Tên nguyên liệu", "Calories (g)", "Protein (g)", "Carbs (g)", "Fat (g)"], // Header row
+      ...filteredData.map(item => [
+        item.ingredientId,
+        item.ingredientName,
+        item.calories,
+        item.protein,
+        item.carbs,
+        item.fat,
+      ]), // Data rows
+    ]); // Transform filteredData into a 2D array
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Ingredients");
+    XLSX.writeFile(wb, "ingredients_export.xlsx");
+  };
  
   
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,6 +153,7 @@ const IngredientPage: React.FC = () => {
         item.ingredientName.toLowerCase().includes(searchText.toLowerCase()),
       )
     : [];
+    
   return (
     <DefaultLayout>
     <div>
@@ -130,9 +165,21 @@ const IngredientPage: React.FC = () => {
           onChange={handleSearch}
           style={{ marginBottom: 20, width: 300 }}
         />
-        <div className="flex space-x-3 mb-2">
-          <AddIngredientModal /> {/* Modal for adding new ingredient */}
-        </div>
+       <div className="flex space-x-3 mb-2">
+            <div>
+              <AddIngredientModal /> {/* Modal for adding new ingredient */}
+            </div>
+            <input
+              type="file"
+              accept=".xlsx, .xls"
+              style={{ display: "none" }}
+              id="fileInput"
+              onChange={handleFileUpload}
+            />
+            <Button onClick={() => document.getElementById('fileInput')?.click()}>Import Excel</Button>
+            <Button onClick={handleFileExport}>Export Excel</Button>
+          </div>
+        
       </div>
   
       <Table<Ingredient> columns={columns} dataSource={filteredData} onChange={onChange} />
