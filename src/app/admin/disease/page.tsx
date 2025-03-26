@@ -4,15 +4,14 @@ import { Table, Space, Input } from "antd"; // Import Space từ antd
 import type { TableColumnsType, TableProps } from "antd";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import AddIngredientModal from "@/components/IngredientModal/AddIngredientModal";
-import UpdateAllergyModal from "@/components/AllergyModal/UpdateAllergyModal";
 import DeleteAllergyModal from "@/components/AllergyModal/DeleteAllerfyModal";
 import AddAllergyModal from "@/components/AllergyModal/AddAllergyModal";
-import UpdateDiseaseModal from "@/components/DiseaseModal/UpdateDiseaseModal";
 import DeleteDiseaseModal from "@/components/DiseaseModal/DeleteDiseaseModal";
 import AddDiseaseModal from "@/components/DiseaseModal/AddDiseaseModal";
 import { format, parseISO } from "date-fns";
 import { Disease } from "@/app/data/types";
 import { useGetAllDiseases } from "@/app/data/disease";
+import DiseaseModal from "@/components/DiseaseModal/DiseaseModal";
 
 function formatDate(dateString?: string): string {
   if (!dateString) return "";
@@ -78,7 +77,7 @@ const DiseasePage: React.FC = () => {
       dataIndex: "action",
       render: (_: any, record: Disease) => (
         <Space size="middle">
-          <UpdateDiseaseModal diseaseId={record.diseaseId} refetch={refetch} />
+        <DiseaseModal diseaseId={record.diseaseId} refetch={refetch} />
           <DeleteDiseaseModal diseaseId={record.diseaseId} refetch={refetch} />
         </Space>
       ),

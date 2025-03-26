@@ -4,13 +4,13 @@ import { Table, Space, Input } from "antd";
 import { TableColumnsType, TableProps } from "antd";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import AddIngredientModal from "@/components/IngredientModal/AddIngredientModal";
-import UpdateAllergyModal from "@/components/AllergyModal/UpdateAllergyModal";
 import DeleteAllergyModal from "@/components/AllergyModal/DeleteAllerfyModal";
 import AddAllergyModal from "@/components/AllergyModal/AddAllergyModal";
 
 import { useGetAllAllergies } from "@/app/data/allergy";
 import { format, parseISO } from "date-fns";
 import { Allergy } from "@/app/data/types";
+import AllergyModal from "@/components/AllergyModal/AllergyModal";
 
 
 function formatDate(dateString?: string): string {
@@ -76,7 +76,7 @@ const AllergyPage: React.FC = () => {
       dataIndex: "action",
       render: (_: any, record: Allergy) => (
         <Space size="middle">
-          <UpdateAllergyModal allergyId={record.allergyId} refetch={refetch} />
+         <AllergyModal allergyId={record.allergyId} refetch={refetch} />
           <DeleteAllergyModal allergyId={record.allergyId} refetch={refetch} />
         </Space>
       ),

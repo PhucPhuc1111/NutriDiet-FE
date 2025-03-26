@@ -216,7 +216,7 @@ const FoodPage: React.FC = () => {
 
 <div className="flex space-x-3 mb-2">
             <div>
-              <AddFoodModal /> {/* Modal for adding new ingredient */}
+              <AddFoodModal /> 
             </div>
             <input
               type="file"

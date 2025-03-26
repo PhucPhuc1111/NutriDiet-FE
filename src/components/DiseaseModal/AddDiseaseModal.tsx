@@ -1,17 +1,18 @@
 import { Button, Modal, Form } from 'antd';
 import { useState } from 'react';
-import { createDisease } from "@/app/data/disease";  
+
+import {createDisease } from "@/app/data/disease";  
 import { useQueryClient } from "@tanstack/react-query"; 
-import AddDiseaseForm from './Form/AddDiseaseForm';
+
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import AddDiseaseForm from './Form/AddDiseaseForm';
 
 const AddDiseaseModal: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
+
   const [form] = Form.useForm();
   const queryClient = useQueryClient(); 
-
   const showModal = () => {
     setOpen(true);
   };
@@ -22,7 +23,7 @@ const AddDiseaseModal: React.FC = () => {
       setConfirmLoading(true);
   
       try {
-        // Lấy danh sách bệnh hiện có để kiểm tra trùng lặp
+        
         const existingDiseases: any[] = queryClient.getQueryData(["diseases"]) || [];
 
         const isDuplicate = existingDiseases.some(
@@ -33,22 +34,27 @@ const AddDiseaseModal: React.FC = () => {
           form.setFields([
             {
               name: "diseaseName",
-              errors: ["Tên bệnh nền đã tồn tại"],
+              errors: ["Tên bệnh đã tồn tại"],
             },
           ]);
           setConfirmLoading(false);
           return;
         }
-  
-        // Gọi API để tạo bệnh mới
-        await createDisease(values);
-        toast.success("Thêm bệnh nền thành công");
+        const formattedData = {
+          DiseaseName: values.diseaseName,
+          Description: values.description,
+          ingredientIds: values.ingredientIds || [],
+        
+        };
+
+        await createDisease(formattedData);
+        toast.success("Thêm bệnh thành công");
         setOpen(false);
         setConfirmLoading(false);
         form.resetFields();
-        queryClient.invalidateQueries({ queryKey: ["diseases"] }); // Làm mới danh sách bệnh nền
+        queryClient.invalidateQueries({ queryKey: ["diseases"] });
       } catch (error) {
-        toast.error("Bệnh nền đã tồn tại");
+        toast.error("Bệnh đã tồn tại");
         setConfirmLoading(false);
       }
     }).catch((errorInfo) => {
@@ -68,10 +74,10 @@ const AddDiseaseModal: React.FC = () => {
   return (
     <>
       <Button style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={showModal}>
-        Thêm bệnh nền
+        Thêm bệnh
       </Button>
       <Modal
-        title="Thêm bệnh nền"
+        title="Thêm bệnh"
         open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading}

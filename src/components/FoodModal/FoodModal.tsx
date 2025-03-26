@@ -82,8 +82,7 @@ const FoodModal: React.FC<{ foodId: number; refetch: () => void }> = ({ foodId, 
         FoodImageUrl: foodImageUrl || null,
         Description: values.description ?? currentFood?.description,
         Others: values.other ?? currentFood?.others,
-        // AllergyId: values.allergies ? [...values.allergies] : [],
-        // DiseaseId: values.diseases ? [...values.diseases] : [],
+   
         Ingredients: values.ingredients ? [...values.ingredients] : [],
       };
   
