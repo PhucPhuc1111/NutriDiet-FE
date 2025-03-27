@@ -17,11 +17,13 @@ import Link from "next/link";
 import DeleteFoodModal from "@/components/FoodModal/DeleteFoodModal";
 import {
   Food,
+  importFoodExcelFile,
   useGetAllAllergies,
   useGetAllDiseases,
   useGetAllFoods,
 } from "@/app/data";
 import FoodModal from "@/components/FoodModal/FoodModal";
+import Loader from "@/components/common/Loader";
 
 const FoodPage: React.FC = () => {
   const { data: allergiesData } = useGetAllAllergies(1, 100, "");
@@ -68,12 +70,12 @@ const FoodPage: React.FC = () => {
       ),
     },
     {
-      title: "Tên thực phẩm",
+      title: "Tên món ăn",
       dataIndex: "foodName",
       sorter: (a, b) => a.foodName.localeCompare(b.foodName),
     },
     {
-      title: "Bữa",
+      title: "Bữa ăn",
       dataIndex: "mealType",
       filters: [
         { text: "Bữa chính", value: "Main" },
@@ -111,7 +113,7 @@ const FoodPage: React.FC = () => {
       dataIndex: "servingSize",
     },
     {
-      title: "Calories(cal)",
+      title: "Calories(kcal)",
       dataIndex: "calories",
       sorter: (a, b) => a.calories - b.calories,
     },
@@ -124,6 +126,11 @@ const FoodPage: React.FC = () => {
       title: "Carbs (g)",
       dataIndex: "carbs",
       sorter: (a, b) => a.calories - b.calories,
+    },
+    {
+      title: "Fat (g)",
+      dataIndex: "fat",
+      sorter: (a, b) => a.fat - b.fat,
     },
     {
       title: "Glucid(g)",
@@ -148,31 +155,29 @@ const FoodPage: React.FC = () => {
       ),
     },
   ];
- const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (evt) => {
-        if (!evt.target) return;
-        const ab = evt.target.result;
-        const workbook = XLSX.read(ab, { type: "array" });
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-        console.log("Imported data", json);
-        // Set the imported data to your state
-        // You may want to map the Excel data to match your ingredient structure
-      };
-      reader.readAsArrayBuffer(file);
+      const formData = new FormData();
+      formData.append('excelFile', file);
+
+      try {
+        await importFoodExcelFile(formData);
+        console.log('Excel file imported successfully');
+        // Optionally refetch to update the data
+        refetch();
+      } catch (error) {
+        console.error('Error importing Excel file:', error);
+      }
     }
   };
 
-  // Export file handler
-    // Export file handler
+
     const handleFileExport = () => {
       const ws = XLSX.utils.aoa_to_sheet([
-        ["Id", "Tên thực phẩm", "Bữa","Loại","Khẩu phần", "Calories (g)", "Protein (g)", "Carbs (g)","Glucide (g)", "Fiber (g)","Mô tả",'Khác'], // Header row
+        [ "Tên món ăn", "Bữa ăn","Loại","Khẩu phần", "Calories(kcal)", "Protein(g)","Carbs(g)","Fat(g)","Glucide(g)", "Fiber(g)","Mô tả"], // Header row
         ...filteredData.map((item) => [
-          item.foodId,
+         
           item.foodName,
           item.mealType,
           item.foodType,
@@ -180,10 +185,11 @@ const FoodPage: React.FC = () => {
           item.calories,
           item.protein,
           item.carbs,
+          item.fat,
           item.glucid,
           item.fiber,
           item.description,
-          item.others,
+     
          
         
         ]), // Data rows
@@ -229,12 +235,17 @@ const FoodPage: React.FC = () => {
             <Button onClick={handleFileExport}>Export Excel</Button>
           </div>
         </div>
-
+        {isLoading ? (
+          <Loader />
+        ) : (
         <Table<Food>
           columns={columns}
           dataSource={filteredData}
           onChange={onChange}
-        />
+        /> )}
+         
+        
+       
       </div>
     </DefaultLayout>
   );

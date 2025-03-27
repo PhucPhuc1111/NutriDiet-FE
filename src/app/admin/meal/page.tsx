@@ -8,6 +8,7 @@ import DeleteMealPlanModal from "@/components/MealPlanModel/DeleteMealPlanModal"
 import Link from "next/link";
 import { MealPlan, useGetAllMealPlans } from "@/app/data";
 import { format, parseISO } from "date-fns";
+import Loader from "@/components/common/Loader";
 function formatDate(dateString?: string): string {
   if (!dateString) return "";
   try {
@@ -137,13 +138,13 @@ const MealPage: React.FC = () => {
       )
     : [];
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (isLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (isError) {
-    return <div>Error: {error?.message}</div>;
-  }
+  // if (isError) {
+  //   return <div>Error: {error?.message}</div>;
+  // }
 
   return (
     <DefaultLayout>
@@ -165,13 +166,15 @@ const MealPage: React.FC = () => {
             </Link>
           </div>
         </div>
-
+        {isLoading ? (
+          <Loader />
+        ) : (
         <Table<MealPlan>
           columns={columns}
           dataSource={filteredData}
           onChange={onChange}
           rowKey={(record) => record.mealPlanId}
-        />
+        />)}
       </div>
     </DefaultLayout>
   );

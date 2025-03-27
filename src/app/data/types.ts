@@ -27,8 +27,16 @@ export interface CreateMealPlanParams {
     gender: "Male" | "Female" | "Other"; 
     location: string; 
     status: "Active" | "Inactive"; 
-  }
-  
+    userPackages: UserPackage[];
+  };
+  export type UserPackage ={
+    userPackageId: number;
+    packageId: number;
+    packageName: string;
+    startDate: string;
+    expiryDate: string;
+    status: "Active" | "Inactive"; 
+  };
   export type User = {
     id: number;
     name: string;

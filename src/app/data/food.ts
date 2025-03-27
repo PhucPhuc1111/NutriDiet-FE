@@ -36,7 +36,10 @@ export async function getFoodById(foodId: number): Promise<ApiResponse<Food>> {
 //   return response;
 // }
 
-
+// POST request to upload an Excel file
+export async function importFoodExcelFile(formData: FormData): Promise<void> {
+  await request.postMultiPart(`${baseURL}/api/food/excel`, formData);
+}
 export async function createFood(
   formData: {
     FoodName: string;
