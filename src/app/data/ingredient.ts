@@ -13,7 +13,9 @@ export async function getAllIngredients(pageIndex: number, pageSize: number): Pr
 export async function getIngredientById(ingredientId: number): Promise<ApiResponse<Ingredient>> {
   return await request.get(`${baseURL}/api/ingredient/${ingredientId}`);
 }
-
+export async function importIngredientExcelFile(formData: FormData): Promise<void> {
+  await request.postMultiPart(`${baseURL}/api/ingredient/excel`, formData);
+}
 export async function createIngredient(
   formData: { 
     ingredientName: string;

@@ -1,9 +1,9 @@
 
+
 "use client"
 import { Account, useGetAllAccounts } from '@/app/data'
 import AddAllergyModal from '@/components/AllergyModal/AddAllergyModal'
 import DeleteAllergyModal from '@/components/AllergyModal/DeleteAllerfyModal'
-import Loader from '@/components/common/Loader'
 
 import AuthLayout from '@/components/Layouts/AuthLayout'
 import DefaultLayout from '@/components/Layouts/DefaultLayout'
@@ -18,7 +18,7 @@ import React, { useMemo, useState } from 'react'
 
 
 
-const CustomerPage: React.FC = () => {
+const FeedbackPage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
   const pageIndex = 1;
   const pageSize = 100;
@@ -135,6 +135,13 @@ const columns: TableColumnsType<Account> = [
     )
   : [];
 
+if (isLoading) {
+  return <div>Loading...</div>;
+}
+
+if (isError) {
+  return <div>Error: {error?.message}</div>;
+}
 
 
 
@@ -154,18 +161,16 @@ const columns: TableColumnsType<Account> = [
           {/* <AddAllergyModal /> */}
         </div>
       </div>
-      {isLoading ? (
-          <Loader />
-        ) : (
+
       <Table<Account>
         columns={columns}
         dataSource={filteredData}
         onChange={onChange}
-      />)}
+      />
       
     </div>
   </DefaultLayout>
   );
 };
 
-export default CustomerPage;
+export default FeedbackPage;

@@ -11,6 +11,7 @@ import { useGetAllAllergies } from "@/app/data/allergy";
 import { format, parseISO } from "date-fns";
 import { Allergy } from "@/app/data/types";
 import AllergyModal from "@/components/AllergyModal/AllergyModal";
+import Loader from "@/components/common/Loader";
 
 
 function formatDate(dateString?: string): string {
@@ -94,13 +95,13 @@ const AllergyPage: React.FC = () => {
       )
     : [];
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (isLoading) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (isError) {
-    return <div>Error: {error?.message}</div>;
-  }
+  // if (isError) {
+  //   return <div>Error: {error?.message}</div>;
+  // }
 
   return (
     <DefaultLayout>
@@ -117,13 +118,15 @@ const AllergyPage: React.FC = () => {
             <AddAllergyModal />
           </div>
         </div>
-
+        {isLoading ? (
+          <Loader />
+        ) : (
         <Table<Allergy>
           columns={columns}
           dataSource={filteredData}
           onChange={onChange}
         />
-        
+        )}
       </div>
     </DefaultLayout>
   );

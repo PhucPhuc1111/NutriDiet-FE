@@ -78,6 +78,7 @@ const menuGroups = [
           { label: ["Bữa ăn"], route: "/admin/meal" },
 
           { label: ["Khách hàng"], route: "/admin/customer" },
+          { label: ["Feedback"], route: "/admin/feedback" },
         ],
       },
 

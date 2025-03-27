@@ -12,6 +12,7 @@ import { format, parseISO } from "date-fns";
 import { Disease } from "@/app/data/types";
 import { useGetAllDiseases } from "@/app/data/disease";
 import DiseaseModal from "@/components/DiseaseModal/DiseaseModal";
+import Loader from "@/components/common/Loader";
 
 function formatDate(dateString?: string): string {
   if (!dateString) return "";
@@ -94,13 +95,7 @@ const DiseasePage: React.FC = () => {
       )
     : [];
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
-  if (isError) {
-    return <div>Error: {error?.message}</div>;
-  }
   return (
     <DefaultLayout>
       <div className="">
@@ -117,13 +112,15 @@ const DiseasePage: React.FC = () => {
             <AddDiseaseModal />
           </div>
         </div>
-
+        {isLoading ? (
+          <Loader />
+        ) : (
         <Table<Disease>
           columns={columns}
           dataSource={filteredData}
           rowKey={(record) => record.diseaseId}
           onChange={onChange}
-        />
+        />)}
       </div>
     </DefaultLayout>
   );
