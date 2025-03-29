@@ -90,13 +90,13 @@ const AddFoodModal: React.FC = () => {
         onCancel={handleCancel}
         footer={[
           <Button key="reset" onClick={handleReset} style={{ marginRight: 10 }}>
-            Reset
+            Tạo lại
           </Button>,
           <Button key="cancel" onClick={handleCancel} style={{ marginRight: 10 }}>
-            Cancel
+            Hủy
           </Button>,
-          <Button key="submit" type="primary" loading={confirmLoading} onClick={handleOk}>
-            Submit
+          <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} loading={confirmLoading} onClick={handleOk}>
+            Xác nhận
           </Button>, 
         ]}
       >

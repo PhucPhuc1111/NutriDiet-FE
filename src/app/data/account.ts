@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import request, { baseURL } from "@/services/apiClient";
 
-import { Account, Allergy } from "./types";
+import { Account, Allergy, Dashboard } from "./types";
 import { ApiResponse } from ".";
 
 import Cookies from "js-cookie";
@@ -11,6 +11,12 @@ export async function getAllAccounts(
   pageSize: number
 ): Promise<ApiResponse<Account[]>> {
   return await request.get(`${baseURL}/api/user?pageIndex=${pageIndex}&pageSize=${pageSize}`);
+}
+
+export async function getAllDashboard(
+
+): Promise<ApiResponse<Dashboard>> {
+  return await request.get(`${baseURL}/api/dashboard/dashboard`);
 }
 
 

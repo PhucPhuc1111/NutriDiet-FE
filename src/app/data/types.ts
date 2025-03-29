@@ -83,6 +83,31 @@ export type Ingredient = {
     diseases: Disease[],
     ingredients: Ingredient[]
   };
+export type Dashboard={
+  totalUser: number;
+  mealPlanNumber : number;
+  packageNumber: number;
+
+}
+export type Package = {
+  packageId: number;
+  packageName: string;
+  price: number;
+  duration: number;
+  description: string;
+}
+  export type Feedback = {
+ id: number;
+ type: string;
+ userId: number;
+ fullName: string;
+ recommendedAt: string;
+ response: string;
+status: string;
+rejectReason: string;
+feedback: string;
+
+  }
    export type MealPlan ={
     mealPlanId:number;
     planName:string;
@@ -108,7 +133,8 @@ export type Ingredient = {
   }
    export type MealPlanDetail ={
     mealPlanDetailId:number;
-    foodName: number;
+    foodId: number;
+    foodName: string;
     quantity: number;
     mealType: string;
     dayNumber: string;

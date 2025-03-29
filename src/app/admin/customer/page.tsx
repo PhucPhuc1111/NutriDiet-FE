@@ -8,13 +8,21 @@ import Loader from '@/components/common/Loader'
 import AuthLayout from '@/components/Layouts/AuthLayout'
 import DefaultLayout from '@/components/Layouts/DefaultLayout'
 import { Button, Image, Input, Pagination, PaginationProps, Space, Table, TableColumnsType, TableProps } from 'antd'
+import { format, parseISO } from 'date-fns'
 
 import Link from 'next/link'
 
 import React, { useMemo, useState } from 'react'
 
 
-
+function formatDate(dateString?: string): string {
+  if (!dateString) return ""; 
+  try {
+    return format(parseISO(dateString), "hh:mm dd/MM/yyyy");
+  } catch (error) {
+    console.error("Error formatting date:", error);
+    return dateString;
+  }}
 
 
 
@@ -96,23 +104,26 @@ const columns: TableColumnsType<Account> = [
     render: (userPackages) => {
       // Kiểm tra xem userPackages có dữ liệu không
       if (userPackages && userPackages.length > 0) {
-        return userPackages.map((pkg: { startDate: any }) => pkg.startDate).join(", "); // Hiển thị danh sách packageName
+        // Format ngày bắt đầu
+        return userPackages.map((pkg: { startDate: string }) => formatDate(pkg.startDate)).join(", ");
       }
       return "Chưa đăng ký"; // Nếu không có package, hiển thị thông báo
     },
   },
-
+  
   {
     title: "Ngày hết hạn",
     dataIndex: "userPackages",
     render: (userPackages) => {
       // Kiểm tra xem userPackages có dữ liệu không
       if (userPackages && userPackages.length > 0) {
-        return userPackages.map((pkg: { expiryDate: any }) => pkg.expiryDate).join(", "); // Hiển thị danh sách packageName
+        // Format ngày hết hạn
+        return userPackages.map((pkg: { expiryDate: string }) => formatDate(pkg.expiryDate)).join(", ");
       }
       return "Chưa đăng ký"; // Nếu không có package, hiển thị thông báo
     },
   },
+  
  
   {
     title: "Trạng thái",

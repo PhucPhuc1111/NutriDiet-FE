@@ -19,7 +19,7 @@ import Loader from "@/components/common/Loader"; // Import Loader component
 const IngredientPage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
   const pageIndex = 1;
-  const pageSize = 200;
+  const pageSize = 500;
   const { data, isLoading, isError, error, refetch } = useGetAllIngredients(
     pageIndex,
     pageSize,
@@ -117,7 +117,7 @@ const IngredientPage: React.FC = () => {
       ]), // Data rows
     ]);
     const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Ingredients");
+    XLSX.utils.book_append_sheet(wb, ws, "Ingredient");
     XLSX.writeFile(wb, "ingredients_export.xlsx");
   };
 

@@ -26,7 +26,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ value, onChange }) => {
   }, [value]);
 
   const beforeUpload = (file: File) => {
-    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
+    const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png" || file.type === "image/jpeg";
     if (!isJpgOrPng) {
       message.error("Bạn chỉ có thể tải lên JPG/PNG!");
     }

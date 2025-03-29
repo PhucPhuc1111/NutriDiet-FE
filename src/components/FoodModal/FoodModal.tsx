@@ -100,7 +100,7 @@ const FoodModal: React.FC<{ foodId: number; refetch: () => void }> = ({ foodId, 
   
   return (
     <>
-      <Button onClick={showDetailModal}>Chi tiết</Button>
+      <Button style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={showDetailModal}>Chi tiết</Button>
       <Modal
         title={isEditing ? "Sửa Thực Phẩm" : "Chi tiết Thực Phẩm"}
         open={open}
@@ -111,10 +111,10 @@ const FoodModal: React.FC<{ foodId: number; refetch: () => void }> = ({ foodId, 
           isEditing ? (
             <>
               <Button key="cancel" onClick={handleCancel}>Hủy</Button>
-              <Button key="submit" type="primary" onClick={handleSave} loading={loadingSave}>Lưu</Button>
+              <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={handleSave} loading={loadingSave}>Lưu</Button>
             </>
           ) : (
-            <Button key="edit" type="primary" onClick={enableEdit}>Sửa</Button>
+            <Button key="edit" style={{ backgroundColor: '#2f855a', color: 'white' }}onClick={enableEdit}>Sửa</Button>
           )
         ]}
       >
