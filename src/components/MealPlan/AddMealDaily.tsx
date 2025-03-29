@@ -32,10 +32,10 @@ const MealSelectionForm: React.FC<MealSelectionFormProps> = ({
     >
       {(
         [
-          "breakfast",
-          "lunch",
-          "dinner",
-          "snacks",
+          "Breakfast",
+          "Lunch",
+          "Dinner",
+          "Snacks",
         ] as (keyof DayMeal["foodDetails"])[]
       ).map((mealType) => (
         // <Form.Item key={mealType} label={`Bữa ${mealType}`}>
@@ -103,7 +103,7 @@ const AddMealDaily: React.FC<AddMealDailyProps> = ({ onChange = () => {} }) => {
       ...prevDays,
       {
         dayNumber: prevDays.length + 1,
-        foodDetails: { breakfast: [], lunch: [], dinner: [], snacks: [] },
+        foodDetails: { Breakfast: [], Lunch: [], Dinner: [], Snacks: [] },
         totalCalories: 0,
       },
     ]);
