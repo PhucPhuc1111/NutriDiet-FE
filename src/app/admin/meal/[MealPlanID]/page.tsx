@@ -256,10 +256,10 @@ const MealPlanDetailPage = () => {
   
       // Cập nhật bảng ánh xạ từ mealType của API
       const mealTypeMap: Record<string, keyof DayFoodDetails> = {
-        "breakfast": "breakfast",
-        "lunch": "lunch",
-        "dinner": "dinner",
-        "snacks": "evening",  // Sử dụng "snacks" cho bữa phụ
+        "Breakfast": "breakfast",
+        "Lunch": "lunch",
+        "Dinner": "dinner",
+        "Snacks": "evening",  // Sử dụng "snacks" cho bữa phụ
       };
   
       const mealType = mealTypeMap[detail.mealType];

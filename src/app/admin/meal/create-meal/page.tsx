@@ -21,10 +21,10 @@ interface MealDetail {
 export interface DayMeal {
   dayNumber: number;
   foodDetails: {
-    breakfast: number[];
-    lunch: number[];
-    dinner: number[];
-    snacks: number[];
+    Breakfast: number[];
+    Lunch: number[];
+    Dinner: number[];
+    Snacks: number[];
   };
   totalCalories: number;
 }
