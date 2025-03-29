@@ -8,7 +8,11 @@ import AddIngredientModal from "@/components/IngredientModal/AddIngredientModal"
 import UpdateIngredientModal from "@/components/IngredientModal/UpdateIngredientModal";
 import DeleteIngredientModal from "@/components/IngredientModal/DeleteIngredientModal";
 import { Key } from "antd/es/table/interface";
-import { importIngredientExcelFile, Ingredient, useGetAllIngredients } from "@/app/data";
+import {
+  importIngredientExcelFile,
+  Ingredient,
+  useGetAllIngredients,
+} from "@/app/data";
 import { toast } from "react-toastify";
 import Loader from "@/components/common/Loader"; // Import Loader component
 
@@ -27,7 +31,7 @@ const IngredientPage: React.FC = () => {
     pagination,
     filters,
     sorter,
-    extra
+    extra,
   ) => {
     console.log("params", pagination, filters, sorter, extra);
   };
@@ -69,8 +73,14 @@ const IngredientPage: React.FC = () => {
       dataIndex: "action",
       render: (_: any, record: Ingredient) => (
         <Space size="middle">
-          <UpdateIngredientModal ingredientId={record.ingredientId} refetch={refetch} />
-          <DeleteIngredientModal ingredientId={record.ingredientId} refetch={refetch} />
+          <UpdateIngredientModal
+            ingredientId={record.ingredientId}
+            refetch={refetch}
+          />
+          <DeleteIngredientModal
+            ingredientId={record.ingredientId}
+            refetch={refetch}
+          />
         </Space>
       ),
     },
@@ -119,7 +129,7 @@ const IngredientPage: React.FC = () => {
   // Filtered data based on search
   const filteredData = Array.isArray(data)
     ? data.filter((item) =>
-        item.ingredientName.toLowerCase().includes(searchText.toLowerCase())
+        item.ingredientName.toLowerCase().includes(searchText.toLowerCase()),
       )
     : [];
 
@@ -134,7 +144,7 @@ const IngredientPage: React.FC = () => {
             onChange={handleSearch}
             style={{ marginBottom: 20, width: 300 }}
           />
-          <div className="flex space-x-3 mb-2">
+          <div className="mb-2 flex space-x-3">
             <div>
               <AddIngredientModal /> {/* Modal for adding new ingredient */}
             </div>
@@ -145,7 +155,9 @@ const IngredientPage: React.FC = () => {
               id="fileInput"
               onChange={handleFileUpload}
             />
-            <Button onClick={() => document.getElementById("fileInput")?.click()}>
+            <Button
+              onClick={() => document.getElementById("fileInput")?.click()}
+            >
               Import Excel
             </Button>
             <Button onClick={handleFileExport}>Export Excel</Button>
@@ -156,7 +168,11 @@ const IngredientPage: React.FC = () => {
         {isLoading ? (
           <Loader />
         ) : (
-          <Table<Ingredient> columns={columns} dataSource={filteredData} onChange={onChange} />
+          <Table<Ingredient>
+            columns={columns}
+            dataSource={filteredData}
+            onChange={onChange}
+          />
         )}
       </div>
     </DefaultLayout>
