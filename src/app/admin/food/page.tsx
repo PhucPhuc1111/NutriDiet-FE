@@ -33,7 +33,7 @@ const FoodPage: React.FC = () => {
 
   const [searchText, setSearchText] = useState<string>("");
   const pageIndex = 1;
-  const pageSize = 200;
+  const pageSize = 500;
   const { data, isLoading, isError, error, refetch } = useGetAllFoods(
     pageIndex,
     pageSize,
@@ -78,8 +78,11 @@ const FoodPage: React.FC = () => {
       title: "Bữa ăn",
       dataIndex: "mealType",
       filters: [
-        { text: "Bữa chính", value: "Main" },
-        { text: "Bữa phụ", value: "Dessert" },
+        { text: "Bữa sáng", value: "breakfast" },
+        { text: "Bữa trưa", value: "lunch" },
+        { text: "Bữa chiều", value: "dinner" },
+        { text: "Bữa tối", value: "evening" },
+       
       ],
       onFilter: (value: string | boolean | Key, record: Food): boolean => {
         if (typeof record.mealType === "string" && typeof value === "string") {

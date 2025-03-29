@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { Table, Space, Input } from "antd"; // Import Space từ antd
+import { Table, Space, Input, Button } from "antd"; // Import Space từ antd
 import type { TableColumnsType, TableProps } from "antd";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import AddIngredientModal from "@/components/IngredientModal/AddIngredientModal";
@@ -13,7 +13,7 @@ import { Disease } from "@/app/data/types";
 import { useGetAllDiseases } from "@/app/data/disease";
 import DiseaseModal from "@/components/DiseaseModal/DiseaseModal";
 import Loader from "@/components/common/Loader";
-
+import * as XLSX from "xlsx";
 function formatDate(dateString?: string): string {
   if (!dateString) return "";
   try {
@@ -34,6 +34,21 @@ const DiseasePage: React.FC = () => {
     pageSize,
     searchText,
   );
+   const handleFileExport = () => {
+      const ws = XLSX.utils.aoa_to_sheet([
+        ["Id", "Tên bệnh", "Mô tả","Ngày tạo", "Ngày cập nhật"], // Header row
+        ...filteredData.map((item) => [
+          item.diseaseId,
+          item.diseaseName,
+          item.description,
+          formatDate(item.createdAt),  // Format date createdAt
+          formatDate(item.updatedAt),  // Format date updatedAt
+        ]), // Data rows
+      ]);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Disease");
+      XLSX.writeFile(wb, "disease_export.xlsx");
+    };
   const onChange: TableProps<Disease>["onChange"] = (
     pagination,
     filters,
@@ -110,6 +125,8 @@ const DiseasePage: React.FC = () => {
 
           <div className="mb-2 flex space-x-3">
             <AddDiseaseModal />
+                        <Button onClick={handleFileExport}>Export Excel</Button>
+            
           </div>
         </div>
         {isLoading ? (

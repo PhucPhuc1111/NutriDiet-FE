@@ -84,7 +84,7 @@ const AddIngredientModal: React.FC = () => {
           <Button key="cancel" onClick={handleCancel} style={{ marginRight: 10 }}>
             Hủy
           </Button>,
-          <Button key="submit" type="primary" loading={confirmLoading} onClick={handleOk}>
+          <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} loading={confirmLoading} onClick={handleOk}>
             Xác nhận
           </Button>,
         ]}

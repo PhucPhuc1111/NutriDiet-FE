@@ -1,12 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Table, Space, Input } from "antd";
+import { Table, Space, Input, Button } from "antd";
 import { TableColumnsType, TableProps } from "antd";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import AddIngredientModal from "@/components/IngredientModal/AddIngredientModal";
 import DeleteAllergyModal from "@/components/AllergyModal/DeleteAllerfyModal";
 import AddAllergyModal from "@/components/AllergyModal/AddAllergyModal";
-
+import * as XLSX from "xlsx";
 import { useGetAllAllergies } from "@/app/data/allergy";
 import { format, parseISO } from "date-fns";
 import { Allergy } from "@/app/data/types";
@@ -44,6 +44,22 @@ const AllergyPage: React.FC = () => {
     console.log("params", pagination, filters, sorter, extra);
   };
 
+  // Handle file export
+  const handleFileExport = () => {
+    const ws = XLSX.utils.aoa_to_sheet([
+      ["Id", "Tên dị ứng", "Chú ý","Ngày tạo", "Ngày cập nhật"], // Header row
+      ...filteredData.map((item) => [
+        item.allergyId,
+        item.allergyName,
+        item.notes,
+        formatDate(item.createdAt),  // Format date createdAt
+        formatDate(item.updatedAt),  // Format date updatedAt
+      ]), // Data rows
+    ]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Allergy");
+    XLSX.writeFile(wb, "allergies_export.xlsx");
+  };
 
   const columns: TableColumnsType<Allergy> = [
     {
@@ -116,6 +132,7 @@ const AllergyPage: React.FC = () => {
           />
           <div className="mb-2 flex space-x-3">
             <AddAllergyModal />
+            <Button onClick={handleFileExport}>Export Excel</Button>
           </div>
         </div>
         {isLoading ? (

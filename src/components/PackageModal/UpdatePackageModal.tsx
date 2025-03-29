@@ -1,58 +1,60 @@
 import { Button, Modal, Form } from 'antd';
 import { useState, useEffect } from 'react';
-import { getIngredientById, updateIngredient, useGetAllIngredients } from '@/app/data/ingredient';
-import UpdateIngredientForm from './Form/UpdateIngredientForm';
+import UpdateIngredientForm from './Form/UpdatePackageForm';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { getPackageById, updatePackage, useGetAllPackages } from '@/app/data/package';
+import { Package } from '@/app/data';
+import UpdatePackageForm from './Form/UpdatePackageForm';
 
-const UpdateIngredientModal: React.FC<{ ingredientId: number; refetch: () => void }> = ({ ingredientId, refetch }) => {
+const UpdatePackageModal: React.FC<{ packageId: number; refetch: () => void }> = ({ packageId, refetch }) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [form] = Form.useForm();
-  const [currentIngredient, setCurrentIngredient] = useState<any>(null);
+  const [currentPackage, setCurrentPackage] =  useState<any>(null);
 
   const showModal = () => {
     setOpen(true);
   };
 
-  const { data: allIngredientsData } = useGetAllIngredients(1, 500, "");
+  const { data: allPackagesData } = useGetAllPackages(1, 500, "");
 
   const handleOk = () => {
     form.validateFields().then(async (values) => {
       setConfirmLoading(true);
 
       try {
-        const allIngredients = allIngredientsData || [];
+        const allPackages = allPackagesData || [];
         
         const isDuplicate = 
-          values.ingredientName.toLowerCase() !== currentIngredient?.ingredientName.toLowerCase() &&
-          allIngredients.some(
-            (ingredient: any) => 
-              ingredient.ingredientName.toLowerCase() === values.ingredientName.toLowerCase() &&
-              ingredient.id !== ingredientId
+          values.packageName.toLowerCase() !== currentPackage?.packageName.toLowerCase() &&
+          allPackages.some(
+            (premiumPackage: any) => 
+              premiumPackage.packageName.toLowerCase() === values.packageName.toLowerCase() &&
+            premiumPackage.id !== packageId
           );
 
         if (isDuplicate) {
           form.setFields([
             {
-              name: 'ingredientName',
-              errors: ['Tên nguyên liệu đã tồn tại'],
+              name: 'packageName',
+              errors: ['Tên gói đã tồn tại'],
             },
           ]);
-          toast.error('Tên nguyên liệu đã tồn tại!', { position: 'top-right' });
+          toast.error('Tên gói đã tồn tại!', { position: 'top-right' });
           setConfirmLoading(false);
           return;
         }
 
-        await updateIngredient(ingredientId, values,);
+        await updatePackage(packageId, values,);
         refetch();
         setOpen(false);
         setConfirmLoading(false);
         form.resetFields();
-        toast.success('Cập nhật nguyên liệu thành công!', { position: 'top-right' });
+        toast.success('Cập nhật gói thành công!', { position: 'top-right' });
       } catch (error) {
-        console.error('Lỗi khi cập nhật nguyên liệu:', error);
-        toast.error('Lỗi khi cập nhật nguyên liệu!', { position: 'top-right' });
+        console.error('Lỗi khi cập nhật gói:', error);
+        toast.error('Lỗi khi cập nhật gói!', { position: 'top-right' });
         setConfirmLoading(false);
       }
     }).catch((errorInfo) => {
@@ -67,26 +69,23 @@ const UpdateIngredientModal: React.FC<{ ingredientId: number; refetch: () => voi
 
   useEffect(() => {
     if (open) {
-      const fetchIngredientData = async () => {
+      const fetchPackageData = async () => {
         try {
-          const response = await getIngredientById(ingredientId);
-          setCurrentIngredient(response.data);
+          const response = await getPackageById(packageId);
+          setCurrentPackage(response.data);
           form.setFieldsValue({
-            ingredientName: response.data?.ingredientName,
-            // category: response.data?.category,
-            // unit: response.data?.unit,
-            calories: response.data?.calories,
-            carbs: response.data?.carbs,
-            fat: response.data?.fat,
-            protein: response.data?.protein,
+            packageName: response.data?.packageName,
+            duration: response.data?.duration,
+            price: response.data?.price,
+            description: response?.data?.description,
           });
         } catch (error) {
           console.error('Lỗi khi lấy dữ liệu nguyên liệu:', error);
         }
       };
-      fetchIngredientData();
+      fetchPackageData();
     }
-  }, [open, ingredientId, form]);
+  }, [open, packageId, form]);
 
   return (
     <>
@@ -108,10 +107,10 @@ const UpdateIngredientModal: React.FC<{ ingredientId: number; refetch: () => voi
           </Button>,
         ]}
       >
-        <UpdateIngredientForm form={form} />
+        <UpdatePackageForm form={form} />
       </Modal>
     </>
   );
 };
 
-export default UpdateIngredientModal;
+export default UpdatePackageModal;

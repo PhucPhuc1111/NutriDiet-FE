@@ -1,60 +1,56 @@
-import { Button, Modal, Form } from 'antd';
-import { useState } from 'react';
+import { Button, Modal, Form } from "antd";
+import { useState } from "react";
+import AddIngredientForm from "./Form/AddPackageForm";
+import { useQueryClient } from "@tanstack/react-query";
+import { createIngredient } from "@/app/data";
+import { toast } from "react-toastify";
+import { createPackage } from "@/app/data/package";
+import AddPackageForm from "./Form/AddPackageForm";
 
-import {createDisease } from "@/app/data/disease";  
-import { useQueryClient } from "@tanstack/react-query"; 
-
-import { toast } from 'react-toastify';
-import AddDiseaseForm from './Form/AddDiseaseForm';
-
-const AddDiseaseModal: React.FC = () => {
+const AddPackageModal: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
 
   const [form] = Form.useForm();
-  const queryClient = useQueryClient(); 
+  const queryClient = useQueryClient();
+
   const showModal = () => {
     setOpen(true);
   };
 
   const handleOk = () => {
     form.validateFields().then(async (values) => {
-      console.log('Form Values:', values);
+      console.log("Form Values:", values);
       setConfirmLoading(true);
-  
-      try {
-        
-        const existingDiseases: any[] = queryClient.getQueryData(["diseases"]) || [];
 
-        const isDuplicate = existingDiseases.some(
-          (disease: any) => disease.diseaseName.toLowerCase() === values.diseaseName.toLowerCase()
+      try {
+        const existingPackages: any[] = queryClient.getQueryData(["packages"]) || [];
+
+
+        const isDuplicate = existingPackages.some(
+          (premiumPackage: any) => premiumPackage.packageName.toLowerCase() === values.packageName.toLowerCase()
         );
-  
+
         if (isDuplicate) {
           form.setFields([
             {
-              name: "diseaseName",
-              errors: ["Tên bệnh đã tồn tại"],
+              name: "packageName",
+              errors: ["Tên gói đã tồn tại"],
             },
           ]);
           setConfirmLoading(false);
           return;
         }
-        const formattedData = {
-          DiseaseName: values.diseaseName,
-          Description: values.description,
-          ingredientIds: values.ingredientIds || [],
-        
-        };
 
-        await createDisease(formattedData);
-        toast.success("Thêm bệnh thành công");
+       
+        await createPackage(values);
+        toast.success("Thêm gói thành công");
         setOpen(false);
         setConfirmLoading(false);
         form.resetFields();
-        queryClient.invalidateQueries({ queryKey: ["diseases"] });
+        queryClient.invalidateQueries({ queryKey: ["packages"] }); 
       } catch (error) {
-        toast.error("Bệnh đã tồn tại");
+        toast.error("Có lỗi xảy ra khi thêm gói");
         setConfirmLoading(false);
       }
     }).catch((errorInfo) => {
@@ -62,9 +58,10 @@ const AddDiseaseModal: React.FC = () => {
       setConfirmLoading(false);
     });
   };
-  
+
   const handleCancel = () => {
-    setOpen(false);
+    console.log("Clicked cancel button");
+    setOpen(false); 
   };
 
   const handleReset = () => {
@@ -73,11 +70,11 @@ const AddDiseaseModal: React.FC = () => {
 
   return (
     <>
-      <Button style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={showModal}>
-        Thêm bệnh
+      <Button style={{ backgroundColor: "#2f855a", color: "white" }} onClick={showModal}>
+        Thêm gói
       </Button>
       <Modal
-        title="Thêm bệnh"
+        title="Thêm gói"
         open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading}
@@ -94,10 +91,10 @@ const AddDiseaseModal: React.FC = () => {
           </Button>,
         ]}
       >
-        <AddDiseaseForm form={form} />
+        <AddPackageForm form={form} />
       </Modal>
     </>
   );
 };
 
-export default AddDiseaseModal;
+export default AddPackageModal;
