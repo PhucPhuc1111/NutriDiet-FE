@@ -246,20 +246,20 @@ const MealPlanDetailPage = () => {
     mealPlanDetails.forEach((detail) => {
       if (!groupedDays[detail.dayNumber]) {
         groupedDays[detail.dayNumber] = {
-          breakfast: [],
-          lunch: [],
-          dinner: [],
-          evening: [],
+          sáng: [],
+          trưa: [],
+          tối: [],
+          phụ: [],
           totalCalories: 0,
         };
       }
   
       // Cập nhật bảng ánh xạ từ mealType của API
       const mealTypeMap: Record<string, keyof DayFoodDetails> = {
-        "Breakfast": "breakfast",
-        "Lunch": "lunch",
-        "Dinner": "dinner",
-        "Snacks": "evening",  // Sử dụng "snacks" cho bữa phụ
+        "Breakfast": "sáng",
+        "Lunch": "trưa",
+        "Dinner": "tối",
+        "Snacks": "phụ",  // Sử dụng "snacks" cho bữa phụ
       };
   
       const mealType = mealTypeMap[detail.mealType];

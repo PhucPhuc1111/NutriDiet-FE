@@ -196,10 +196,10 @@ import { Button, Form, message, Select } from "antd";
 import { useGetAllFoods } from "@/app/data";
 
 interface DayFoodDetails {
-  breakfast: string[];
-  lunch: string[];
-  dinner: string[];
-  evening: string[];
+  sáng: string[];
+  trưa: string[];
+  tối: string[];
+  phụ: string[];
 }
 
 interface Day {
@@ -225,7 +225,7 @@ const MealSelectionForm: React.FC<{
 
   return (
     <Form name={`form_${day.dayNumber}`} style={{ maxWidth: 600 }}>
-      {["breakfast", "lunch", "dinner", "evening"].map((mealType) => (
+      {["sáng", "trưa", "tối", "phụ"].map((mealType) => (
         <Form.Item key={mealType} label={`Bữa ${mealType}`}>
           <Select
             mode="multiple"
