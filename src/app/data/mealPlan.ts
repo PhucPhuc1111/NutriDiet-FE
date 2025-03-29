@@ -6,7 +6,7 @@ import { ApiResponse } from ".";
 import {CreateMealPlanParams} from "./types";
 
 export async function getAllMealPlans(pageIndex: number, pageSize: number): Promise<ApiResponse<MealPlan[]>> {
-  return await request.get(`${baseURL}/api/meal-plan?pageIndex=${pageIndex}&pageSize=${pageSize}`);
+  return await request.get(`${baseURL}/api/meal-plan/sample-mealplan?pageIndex=${pageIndex}&pageSize=${pageSize}`);
 }
 
 
