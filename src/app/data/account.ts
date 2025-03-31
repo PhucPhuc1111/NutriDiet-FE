@@ -16,7 +16,7 @@ export async function getAllAccounts(
 export async function getAllDashboard(
 
 ): Promise<ApiResponse<Dashboard>> {
-  return await request.get(`${baseURL}/api/dashboard/dashboard`);
+  return await request.get(`${baseURL}/api/dashboard`);
 }
 
 
