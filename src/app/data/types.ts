@@ -85,8 +85,16 @@ export type Ingredient = {
   };
 export type Dashboard={
   totalUser: number;
-  mealPlanNumber : number;
-  packageNumber: number;
+  totalPremiumUser: number;
+  totalFeedbackAI: number;
+  totalMealPlan: number;
+totalPackage: number;
+  totalFood: number;
+  totalAllergy: number;
+  totalDisease: number;
+  totalIngredient: number;
+  // mealPlanNumber : number;
+  // packageNumber: number;
 
 }
 export type Package = {
