@@ -87,16 +87,21 @@ const columns: TableColumnsType<Account> = [
     render: (text) => text || "Chưa có dữ liệu",
   },
   {
-    title: "Gói",
+    title: "Premium",
     dataIndex: "userPackages",
     render: (userPackages) => {
-      // Kiểm tra xem userPackages có dữ liệu không
       if (userPackages && userPackages.length > 0) {
-        return <span style={{ fontWeight:"bold" }}>{userPackages.map((pkg: { packageName: any }) => pkg.packageName).join(", ")}</span>;
+        const hasActivePackage = userPackages.some(
+          (pkg:any) => pkg.status.toLowerCase() === "active"
+        );
+        const color = hasActivePackage ? "green" : "red";
+        const statuses = userPackages.map((pkg:any) => pkg.status).join(", ");
+        return <span style={{ fontWeight: "bold", color }}>{statuses}</span>;
       }
-      return "Mặc định"; // Nếu không có package, hiển thị thông báo
+      return <span style={{ fontWeight: "bold", color:"red" }}>InActive</span>;
     },
-  },
+  }
+,  
 
   {
     title: "Ngày bắt đầu",
@@ -128,12 +133,18 @@ const columns: TableColumnsType<Account> = [
   {
     title: "Trạng thái",
     dataIndex: "status",
-    render: (status) => (
-      status === "Active" ? <span className="text-green-500">Active</span> : 
-      status === "Inactive" ? <span className="text-red-500">Inactive</span> : 
-      "Chưa có dữ liệu"
-    ),
-  },
+    render: (status) => {
+      const normalizedStatus = status.toLowerCase(); // Chuyển về chữ thường để so sánh
+      return normalizedStatus === "active" ? (
+        <span className="text-green-500 font-bold">Active</span>
+      ) : normalizedStatus === "inactive" ? (
+        <span className="text-red-500 font-bold">Inactive</span>
+      ) : (
+        <span className="text-gray-500">Chưa có dữ liệu</span>
+      );
+    },
+  }
+  
   
 ];
 
