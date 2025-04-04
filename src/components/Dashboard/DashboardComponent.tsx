@@ -6,21 +6,82 @@ import ChartTwo from "../Charts/ChartTwo";
 
 import CardDataStats from "../CardDataStats";
 import Loader from "../common/Loader";
-import { Dashboard, getAllDashboard } from "@/app/data";
-
-
+import { Dashboard, getAllDashboard, getAllRevenue } from "@/app/data";
+import { Select } from "antd";
 
 const ChartThree = dynamic(() => import("@/components/Charts/ChartThree"), {
   ssr: false,
 });
 
-
-
 const DashboardComponent: React.FC = () => {
   const [dashboardData, setDashboardData] = useState<Dashboard | null>(null);
+  const [revenueData, setRevenueData] = useState<any | null>(null);
+  const [selectedFilter, setSelectedFilter] = useState<string>("Hôm nay");
   const [isLoading, setIsLoading] = useState(true);
-  const [searchText, setSearchText] = useState("");
 
+  // Hàm để fetch doanh thu theo filter
+  const fetchRevenueData = async (filter: string) => {
+    try {
+      setIsLoading(true);
+      const response = await getAllRevenue(); // Lấy dữ liệu doanh thu từ API
+
+      let filteredData = { totalRevenue: 0, packageSold: 0 };
+
+      // Hàm để chuyển đổi định dạng ngày (YYYY-MM-DD)
+      const formatDate = (date: string) => date.split('T')[0]; 
+
+      switch (filter) {
+        case "Hôm nay":
+          const today = new Date().toISOString().split('T')[0]; // Lấy ngày hôm nay
+          const todayData = response.data.revenue.daily.find((day: any) => formatDate(day.date) === today);
+          if (todayData) {
+            filteredData.totalRevenue = todayData.totalRevenue;
+            filteredData.packageSold = todayData.packageSold;
+          }
+          break;
+        case "Hôm qua":
+          const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().split('T')[0]; // Ngày hôm qua
+          const yesterdayData = response.data.revenue.daily.find((day: any) => formatDate(day.date) === yesterday);
+          if (yesterdayData) {
+            filteredData.totalRevenue = yesterdayData.totalRevenue;
+            filteredData.packageSold = yesterdayData.packageSold;
+          } else {
+            // Nếu không có dữ liệu cho ngày hôm qua, bạn có thể hiển thị giá trị mặc định
+            filteredData.totalRevenue = 0;
+            filteredData.packageSold = 0;
+          }
+          break;
+        case "Tuần này":
+          const thisWeekData = response.data.revenue.weekly.find(
+            (week: any) => week.year === new Date().getFullYear()
+          );
+          if (thisWeekData) {
+            filteredData.totalRevenue = thisWeekData.totalRevenue;
+            filteredData.packageSold = thisWeekData.packageSold;
+          }
+          break;
+        case "Tuần trước":
+          const lastWeekData = response.data.revenue.weekly.find(
+            (week: any) => week.year === new Date().getFullYear() - 1
+          );
+          if (lastWeekData) {
+            filteredData.totalRevenue = lastWeekData.totalRevenue;
+            filteredData.packageSold = lastWeekData.packageSold;
+          }
+          break;
+        default:
+          break;
+      }
+
+      setRevenueData(filteredData); // Cập nhật dữ liệu doanh thu vào state
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error fetching revenue data:", error);
+      setIsLoading(false);
+    }
+  };
+
+  // Lấy dữ liệu tổng quan chỉ một lần khi component mount
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -33,54 +94,143 @@ const DashboardComponent: React.FC = () => {
       }
     };
 
-    fetchDashboardData(); // Gọi hàm lấy dữ liệu khi component mount
-  }, []);
-  
+    fetchDashboardData(); 
+  }, []); // Chạy chỉ một lần khi component mount
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchText(e.target.value);
+  // Cập nhật dữ liệu doanh thu khi thay đổi filter
+  useEffect(() => {
+    fetchRevenueData(selectedFilter); // Gọi lại hàm fetch chỉ khi filter thay đổi
+  }, [selectedFilter]); // Chạy lại chỉ khi selectedFilter thay đổi
+
+  const handleFilterChange = (value: string) => {
+    setSelectedFilter(value); // Cập nhật filter khi người dùng thay đổi
   };
 
-  if (isLoading) {
-    return <Loader />; // Hiển thị loader khi đang tải dữ liệu
-  }
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <CardDataStats title="Dị ứng" total={dashboardData?.totalAllergy?.toString() || "0"} rate="" >
      
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className=" stroke-primary lucide lucide-bean-off-icon lucide-bean-off"><path d="M9 9c-.64.64-1.521.954-2.402 1.165A6 6 0 0 0 8 22a13.96 13.96 0 0 0 9.9-4.1"/><path d="M10.75 5.093A6 6 0 0 1 22 8c0 2.411-.61 4.68-1.683 6.66"/><path d="M5.341 10.62a4 4 0 0 0 6.487 1.208M10.62 5.341a4.015 4.015 0 0 1 2.039 2.04"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+<div className="flex justify-between w-full">
 
 
-        </CardDataStats>
-
-        <CardDataStats title="Bệnh" total={dashboardData?.totalDisease?.toString() || "0"} rate="">
+      <div className="w-1/4" >
+      <div className=" mt-4  h-[170px] w-[262px]  bg-white ">
+        <div className="flex justify-between p-4">
+          <div>Doanh thu</div>
+          <div className="">
+            {" "}
+            <Select
+                  value={selectedFilter} // Sử dụng value thay vì defaultValue
+                  onChange={handleFilterChange} // Cập nhật khi chọn filter mới
+                  style={{ width: "100%" }}
+                >
+                  <Select.Option value="Hôm nay">Hôm nay</Select.Option>
+                  <Select.Option value="Hôm qua">Hôm qua</Select.Option>
+                  <Select.Option value="Tuần này">Tuần này</Select.Option>
+                  <Select.Option value="Tuần trước">Tuần trước</Select.Option>
+                </Select>
+          </div>
+        </div>
+         <div className="text-2xl font-bold pl-7 pt-8 text-green-700">
+              {revenueData ? `${revenueData.totalRevenue} VNĐ` : "0 VNĐ"}
+            </div>
+            <div className=" pl-7   text-green-700">
+            <span>Đã bán được:</span> <span> {revenueData ? `${revenueData.packageSold} Gói` : "0 Gói"}</span>
+            </div>
+      </div>
+      <div className=" mt-4  h-[170px] w-[262px]  ">
+      <CardDataStats title="Dị ứng" total={dashboardData?.totalAllergy?.toString() || "0"} rate="" >
+     
+     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className=" stroke-primary lucide lucide-bean-off-icon lucide-bean-off"><path d="M9 9c-.64.64-1.521.954-2.402 1.165A6 6 0 0 0 8 22a13.96 13.96 0 0 0 9.9-4.1"/><path d="M10.75 5.093A6 6 0 0 1 22 8c0 2.411-.61 4.68-1.683 6.66"/><path d="M5.341 10.62a4 4 0 0 0 6.487 1.208M10.62 5.341a4.015 4.015 0 0 1 2.039 2.04"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+     
+     
+             </CardDataStats>
+             </div>
+             <div className=" mt-4  h-[170px] w-[262px] ">
+             <CardDataStats title="Bệnh" total={dashboardData?.totalDisease?.toString() || "0"} rate="">
           
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 stroke-primary">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-</svg>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 stroke-primary">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+  </svg>
+  
+  
+          </CardDataStats>
+          </div>
+      {/* <div className=" mt-4  h-[170px] w-[262px] bg-white shadow-3">
+        <div className="flex justify-between p-4">
+          <div>Gói bán được</div>
+          <div className="">
+            {" "}
+              <Select
+                  value={selectedPackageSoldFilter} // Sử dụng value thay vì defaultValue
+                  onChange={handlePackageSoldFilterChange} // Cập nhật khi chọn filter mới
+                  style={{ width: "100%" }}
+                >
+                  <Select.Option value="Hôm nay">Hôm nay</Select.Option>
+                  <Select.Option value="Hôm qua">Hôm qua</Select.Option>
+                  <Select.Option value="Tuần này">Tuần này</Select.Option>
+                  <Select.Option value="Tuần trước">Tuần trước</Select.Option>
+                </Select>
+          </div>
+        </div>
+       <div className="text-2xl font-bold p-7 pt-8 text-green-700">
+              {revenueData ? `${revenueData.packageSold} Gói` : "0 Gói"}
+            </div>
+      </div> */}
+      </div>
+    
+      <div className="mt-4 w-3/4">
+        {dashboardData ? <ChartOne /> : <p>Loading chart...</p>}
+      </div>
+      </div>
+      <div className=" mt-3 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
+     
 
-
-        </CardDataStats>
+       
         <CardDataStats title="Nguyên liệu" total={dashboardData?.totalIngredient?.toString() || "0"} rate="">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className="stroke-primary lucide lucide-banana-icon lucide-banana"><path d="M4 13c3.5-2 8-2 10 2a5.5 5.5 0 0 1 8 5"/><path d="M5.15 17.89c5.52-1.52 8.65-6.89 7-12C11.55 4 11.5 2 13 2c3.22 0 5 5.5 5 8 0 6.5-4.2 12-10.49 12C5.11 22 2 22 2 20c0-1.5 1.14-1.55 3.15-2.11Z"/></svg>      </CardDataStats>
-        <CardDataStats title="Món ăn" total={dashboardData?.totalFood?.toString() || "0"} rate="">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className=" stroke-primary lucide lucide-pizza-icon lucide-pizza"><path d="m12 14-1 1"/><path d="m13.75 18.25-1.25 1.42"/><path d="M17.775 5.654a15.68 15.68 0 0 0-12.121 12.12"/><path d="M18.8 9.3a1 1 0 0 0 2.1 7.7"/><path d="M21.964 20.732a1 1 0 0 1-1.232 1.232l-18-5a1 1 0 0 1-.695-1.232A19.68 19.68 0 0 1 15.732 2.037a1 1 0 0 1 1.232.695z"/></svg>        </CardDataStats>
+        <CardDataStats
+          title="Món ăn"
+          total={dashboardData?.totalFood?.toString() || "0"}
+          rate=""
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            className=" lucide lucide-pizza-icon lucide-pizza stroke-primary"
+          >
+            <path d="m12 14-1 1" />
+            <path d="m13.75 18.25-1.25 1.42" />
+            <path d="M17.775 5.654a15.68 15.68 0 0 0-12.121 12.12" />
+            <path d="M18.8 9.3a1 1 0 0 0 2.1 7.7" />
+            <path d="M21.964 20.732a1 1 0 0 1-1.232 1.232l-18-5a1 1 0 0 1-.695-1.232A19.68 19.68 0 0 1 15.732 2.037a1 1 0 0 1 1.232.695z" />
+          </svg>{" "}
+        </CardDataStats>
         <CardDataStats title="Bữa ăn có sẵn" total={dashboardData?.totalMealPlan?.toString() || "0"} rate="">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 stroke-primary">
   <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
 </svg>
 
         </CardDataStats>
-        <CardDataStats title="FeedBack" total={dashboardData?.totalFeedbackAI?.toString() || "0"} rate="">
+        {/* <CardDataStats title="FeedBack" total={dashboardData?.totalFeedbackAI?.toString() || "0"} rate="">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 stroke-primary ">
   <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
 </svg>
 
 
-        </CardDataStats>
-        <CardDataStats title="Người dùng" total={dashboardData?.totalUser?.toString() || "0"} rate="">
+        </CardDataStats> */}
+        <CardDataStats
+          title="Người dùng"
+          total={dashboardData?.totalUser?.toString() || "0"}
+          rate=""
+        >
           <svg
             className="fill-primary dark:fill-white"
             width="22"
@@ -103,24 +253,49 @@ const DashboardComponent: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats title="Tài khoản premium" total={dashboardData?.totalPremiumUser?.toString() || "0"} rate="">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="stroke-primary size-6 stroke-prima">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z" />
-</svg>
-
+        <CardDataStats
+          title="Tài khoản premium"
+          total={dashboardData?.totalPremiumUser?.toString() || "0"}
+          rate=""
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            className="stroke-prima size-6 stroke-primary"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z"
+            />
+          </svg>
         </CardDataStats>
-        <CardDataStats title="Gói" total={dashboardData?.totalPackage?.toString() || "0"} rate="">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className="stroke-primary lucide lucide-gem-icon lucide-gem"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>
+        <CardDataStats
+          title="Gói"
+          total={dashboardData?.totalPackage?.toString() || "0"}
+          rate=""
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            className="lucide lucide-gem-icon lucide-gem stroke-primary"
+          >
+            <path d="M6 3h12l4 6-10 13L2 9Z" />
+            <path d="M11 3 8 9l4 13 4-13-3-6" />
+            <path d="M2 9h20" />
+          </svg>
         </CardDataStats>
-      
       </div>
-
-      {/* <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-        <ChartOne />
-        <ChartTwo />
-        <ChartThree />
-       
-      </div> */}
     </>
   );
 };

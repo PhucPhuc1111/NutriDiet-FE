@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import request, { baseURL } from "@/services/apiClient";
 
-import { Account, Allergy, Dashboard } from "./types";
+import { Account, Allergy, Dashboard, Revenue, Transaction } from "./types";
 import { ApiResponse } from ".";
 
 import Cookies from "js-cookie";
@@ -18,7 +18,12 @@ export async function getAllDashboard(
 ): Promise<ApiResponse<Dashboard>> {
   return await request.get(`${baseURL}/api/dashboard`);
 }
-
+export async function getAllTransactions(
+  pageIndex: number,
+  pageSize: number
+): Promise<ApiResponse<Transaction[]>> {
+  return await request.get(`${baseURL}/api/dashboard/transaction?pageIndex=${pageIndex}&pageSize=${pageSize}`);
+}
 
 export async function getAccountById(
   token: string,
@@ -30,7 +35,21 @@ export async function getAccountById(
     },
   });
 }
-
+export const useGetAllTransactions = (
+  pageIndex: number,
+  pageSize: number,
+  fullName: string,
+  config?: UseQueryOptions<Transaction[]>
+) => {
+  return useQuery<Transaction[]>({
+    queryKey: ["transactions", pageIndex, pageSize],
+    queryFn: async (): Promise<Transaction[]> => {
+      const response = await getAllTransactions(pageIndex, pageSize); // Không cần truyền token
+      return response.data;
+    },
+    ...config,
+  });
+};
 export const useGetAllAccounts = (
   pageIndex: number,
   pageSize: number,
@@ -41,6 +60,23 @@ export const useGetAllAccounts = (
     queryKey: ["accounts", pageIndex, pageSize],
     queryFn: async () => {
       const response = await getAllAccounts(pageIndex, pageSize); // Không cần truyền token
+      return response.data;
+    },
+    ...config,
+  });
+};
+export async function getAllRevenue(): Promise<ApiResponse<Revenue>> {
+  return await request.get(`${baseURL}/api/dashboard/revenue`); // Không cần pageIndex và pageSize
+}
+
+
+export const useGetAllRevenue = (
+  config?: UseQueryOptions<Revenue>
+) => {
+  return useQuery<Revenue>({
+    queryKey: ["revenue"], // Không cần pageIndex và pageSize
+    queryFn: async (): Promise<Revenue> => {
+      const response = await getAllRevenue(); // Gọi API không cần truyền tham số phân trang
       return response.data;
     },
     ...config,
