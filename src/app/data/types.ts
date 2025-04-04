@@ -52,6 +52,7 @@ export interface CreateMealPlanParams {
     role:string;
   };
 
+
   
 export type Ingredient = {
   ingredientId: number;     
@@ -96,6 +97,67 @@ totalPackage: number;
   // mealPlanNumber : number;
   // packageNumber: number;
 
+}
+// Kiểu trả về của API cho revenue
+export type Revenue = {
+  revenue:IncludeRevenue
+ 
+}
+
+
+
+type IncludeRevenue={
+  daily: DailyRevenue[];
+  weekly: WeeklyRevenue[];
+  monthly: MonthlyRevenue[];
+  total: TotalRevenue;
+  annual: AnnualRevenue[];
+}
+// Kiểu dữ liệu cho doanh thu hàng ngày
+type DailyRevenue = {
+  date: string;
+  packageSold: number;
+  totalRevenue: number;
+};
+type AnnualRevenue = {
+  year: number;
+  packageSold: number;
+  totalRevenue: number;
+};
+
+// Kiểu dữ liệu cho doanh thu theo tuần
+type WeeklyRevenue = {
+  year: number;
+  month: number;
+  week: number;
+  packageSold: number;
+  totalRevenue: number;
+};
+
+// Kiểu dữ liệu cho doanh thu theo tháng
+type MonthlyRevenue = {
+  year: number;
+  month: number;
+  packageSold: number;
+  totalRevenue: number;
+};
+
+// Kiểu dữ liệu cho doanh thu tổng
+type TotalRevenue = {
+  packageSold: number;
+  totalRevenue: number;
+};
+
+
+export type Transaction={
+  userId:number
+  email: string
+  packageId: number
+  packageName: string
+  description: string
+  price: number
+  paidAt: string
+  expiryDate: string
 }
 export type Package = {
   packageId: number;

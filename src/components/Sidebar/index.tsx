@@ -75,8 +75,10 @@ const menuGroups = [
           { label: ["Nguyên liệu"], route: "/admin/ingredient" },
           { label: ["Thực phẩm"], route: "/admin/food" },
      { label: ["Bữa ăn"], route: "/admin/meal" },
+     { label: ["Gói Premium"], route: "/admin/package" },
+     { label: ["Giao dịch"], route: "/admin/transaction" },
         { label: ["Khách hàng"], route: "/admin/customer" },
-          { label: ["Gói Premium"], route: "/admin/package" },
+        
           { label: ["Feedback"], route: "/admin/feedback" },
         ],
       },
