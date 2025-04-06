@@ -307,7 +307,7 @@ const ChartOne: React.FC = () => {
   }
 
   return (
-    <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
+    <div className="col-span-12 h-[720px] rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
       <div className="rounded-3xl">
         <div>
           {/* Dropdown for selecting year */}
@@ -360,7 +360,7 @@ const ChartOne: React.FC = () => {
                   plugins: {
                     title: {
                       display: true,
-                      text: view === 'day' ? 'Doanh thu theo ngày (dd-mm)' : 
+                      text: view === 'day' ? `Doanh thu theo ngày (${selectedMonth}-${selectedYear})` : 
                             view === 'week' ? 'Doanh thu theo tuần' : 
                             `Doanh thu hàng tháng ${selectedYear}`,
                     },
