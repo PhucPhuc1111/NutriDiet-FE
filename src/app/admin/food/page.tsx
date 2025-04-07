@@ -24,6 +24,7 @@ import {
 } from "@/app/data";
 import FoodModal from "@/components/FoodModal/FoodModal";
 import Loader from "@/components/common/Loader";
+import { toast } from "react-toastify";
 
 const FoodPage: React.FC = () => {
   const { data: allergiesData } = useGetAllAllergies(1, 100, "");
@@ -163,14 +164,13 @@ const FoodPage: React.FC = () => {
     if (file) {
       const formData = new FormData();
       formData.append('excelFile', file);
-
-      try {
+  try {
         await importFoodExcelFile(formData);
-        console.log('Excel file imported successfully');
-        // Optionally refetch to update the data
-        refetch();
+        toast.success("Import Excel file thành công");
+        refetch(); // Optionally refetch to update the data
       } catch (error) {
-        console.error('Error importing Excel file:', error);
+        console.error("Error importing Excel file:", error);
+        toast.error("Import Excel file thất bại");
       }
     }
   };

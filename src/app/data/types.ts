@@ -221,9 +221,11 @@ feedback: string;
     createdAt: string;
     updatedAt: string;
     ingredientIds: Ingredient[];
+    ingredients: any;
    }
 
    export type Disease ={
+    ingredients: any;
     diseaseId: number;
     diseaseName: string;
     description: string;

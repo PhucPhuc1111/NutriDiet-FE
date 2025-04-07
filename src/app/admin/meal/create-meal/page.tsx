@@ -113,6 +113,10 @@ const CreateMealPlanPage: React.FC = () => {
               label="Tên kế hoạch"
               rules={[
                 { required: true, message: "Vui lòng nhập tên kế hoạch" },
+                {
+                  pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
+                  message: 'Tên kế hoạch không được chứa ký tự đặc biệt ',
+                }
               ]}
             >
               <Input />

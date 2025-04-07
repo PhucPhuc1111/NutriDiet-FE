@@ -34,7 +34,12 @@ const AddAllergyForm: React.FC<{ form: any }> = ({ form }) => {
       <Form.Item
         name="allergyName"
         label="Tên dị ứng"
-        rules={[{ required: true, message: 'Tên dị ứng là bắt buộc' }]}
+        rules={[{ required: true, message: 'Tên dị ứng là bắt buộc' },
+          {
+            pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
+            message: 'Tên dị ứng không được chứa ký tự đặc biệt ',
+          }
+        ]}
       >
         <Input />
       </Form.Item>

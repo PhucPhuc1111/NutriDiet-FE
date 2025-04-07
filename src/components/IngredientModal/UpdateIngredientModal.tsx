@@ -94,7 +94,7 @@ const UpdateIngredientModal: React.FC<{ ingredientId: number; refetch: () => voi
         Sửa
       </Button>
       <Modal
-        title="Sửa Thành Phần"
+        title="Sửa Nguyên liệu"
         open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading}

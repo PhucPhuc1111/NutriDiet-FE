@@ -5,7 +5,10 @@ import { Ingredient } from "./types";
 import { ApiResponse } from ".";
 
 
-export async function getAllIngredients(pageIndex: number, pageSize: number): Promise<ApiResponse<Ingredient[]>> {
+export async function getAllIngredients(
+  pageIndex: number, 
+  pageSize: number): 
+  Promise<ApiResponse<Ingredient[]>> {
   return await request.get(`${baseURL}/api/ingredient?pageIndex=${pageIndex}&pageSize=${pageSize}`);
 }
 
