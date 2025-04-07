@@ -16,7 +16,12 @@ const AddPackageForm: React.FC<{ form: any }> = ({ form }) => {
       <Form.Item
         name="packageName"
         label="Tên gói"
-        rules={[{ required: true, message: "Tên gói là bắt buộc" }]}
+        rules={[{ required: true, message: "Tên gói là bắt buộc" },
+          {
+            pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
+            message: 'Tên gói không được chứa ký tự đặc biệt ',
+          }
+        ]}
       >
         <Input />
       </Form.Item>

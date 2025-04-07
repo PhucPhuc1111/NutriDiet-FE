@@ -80,24 +80,6 @@ const MealPage: React.FC = () => {
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
       render: (text) => formatDate(text),
     },
-    {
-      title: "Status ",
-      dataIndex: "status",
-      filters: [
-        { text: "Active", value: "Active" },
-        { text: "Inactive", value: "Inactive" },
-      ],
-      onFilter: (value: string | boolean | Key, record: MealPlan) => {
-        if (typeof record.status === "string" && typeof value === "string") {
-          return record.status
-            .toLowerCase()
-            .trim()
-            .includes(value.toLowerCase().trim());
-        }
-        return false;
-      },
-      width: "30",
-    },
 
     {
       title: "Sửa/Xóa",

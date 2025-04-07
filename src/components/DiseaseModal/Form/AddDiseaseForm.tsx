@@ -34,7 +34,13 @@ const AddDiseaseForm: React.FC<{ form: any }> = ({ form }) => {
       <Form.Item
         name="diseaseName"
         label="Tên bệnh"
-        rules={[{ required: true, message: 'Tên bệnh là bắt buộc' }]}
+        rules={[
+          { required: true, message: 'Tên bệnh là bắt buộc' },
+         {
+            pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
+            message: 'Tên bệnh không được chứa ký tự đặc biệt ngoài dấu',
+          },]}
+      
       >
         <Input />
       </Form.Item>

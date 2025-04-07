@@ -39,7 +39,12 @@ const DetailAllergyForm: React.FC<{form:any,allergyId: number,isEditing: boolean
   return (
    <Form form={form} name="food-details">
 
-          <Form.Item name="allergyName" label="Tên dị ứng">
+          <Form.Item name="allergyName" label="Tên dị ứng"
+          rules={[
+             { required: true, message: 'Tên bệnh là bắt buộc' },  {
+            pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
+            message: 'Tên bệnh không được chứa ký tự đặc biệt ',
+          }]}>
             <Input disabled={!isEditing} />
           </Form.Item>
 
@@ -50,7 +55,7 @@ const DetailAllergyForm: React.FC<{form:any,allergyId: number,isEditing: boolean
           </Form.Item>
 
          
-          <Form.Item name="ingredientIds" label="Nguyên liệu cân">
+          <Form.Item name="ingredientIds" label="Nguyên liệu cần tránh">
         <Select
           mode="multiple"
           placeholder="Chọn nguyên liệu"
@@ -58,6 +63,14 @@ const DetailAllergyForm: React.FC<{form:any,allergyId: number,isEditing: boolean
           loading={isLoadingIngredients}
           allowClear
           disabled={!isEditing}
+          showSearch
+          filterOption={(input, option) => {
+            if (option && option.label) {
+            
+              return (option.label as string).toLowerCase().includes(input.toLowerCase());
+            }
+            return false;
+          }}
         />
       </Form.Item>
         

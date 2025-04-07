@@ -35,7 +35,12 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
           <Form.Item
             name="foodName"
             label="Tên thực phẩm"
-            rules={[{ required: true, message: "Tên thực phẩm là bắt buộc" }]}
+            rules={[{ required: true, message: "Tên thực phẩm là bắt buộc" },
+              {
+                pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
+                message: 'Tên thực phẩm không được chứa ký tự đặc biệt ',
+              }
+            ]}
           >
             <Input />
           </Form.Item>

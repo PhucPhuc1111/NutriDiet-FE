@@ -1,6 +1,6 @@
 import { Button, Modal, Form, Spin, message } from "antd";
 import { useState, useEffect } from "react";
-import { useGetFoodById, updateFood, useGetAllFoods, useGetAllergyById, useGetAllAllergies, updateAllergy } from "@/app/data"; // API lấy dữ liệu theo ID
+import { useGetFoodById, updateFood, useGetAllFoods, useGetAllergyById, useGetAllAllergies, updateAllergy, getAllergyById } from "@/app/data"; // API lấy dữ liệu theo ID
 import { toast } from "react-toastify";
 import DetailAllergyForm from "./Form/DetailAllergyForm";
 
@@ -10,79 +10,85 @@ const AllergyModal: React.FC<{ allergyId: number; refetch: () => void }> = ({ al
   const [isEditing, setIsEditing] = useState(false);
   const [loadingSave, setLoadingSave] = useState(false);
  const [form] = Form.useForm();
-  const { data: currentAllergy, isLoading } = useGetAllergyById(allergyId);
-  useEffect(() => {
-    if (currentAllergy) {
-      console.log("Dữ liệu từ API:", currentAllergy); // Kiểm tra API có trả về imgUrl không
-      form.setFieldsValue({
-        ...currentAllergy,
-       
-        ingredientIds: currentAllergy.ingredientIds?.map((item) => item.ingredientId) || [],
-       
-      });
-    }
-  }, [currentAllergy, form]);
-  
-  
-  const showDetailModal = () => {
-    console.log("AllergyId khi mở modal:", allergyId); 
-    setIsEditing(false);
-    setOpen(true);
-  };
-  
-  const enableEdit = () => {
-    setIsEditing(true);
-  };
+  // const { data: currentAllergy, isLoading } = useGetAllergyById(allergyId);
+  const [currentAllergy, setCurrentAllergy] = useState<any>(null);
+ const { data: allAllergies } = useGetAllAllergies(1, 500, "");
+ 
+   
+ const showDetailModal = () => {
 
-  const handleCancel = () => {
-    setOpen(false);
-    setIsEditing(false);
-  };
-  const { data: allAllergies } = useGetAllAllergies(1,500,""); // Lấy danh sách thực phẩm hiện có
+  setIsEditing(false);
+  setOpen(true);
+};
 
+const enableEdit = () => {
+  setIsEditing(true);
+};
 
+const handleCancel = () => {
+  setOpen(false);
+  setIsEditing(false);
+  form.resetFields(); 
+};
 
-  const handleSave = async () => {
-    try {
-      setLoadingSave(true); // Bật trạng thái loading
-      const values = form.getFieldsValue();
-      console.log("Giá trị form lấy được:", values);
-  
-      
-      if (!allergyId) {
-        message.error("FoodId không hợp lệ!");
-        return;
+const handleSave = async () => {
+    form.validateFields().then(async (values) => {
+      setLoadingSave(true);
+      try {
+        // Kiểm tra tên dị ứng trùng
+        const isDuplicate = allAllergies?.some(
+          (allergy) => allergy.allergyName === values.allergyName && allergy.allergyId !== allergyId
+        );
+
+        if (isDuplicate) {
+          // Nếu trùng tên, hiển thị thông báo lỗi nhưng vẫn tiếp tục
+          console.error("Tên dị ứng đã tồn tại, vui lòng chọn tên khác!");
+        }
+
+        // Payload gửi lên API
+        const payload = {
+          AllergyId: Number(allergyId),
+          AllergyName: values.allergyName ?? currentAllergy?.allergyName,
+          Notes: values.notes ?? currentAllergy?.notes,
+          ingredientIds: values.ingredientIds ? [...values.ingredientIds] : [],
+        };
+
+        await updateAllergy(payload); // Gửi yêu cầu API để cập nhật dị ứng
+        toast.success("Cập nhật dị ứng thành công!"); // Hiển thị thông báo thành công
+        setOpen(false);
+        refetch();
+      } catch (error) {
+        console.error("Lỗi khi cập nhật dị ứng:", error);
+        toast.error("Tên dị ứng đã tồn tại!"); // Hiển thị thông báo lỗi nếu có lỗi API
+      } finally {
+        setLoadingSave(false); // Tắt trạng thái loading
       }
-  
-      const isDuplicate = allAllergies?.some(
-        (allergy) => allergy.allergyName === values.allergyName && allergy.allergyId !== allergyId
-      );
-  
-      if (isDuplicate) {
-        message.error("Tên thực phẩm đã tồn tại, vui lòng chọn tên khác!");
-        return;
-      }
-  
-      const payload = {
-        AllergyId: Number(allergyId),
-        AllergyName: values.allergyName ?? currentAllergy?.allergyName,
-        Notes: values.notes ?? currentAllergy?.notes,
-        ingredientIds: values.ingredientIds ? [...values.ingredientIds] : [],
-        
+    }).catch((errorInfo) => {
+      console.log("Validate Failed:", errorInfo);
+      setLoadingSave(false);
+    });
+  };
+
+useEffect(() => {
+    if (open) {
+      const fetchDiseaseData = async () => {
+        try {
+          const response = await getAllergyById(allergyId);
+          setCurrentAllergy(response.data);
+          // Cập nhật giá trị form khi dữ liệu dị ứng được tải
+          form.setFieldsValue({
+            allergyName: response.data?.allergyName,
+            notes: response.data?.notes,
+            ingredientIds: response.data?.ingredients?.map((ingredient: any) => ingredient.ingredientId) || [],
+          });
+        } catch (error) {
+          console.error("Lỗi khi lấy dữ liệu dị ứng:", error);
+        }
       };
-  
-      await updateAllergy(payload);
-      toast.success("Cập nhật dị ứng thành công!");
-      setOpen(false);
-      refetch();
-    } catch (error) {
-      console.error("Lỗi khi cập nhật dị ứng:", error);
-      toast.error("Cập nhật thất bại!");
-    } finally {
-      setLoadingSave(false); // Tắt trạng thái loading
+      fetchDiseaseData();
     }
-  };
-  
+  }, [open, allergyId, form]);
+
   return (
     <>
       <Button style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={showDetailModal}>Chi tiết</Button>
@@ -103,7 +109,7 @@ const AllergyModal: React.FC<{ allergyId: number; refetch: () => void }> = ({ al
           )
         ]}
       >
-        {isLoading ? <Spin /> : <DetailAllergyForm form={form} isEditing={isEditing} allergyId={allergyId} />}
+      <DetailAllergyForm form={form} isEditing={isEditing} allergyId={allergyId} />
 
       </Modal>
     </>

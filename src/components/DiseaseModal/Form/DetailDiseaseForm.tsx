@@ -39,7 +39,12 @@ const DetailDiseaseForm: React.FC<{form:any,diseaseId: number,isEditing: boolean
   return (
    <Form form={form} name="">
 
-          <Form.Item name="diseaseName" label="Tên bệnh">
+          <Form.Item name="diseaseName" label="Tên bệnh"
+          rules={[
+            { required: true, message: 'Tên bệnh là bắt buộc' },  {
+           pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
+           message: 'Tên bệnh không được chứa ký tự đặc biệt ',
+         }]}>
             <Input disabled={!isEditing} />
           </Form.Item>
 
@@ -58,6 +63,14 @@ const DetailDiseaseForm: React.FC<{form:any,diseaseId: number,isEditing: boolean
           loading={isLoadingIngredients}
           allowClear
           disabled={!isEditing}
+          showSearch
+          filterOption={(input, option) => {
+            if (option && option.label) {
+            
+              return (option.label as string).toLowerCase().includes(input.toLowerCase());
+            }
+            return false;
+          }}
         />
       </Form.Item>
         

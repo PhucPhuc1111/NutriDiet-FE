@@ -18,7 +18,12 @@ const UpdateIngredientForm: React.FC<{ form: any }> = ({ form }) => {
           <Form.Item
             name="ingredientName"
             label="Tên nguyên liệu"
-            rules={[{ required: true, message: "Tên nguyên liệu là bắt buộc" }]}
+            rules={[{ required: true, message: "Tên nguyên liệu là bắt buộc" },
+              {
+                pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
+                message: 'Tên nguyên liệu không được chứa ký tự đặc biệt ',
+              }
+            ]}
           >
             <Input />
           </Form.Item>
