@@ -6,11 +6,22 @@ import { ApiResponse } from ".";
 
 import Cookies from "js-cookie";
 
+
 export async function getAllAccounts(
   pageIndex: number,
   pageSize: number
 ): Promise<ApiResponse<Account[]>> {
   return await request.get(`${baseURL}/api/user?pageIndex=${pageIndex}&pageSize=${pageSize}`);
+}
+export async function updateStatus(userId: number, status: string): Promise<ApiResponse<any>> {
+  try {
+    // Gọi API để cập nhật trạng thái người dùng
+    const response = await request.put(`${baseURL}/api/user/status/${userId}/${status}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating status:", error);
+    throw error;
+  }
 }
 
 export async function getAllDashboard(
