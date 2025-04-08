@@ -174,6 +174,7 @@ const CustomerPage: React.FC = () => {
             </>
           ) : (
             <Button
+            type='primary'
               onClick={() => {
                 setEditingUserId(record.userId); // Chế độ chỉnh sửa
                 setOriginalStatus(record.status); // Lưu trạng thái ban đầu

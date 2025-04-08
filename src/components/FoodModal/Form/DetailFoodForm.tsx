@@ -334,6 +334,14 @@ const DetailFoodForm: React.FC<{ form: any, foodId: number, isEditing: boolean }
           loading={isLoadingIngredients}
           allowClear
           disabled={!isEditing}
+          showSearch
+          filterOption={(input, option) => {
+            if (option && option.label) {
+   
+              return (option.label as string).toLowerCase().includes(input.toLowerCase());
+            }
+            return false;
+          }}
         />
       </Form.Item>
 
