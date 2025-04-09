@@ -48,7 +48,7 @@ const AddIngredientModal: React.FC = () => {
         form.resetFields(); // Reset form fields after successful creation
         queryClient.invalidateQueries({ queryKey: ["ingredients"] }); 
       } catch (error) {
-        toast.error("Có lỗi xảy ra khi thêm nguyên liệu");
+        toast.error("Tên nguyên liệu đã tồn tại");
         setConfirmLoading(false);
       }
     }).catch((errorInfo) => {

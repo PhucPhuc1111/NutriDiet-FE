@@ -8,6 +8,8 @@ import {
   TableColumnsType,
   TableProps,
   Image,
+  message,
+  Modal,
 } from "antd";
 import * as XLSX from "xlsx";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
@@ -17,6 +19,8 @@ import Link from "next/link";
 import DeleteFoodModal from "@/components/FoodModal/DeleteFoodModal";
 import {
   Food,
+  importFoodExcelAnalyzeFile,
+  importFoodExcelDuplicateFile,
   importFoodExcelFile,
   useGetAllAllergies,
   useGetAllDiseases,
@@ -31,7 +35,11 @@ const FoodPage: React.FC = () => {
   const { data: diseasesData } = useGetAllDiseases(1, 100, "");
   console.log("Allergies Data:", allergiesData);
   console.log("Diseases Data:", diseasesData);
-
+  const [localData, setLocalData] = useState<Food[]>([]);
+  const [showDuplicateModal, setShowDuplicateModal] = useState(false);
+  const [duplicateFoodNames, setDuplicateFoodNames] = useState<string[]>([]);
+  const [importAll, setImportAll] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null); // Store the uploaded file
   const [searchText, setSearchText] = useState<string>("");
   const pageIndex = 1;
   const pageSize = 500;
@@ -159,23 +167,102 @@ const FoodPage: React.FC = () => {
       ),
     },
   ];
+  // const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     const formData = new FormData();
+  //     formData.append('excelFile', file);
+  //     try {
+  //       // Import the Excel file and get the response message
+  //       const response = await importFoodExcelFile(formData);
+        
+  //       // Show the success message from the API in the toast
+  //       toast.success(response.message); // Display message returned by the API
+  
+  //       // Refetch the data to ensure the table updates
+  //       refetch();
+  
+  //       // Reset the file input value to allow re-upload
+  //       if (e.target) {
+  //         e.target.value = ""; // Reset the file input
+  //       }
+  //     } catch (error) {
+  //       console.error("Error importing Excel file:", error);
+  //       toast.error("Import Excel file thất bại"); // Default error message
+  //     }
+  //   }
+  // };
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setUploadedFile(file); // Store the file in the state
+
       const formData = new FormData();
       formData.append('excelFile', file);
-  try {
-        await importFoodExcelFile(formData);
-        toast.success("Import Excel file thành công");
-        refetch(); // Optionally refetch to update the data
+
+      try {
+        // Analyze the file to check for new and duplicate items
+        const analyzeResponse = await importFoodExcelAnalyzeFile(formData);
+        
+        if (analyzeResponse.data.duplicateFoodCount === 0) {
+          // No duplicates, proceed with import
+          const importResponse = await importFoodExcelFile(formData);
+          toast.success(importResponse.message);
+          refetch(); // Refresh data
+        } else {
+          // There are duplicates, show the modal
+          setDuplicateFoodNames(analyzeResponse.data.duplicateFoodName);
+          setShowDuplicateModal(true);
+        }
+        e.target.value = ""; // Reset the file input after processing
       } catch (error) {
         console.error("Error importing Excel file:", error);
-        toast.error("Import Excel file thất bại");
+        toast.error("Import Excel file failed");
       }
     }
   };
 
+  // Import only new items (ignores duplicates)
+  const handleImportNewOnly = async () => {
+    if (uploadedFile) {
+      const formData = new FormData();
+      formData.append('excelFile', uploadedFile);
 
+      try {
+        // Import only new foods (ignores duplicates)
+        const response = await importFoodExcelFile(formData);
+        toast.success(response.message);
+        refetch(); // Refresh data
+        setShowDuplicateModal(false); // Close the modal
+      } catch (error) {
+        console.error("Error importing new foods:", error);
+        toast.error("Import new foods failed");
+      }
+    }
+  };
+
+  // Import all items, including duplicates
+  const handleImportAll = async () => {
+    if (uploadedFile) {
+      const formData = new FormData();
+      formData.append('excelFile', uploadedFile);
+
+      try {
+        // Import all foods, including duplicates
+        const response = await importFoodExcelDuplicateFile(formData);
+        toast.success(response.message);
+        refetch(); // Refresh data
+        setShowDuplicateModal(false); // Close the modal
+      } catch (error) {
+        console.error("Error importing all foods:", error);
+        toast.error("Import all foods failed");
+      }
+    }
+  };
+
+  const handleCancelImport = () => {
+    setShowDuplicateModal(false); // Close the modal without doing anything
+  };
     const handleFileExport = () => {
       const ws = XLSX.utils.aoa_to_sheet([
         [ "Tên món ăn", "Bữa ăn","Loại","Khẩu phần", "Calories(kcal)", "Protein(g)","Carbs(g)","Fat(g)","Glucide(g)", "Fiber(g)","Mô tả"], // Header row
@@ -234,7 +321,8 @@ const FoodPage: React.FC = () => {
               id="fileInput"
               onChange={handleFileUpload}
             />
-            <Button onClick={() => document.getElementById('fileInput')?.click()}>Import Excel</Button>
+            
+             <Button onClick={() => document.getElementById('fileInput')?.click()}>Import Excel</Button>
             <Button onClick={handleFileExport}>Export Excel</Button>
           </div>
         </div>
@@ -248,7 +336,25 @@ const FoodPage: React.FC = () => {
         /> )}
          
         
-       
+         <Modal
+        title="Món ăn bị trùng"
+        visible={showDuplicateModal}
+        onCancel={handleCancelImport}
+        footer={[
+          <Button key="cancel" onClick={handleCancelImport}>Hủy</Button>,
+          <Button key="importNew" type="primary" style={{ backgroundColor: "#2f855a", color: "white" }} onClick={handleImportNewOnly}>Import Món Mới</Button>,
+          <Button key="importAll" type="primary" style={{ backgroundColor: "#2f855a", color: "white" }} onClick={handleImportAll}>Import Tất Cả</Button>,
+        ]}
+      >
+        <div>
+          <p>Các món ăn bị trùng:</p>
+          <ul>
+            {duplicateFoodNames.map((name, index) => (
+              <li key={index}>{name}</li>
+            ))}
+          </ul>
+        </div>
+      </Modal>
       </div>
     </DefaultLayout>
   );
