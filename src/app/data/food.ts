@@ -5,6 +5,7 @@ import { Food } from "./types";
 import { ApiResponse } from ".";
 
 
+
 export async function getAllFoods(pageIndex: number, pageSize: number): Promise<ApiResponse<Food[]>> {
   return await request.get(`${baseURL}/api/food?pageIndex=${pageIndex}&pageSize=${pageSize}`);
 }
@@ -37,9 +38,43 @@ export async function getFoodById(foodId: number): Promise<ApiResponse<Food>> {
 // }
 
 // POST request to upload an Excel file
-export async function importFoodExcelFile(formData: FormData): Promise<void> {
-  await request.postMultiPart(`${baseURL}/api/food/excel`, formData);
+// export async function importFoodExcelFile(formData: FormData): Promise<{ message: string }> {
+//   try {
+//     // Make the request to the backend and return the response data
+//     const response = await request.postMultiPart(`${baseURL}/api/food/excel`, formData);
+//     console.log("Response Data:", response.data);
+//     // Assuming the response contains a message like { message: 'Import successful' }
+//     return response.data; // Assuming the response structure is { data: { message: string } }
+
+//   } 
+//   catch (error) {
+//     // Handle errors if any
+//     throw new Error('Error importing Excel file');
+//   }
+// }
+export async function importFoodExcelFile(formData: FormData): Promise<{ message: string }> {
+  try {
+    // Make the request to the backend and get the response
+    const response = await request.postMultiPart(`${baseURL}/api/food/excel`, formData);
+
+    // Log the full response to inspect its structure
+    console.log("Full Response:", response);
+
+    // Access the message directly from the response (it's at the top level)
+    const message = response?.message;
+
+    // Log the message to the console
+    console.log("Response Message:", message);
+
+    // Return the message from the API response
+    return { message };
+  } catch (error) {
+    // Handle errors if any
+    console.error("Error importing Excel file:", error);
+    throw new Error('Error importing Excel file');
+  }
 }
+
 export async function createFood(
   formData: {
     FoodName: string;

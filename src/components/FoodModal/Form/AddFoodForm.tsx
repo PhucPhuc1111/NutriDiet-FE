@@ -53,8 +53,8 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
               style={{ width: '50%' }}
             >
               <Select placeholder="Chọn bữa" allowClear>
-                <Option value="luncg">Chính</Option>
-                <Option value="Dessert">Phụ</Option>
+                <Option value="Main">Chính</Option>
+                <Option value="Snack">Phụ</Option>
                 
               </Select>
             </Form.Item>

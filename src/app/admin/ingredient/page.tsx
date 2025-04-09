@@ -86,23 +86,32 @@ const IngredientPage: React.FC = () => {
     },
   ];
 
-  // Handle file upload (Excel import)
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append("excelFile", file);
-
-      try {
-        await importIngredientExcelFile(formData);
-        toast.success("Import Excel file thành công");
-        refetch(); // Optionally refetch to update the data
-      } catch (error) {
-        console.error("Error importing Excel file:", error);
-        toast.error("Import Excel file thất bại");
-      }
-    }
-  };
+ const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+     const file = e.target.files?.[0];
+     if (file) {
+       const formData = new FormData();
+       formData.append('excelFile', file);
+       try {
+         // Import the Excel file and get the response message
+         const response = await importIngredientExcelFile(formData);
+         
+         // Show the success message from the API in the toast
+         toast.success(response.message); // Display message returned by the API
+   
+         // Refetch the data to ensure the table updates
+         refetch();
+   
+         // Reset the file input value to allow re-upload
+         if (e.target) {
+           e.target.value = ""; // Reset the file input
+         }
+       } catch (error) {
+         console.error("Error importing Excel file:", error);
+         toast.error("Import Excel file thất bại"); // Default error message
+       }
+     }
+   };
+   
 
   // Handle file export
   const handleFileExport = () => {

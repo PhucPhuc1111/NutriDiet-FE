@@ -8,6 +8,7 @@ import {
   TableColumnsType,
   TableProps,
   Image,
+  message,
 } from "antd";
 import * as XLSX from "xlsx";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
@@ -31,6 +32,7 @@ const FoodPage: React.FC = () => {
   const { data: diseasesData } = useGetAllDiseases(1, 100, "");
   console.log("Allergies Data:", allergiesData);
   console.log("Diseases Data:", diseasesData);
+  const [localData, setLocalData] = useState<Food[]>([]);
 
   const [searchText, setSearchText] = useState<string>("");
   const pageIndex = 1;
@@ -164,16 +166,27 @@ const FoodPage: React.FC = () => {
     if (file) {
       const formData = new FormData();
       formData.append('excelFile', file);
-  try {
-        await importFoodExcelFile(formData);
-        toast.success("Import Excel file thành công");
-        refetch(); // Optionally refetch to update the data
+      try {
+        // Import the Excel file and get the response message
+        const response = await importFoodExcelFile(formData);
+        
+        // Show the success message from the API in the toast
+        toast.success(response.message); // Display message returned by the API
+  
+        // Refetch the data to ensure the table updates
+        refetch();
+  
+        // Reset the file input value to allow re-upload
+        if (e.target) {
+          e.target.value = ""; // Reset the file input
+        }
       } catch (error) {
         console.error("Error importing Excel file:", error);
-        toast.error("Import Excel file thất bại");
+        toast.error("Import Excel file thất bại"); // Default error message
       }
     }
   };
+  
 
 
     const handleFileExport = () => {

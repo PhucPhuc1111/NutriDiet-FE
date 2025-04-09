@@ -16,8 +16,31 @@ export async function getAllIngredients(
 export async function getIngredientById(ingredientId: number): Promise<ApiResponse<Ingredient>> {
   return await request.get(`${baseURL}/api/ingredient/${ingredientId}`);
 }
-export async function importIngredientExcelFile(formData: FormData): Promise<void> {
-  await request.postMultiPart(`${baseURL}/api/ingredient/excel`, formData);
+// export async function importIngredientExcelFile(formData: FormData): Promise<void> {
+//   await request.postMultiPart(`${baseURL}/api/ingredient/excel`, formData);
+// }
+
+export async function importIngredientExcelFile(formData: FormData): Promise<{ message: string }> {
+  try {
+    // Make the request to the backend and get the response
+    const response = await request.postMultiPart(`${baseURL}/api/ingredient/excel`, formData);
+
+    // Log the full response to inspect its structure
+    console.log("Full Response:", response);
+
+    // Access the message directly from the response (it's at the top level)
+    const message = response?.message;
+
+    // Log the message to the console
+    console.log("Response Message:", message);
+
+    // Return the message from the API response
+    return { message };
+  } catch (error) {
+    // Handle errors if any
+    console.error("Error importing Excel file:", error);
+    throw new Error('Error importing Excel file');
+  }
 }
 export async function createIngredient(
   formData: { 
