@@ -1,3 +1,4 @@
+import { message } from 'antd';
 
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import request, { baseURL } from "@/services/apiClient";
@@ -52,29 +53,64 @@ export async function getFoodById(foodId: number): Promise<ApiResponse<Food>> {
 //     throw new Error('Error importing Excel file');
 //   }
 // }
-export async function importFoodExcelFile(formData: FormData): Promise<{ message: string }> {
+// export async function importFoodExcelFile(formData: FormData): Promise<{ message: string }> {
+//   try {
+//     // Make the request to the backend and get the response
+//     const response = await request.postMultiPart(`${baseURL}/api/food/excel`, formData);
+
+//     // Log the full response to inspect its structure
+//     console.log("Full Response:", response);
+
+//     // Access the message directly from the response (it's at the top level)
+//     const message = response?.message;
+
+//     // Log the message to the console
+//     console.log("Response Message:", message);
+
+//     // Return the message from the API response
+//     return { message };
+//   } catch (error) {
+//     // Handle errors if any
+//     console.error("Error importing Excel file:", error);
+//     throw new Error('Error importing Excel file');
+//   }
+// }
+export async function importFoodExcelAnalyzeFile(formData: FormData): Promise<{ message: string ,data:any}> {
   try {
-    // Make the request to the backend and get the response
-    const response = await request.postMultiPart(`${baseURL}/api/food/excel`, formData);
-
-    // Log the full response to inspect its structure
+    const response = await request.postMultiPart(`${baseURL}/api/food/excel-analyze`, formData);
     console.log("Full Response:", response);
-
-    // Access the message directly from the response (it's at the top level)
     const message = response?.message;
-
-    // Log the message to the console
+    const data = response?.data;
     console.log("Response Message:", message);
-
-    // Return the message from the API response
-    return { message };
+    return { message,data  };
   } catch (error) {
-    // Handle errors if any
     console.error("Error importing Excel file:", error);
     throw new Error('Error importing Excel file');
   }
 }
-
+export async function importFoodExcelFile(formData: FormData): Promise<{ message: string }> {
+  try {
+    const response = await request.postMultiPart(`${baseURL}/api/food/excel`, formData);
+    const message = response?.message;
+    console.log("Response ,ess:", response.message);
+    return { message };
+  } catch (error) {
+    console.error("Error importing Excel file:", error);
+    throw new Error('Error importing Excel file');
+  }
+}
+// Function to add new items and overwrite duplicates
+export async function importFoodExcelDuplicateFile(formData: FormData): Promise<{ message: string }> {
+  try {
+    const response = await request.postMultiPart(`${baseURL}/api/food/excel-duplicate`, formData);
+    const message = response?.message;
+    console.log("Response Data:", response.data);
+    return { message };
+  } catch (error) {
+    console.error("Error importing Excel file:", error);
+    throw new Error('Error importing Excel file');
+  }
+}
 export async function createFood(
   formData: {
     FoodName: string;
