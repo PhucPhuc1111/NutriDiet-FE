@@ -217,7 +217,7 @@ const FoodPage: React.FC = () => {
         e.target.value = ""; // Reset the file input after processing
       } catch (error) {
         console.error("Error importing Excel file:", error);
-        toast.error("Import Excel file failed");
+        toast.error("Import excel thất bại");
       }
     }
   };
@@ -255,7 +255,7 @@ const FoodPage: React.FC = () => {
         setShowDuplicateModal(false); // Close the modal
       } catch (error) {
         console.error("Error importing all foods:", error);
-        toast.error("Import all foods failed");
+        toast.error("Import thức ăn thất bại");
       }
     }
   };

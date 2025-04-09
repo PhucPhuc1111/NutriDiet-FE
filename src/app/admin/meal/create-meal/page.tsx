@@ -64,7 +64,7 @@ const CreateMealPlanPage: React.FC = () => {
     setLoading(true);
     try {
       await createMealPlan(requestData);
-      toast.success("Create meal plan successfully.");
+      toast.success("Tạo thực đơn thành công");
       router.push("/admin/meal");
     } catch (error: unknown) {
       console.error("Error:", error);

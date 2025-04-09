@@ -20,59 +20,135 @@ const DashboardComponent: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   // Hàm để fetch doanh thu theo filter
+  // const fetchRevenueData = async (filter: string) => {
+  //   try {
+  //     setIsLoading(true);
+  //     const response = await getAllRevenue(); // Lấy dữ liệu doanh thu từ API
+
+  //     let filteredData = { totalRevenue: 0, packageSold: 0 };
+
+  //     // Hàm để chuyển đổi định dạng ngày (YYYY-MM-DD)
+  //     const formatDate = (date: string) => date.split('T')[0]; 
+
+  //     switch (filter) {
+  //       case "Hôm nay":
+  //         const today = new Date().toISOString().split('T')[0]; // Lấy ngày hôm nay
+  //         const todayData = response.data.revenue.daily.find((day: any) => formatDate(day.date) === today);
+  //         if (todayData) {
+  //           filteredData.totalRevenue = todayData.totalRevenue;
+  //           filteredData.packageSold = todayData.packageSold;
+  //         }
+  //         break;
+  //       case "Hôm qua":
+  //         const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().split('T')[0]; // Ngày hôm qua
+  //         const yesterdayData = response.data.revenue.daily.find((day: any) => formatDate(day.date) === yesterday);
+  //         if (yesterdayData) {
+  //           filteredData.totalRevenue = yesterdayData.totalRevenue;
+  //           filteredData.packageSold = yesterdayData.packageSold;
+  //         } else {
+  //           // Nếu không có dữ liệu cho ngày hôm qua, bạn có thể hiển thị giá trị mặc định
+  //           filteredData.totalRevenue = 0;
+  //           filteredData.packageSold = 0;
+  //         }
+  //         break;
+  //       case "Tuần này":
+  //         const thisWeekData = response.data.revenue.weekly.find(
+  //           (week: any) => week.year === new Date().getFullYear()
+  //         );
+  //         if (thisWeekData) {
+  //           filteredData.totalRevenue = thisWeekData.totalRevenue;
+  //           filteredData.packageSold = thisWeekData.packageSold;
+  //         }
+  //         break;
+  //       case "Tuần trước":
+  //         const lastWeekData = response.data.revenue.weekly.find(
+  //           (week: any) => week.year === new Date().getFullYear() - 1
+  //         );
+  //         if (lastWeekData) {
+  //           filteredData.totalRevenue = lastWeekData.totalRevenue;
+  //           filteredData.packageSold = lastWeekData.packageSold;
+  //         }
+  //         break;
+  //       default:
+  //         break;
+  //     }
+
+  //     setRevenueData(filteredData); // Cập nhật dữ liệu doanh thu vào state
+  //     setIsLoading(false);
+  //   } catch (error) {
+  //     console.error("Error fetching revenue data:", error);
+  //     setIsLoading(false);
+  //   }
+  // };
   const fetchRevenueData = async (filter: string) => {
     try {
       setIsLoading(true);
       const response = await getAllRevenue(); // Lấy dữ liệu doanh thu từ API
-
+  
       let filteredData = { totalRevenue: 0, packageSold: 0 };
-
+  
       // Hàm để chuyển đổi định dạng ngày (YYYY-MM-DD)
       const formatDate = (date: string) => date.split('T')[0]; 
-
+  
+      // Lấy ngày hôm nay và tuần hiện tại
+      const today = new Date();
+      const currentYear = today.getFullYear();
+      const currentMonth = today.getMonth() + 1; // Tháng hiện tại (1-12)
+  
+      // Tính số tuần trong tháng
+      const getWeekOfMonth = (date: Date) => {
+        const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        const dayOfMonth = date.getDate();
+        return Math.ceil((dayOfMonth + firstDay.getDay()) / 7);
+      };
+  
+      const currentWeek = getWeekOfMonth(today);
+  
       switch (filter) {
         case "Hôm nay":
-          const today = new Date().toISOString().split('T')[0]; // Lấy ngày hôm nay
-          const todayData = response.data.revenue.daily.find((day: any) => formatDate(day.date) === today);
+          const todayDate = today.toISOString().split('T')[0];
+          const todayData = response.data.revenue.daily.find((day: any) => formatDate(day.date) === todayDate);
           if (todayData) {
             filteredData.totalRevenue = todayData.totalRevenue;
             filteredData.packageSold = todayData.packageSold;
           }
           break;
+  
         case "Hôm qua":
-          const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().split('T')[0]; // Ngày hôm qua
-          const yesterdayData = response.data.revenue.daily.find((day: any) => formatDate(day.date) === yesterday);
+          const yesterday = new Date(today);
+          yesterday.setDate(today.getDate() - 1);
+          const yesterdayData = response.data.revenue.daily.find((day: any) => formatDate(day.date) === formatDate(yesterday.toISOString()));
           if (yesterdayData) {
             filteredData.totalRevenue = yesterdayData.totalRevenue;
             filteredData.packageSold = yesterdayData.packageSold;
-          } else {
-            // Nếu không có dữ liệu cho ngày hôm qua, bạn có thể hiển thị giá trị mặc định
-            filteredData.totalRevenue = 0;
-            filteredData.packageSold = 0;
           }
           break;
+  
         case "Tuần này":
-          const thisWeekData = response.data.revenue.weekly.find(
-            (week: any) => week.year === new Date().getFullYear()
+          const currentWeekData = response.data.revenue.weekly.find(
+            (week: any) => week.year === currentYear && week.month === currentMonth && week.week === currentWeek
           );
-          if (thisWeekData) {
-            filteredData.totalRevenue = thisWeekData.totalRevenue;
-            filteredData.packageSold = thisWeekData.packageSold;
+          if (currentWeekData) {
+            filteredData.totalRevenue = currentWeekData.totalRevenue;
+            filteredData.packageSold = currentWeekData.packageSold;
           }
           break;
+  
         case "Tuần trước":
+          const lastWeek = currentWeek - 1;
           const lastWeekData = response.data.revenue.weekly.find(
-            (week: any) => week.year === new Date().getFullYear() - 1
+            (week: any) => week.year === currentYear && week.month === currentMonth && week.week === lastWeek
           );
           if (lastWeekData) {
             filteredData.totalRevenue = lastWeekData.totalRevenue;
             filteredData.packageSold = lastWeekData.packageSold;
           }
           break;
+  
         default:
           break;
       }
-
+  
       setRevenueData(filteredData); // Cập nhật dữ liệu doanh thu vào state
       setIsLoading(false);
     } catch (error) {
@@ -80,7 +156,8 @@ const DashboardComponent: React.FC = () => {
       setIsLoading(false);
     }
   };
-
+  
+  
   // Lấy dữ liệu tổng quan chỉ một lần khi component mount
   useEffect(() => {
     const fetchDashboardData = async () => {
