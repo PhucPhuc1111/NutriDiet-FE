@@ -163,9 +163,10 @@ const CustomerPage: React.FC = () => {
         <div>
           {editingUserId === record.userId ? (
             <>
-              <Button onClick={handleCancel}>Hủy</Button>
+              <Button  onClick={handleCancel}>Hủy</Button>
               <Button
                 type="primary"
+                style={{ backgroundColor: "#2f855a", color: "white" }}
                 loading={isLoadingStatus} // Hiển thị loading khi đang cập nhật
                 onClick={() => handleSave(record.userId)}
               >
@@ -175,6 +176,7 @@ const CustomerPage: React.FC = () => {
           ) : (
             <Button
             type='primary'
+            style={{ backgroundColor: "#2f855a", color: "white" }}
               onClick={() => {
                 setEditingUserId(record.userId); // Chế độ chỉnh sửa
                 setOriginalStatus(record.status); // Lưu trạng thái ban đầu
