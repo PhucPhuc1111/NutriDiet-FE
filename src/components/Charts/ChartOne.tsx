@@ -309,10 +309,29 @@ const ChartOne: React.FC = () => {
   return (
     <div className="col-span-12 h-[720px] rounded-sm border border-stroke bg-white px-5 pb-5 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
       <div className="rounded-3xl">
+        
+
+     
+        
+   
         <div>
           {/* Dropdown for selecting year */}
+          <div className="flex justify-between mb-4">
+
+          
+          <div>
+             {data?.revenue?.total && (
+        <div>
+          <div className="text-lg font-md">Tổng doanh thu: <span className="text-green-800 font-semibold"> {data.revenue.total.totalRevenue} VNĐ</span></div>
+          <div className="text-lg font-md">Tổng số lượng gói đã bán: <span className="text-green-800 font-semibold">{data.revenue.total.packageSold} Gói</span></div>
+        </div>
+      )}
+        </div>
+        <div>
+
+       
           <div className="mb-4">
-            <label className="mr-2">Chọn năm: </label>
+            <label className="mr-6">Chọn năm: </label>
             <select 
               value={selectedYear} 
               onChange={(e) => setSelectedYear(parseInt(e.target.value))}
@@ -342,7 +361,8 @@ const ChartOne: React.FC = () => {
               ))}
             </select>
           </div>
-
+          </div>
+          </div>
           {/* Buttons to switch between day, week, and month */}
           <div className="flex justify-end space-x-4  mb-4">
             <Button onClick={() => setView('day')} className="bg-green-800 text-white px-4 rounded">Ngày</Button>
