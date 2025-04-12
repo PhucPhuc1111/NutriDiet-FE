@@ -170,75 +170,62 @@
 import React, { useEffect, useState } from "react";
 import { Button, Form, Image, Input, Select, Upload, UploadFile } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import { getFoodById, useGetAllIngredients } from "@/app/data";
+import { getFoodById, useGetAllIngredients, useGetAllServingSizes } from "@/app/data";
 
-const DetailFoodForm: React.FC<{ form: any, foodId: number, isEditing: boolean }> = ({
+const DetailFoodForm: React.FC<{ form: any, }> = ({
   form,
-  isEditing,
-  foodId,
 }) => {
+  const onFinish = (values: any) => {
+    console.log('Received values:', values); // Xử lý khi form submit
+  };
   const { Option } = Select;
   const [fileList, setFileList] = useState<UploadFile<any>[]>([]);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const { data: ingredientsData, isLoading: isLoadingIngredients } = useGetAllIngredients(1, 500, "");
-  // Giả sử bạn đã fetch dữ liệu từ API và nhận được giá trị imageUrl
-  // Ví dụ: API trả về dữ liệu:
   const [currentFood, setCurrentFood] = useState<any>(null);
+  const [servingSizesData, setServingSizesData] = useState<any[]>([]);
 
-  // Sử dụng useEffect để cập nhật lại imageUrl khi có dữ liệu mới từ API
-  useEffect(() => {
-    const fetchFoodData = async () => {
-      try {
-        const response = await getFoodById(foodId); // Giả sử đây là API lấy thông tin thực phẩm theo ID
-        setCurrentFood(response.data); // Cập nhật giá trị currentFood
-
-        // Cập nhật imageUrl từ API
-        const fetchedImageUrl = response.data?.imageUrl;
-        console.log("Fetched image URL:", fetchedImageUrl); // Kiểm tra giá trị fetchedImageUrl
-        if (fetchedImageUrl) {
-          setImageUrl(fetchedImageUrl); // Cập nhật imageUrl
-          form.setFieldsValue({ imageUrl: fetchedImageUrl }); // Cập nhật giá trị vào form
-        }
-      } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu thực phẩm:", error);
-      }
-    };
-
-    fetchFoodData();
-  }, [foodId, form]);  // Chạy lại khi foodId hoặc form thay đổi
+  // Fetching serving sizes data
+  const { data: servingSizeDataFromAPI, isLoading, isError } = useGetAllServingSizes(1, 500);
   const ingredientOptions = ingredientsData?.map((ingredient) => ({
     label: ingredient.ingredientName,
     value: ingredient.ingredientId,
   })) || [];
+  const servingSizeOptions = servingSizesData?.map((size) => ({
+    label: size.unitName,  // Tên khẩu phần dinh dưỡng
+    value: size.servingSizeId.toString(), // Đảm bảo id là chuỗi khi chọn
+  })) || [];
+  useEffect(() => {
+    if (servingSizeDataFromAPI) {
+      setServingSizesData(servingSizeDataFromAPI);
+    }
+  }, [servingSizeDataFromAPI]);
+
+  const getServingSizeUnitName = (servingSizeId: number) => {
+    const size = servingSizesData.find(item => item.servingSizeId === servingSizeId);
+    return size ? size.unitName : '';
+  };
   return (
-    <Form form={form} name="food-details">
+    <Form form={form} onFinish={onFinish} name="food-details">
       <div className="flex space-x-2">
         <div className="w-2/3">
-          <Form.Item name="foodName" label="Tên thức ăn"
-            rules={[
-              { required: true, message: 'Tên thực phẩm là bắt buộc' },
-              {
-                pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
-                message: 'Tên thực phẩm không được chứa ký tự đặc biệt ',
-              }
-            ]}>
-            <Input disabled={!isEditing} />
+          <Form.Item name="foodName" label="Tên thức ăn" rules={[
+            { required: true, message: 'Tên thực phẩm là bắt buộc' },
+            { pattern: /^[a-zA-Z0-9\s]*$/, message: 'Tên thực phẩm không được chứa ký tự đặc biệt ' },
+          ]}>
+            <Input />
           </Form.Item>
 
           <div className="flex justify-between space-x-4">
-            <Form.Item
-              name="mealType"
-              label="Chọn bữa"
-              style={{ width: "50%" }}
-            >
-              <Select placeholder="Chọn bữa" allowClear disabled={!isEditing}>
+            <Form.Item name="mealType" label="Chọn bữa" style={{ width: "50%" }}>
+              <Select placeholder="Chọn bữa" allowClear >
                 <Option value="Main">Chính</Option>
                 <Option value="Dessert">Phụ</Option>
               </Select>
             </Form.Item>
 
             <Form.Item name="foodType" label="Loại" style={{ width: "50%" }}>
-              <Select placeholder="Chọn loại" allowClear disabled={!isEditing}>
+              <Select placeholder="Chọn loại" allowClear>
                 <Option value="Vegetable">Rau củ quả</Option>
                 <Option value="Fruit">Trái cây</Option>
                 <Option value="Broth">Món nước</Option>
@@ -249,56 +236,123 @@ const DetailFoodForm: React.FC<{ form: any, foodId: number, isEditing: boolean }
             </Form.Item>
           </div>
 
-          <Form.Item name="servingSize" label="Khẩu phần">
-            <Input disabled={!isEditing} />
-          </Form.Item>
+          <Form.List name="foodServingSizes">
+            
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, fieldKey, name, ...restField }) => (
+                  <div key={key} className="mb-4">
+                  
+                     <Form.Item
+                    
+                    
+                    {...restField}
+                    name={[name, "servingSizeId"]}
+                    label={`Khẩu phần ${key + 1}`}
+                    rules={[{ required: true, message: 'Vui lòng nhập khẩu phần' }]}
+                  >
+                    <Select placeholder="Chọn khẩu phần" allowClear>
+                    {servingSizesData.map((size) => (
+                      <Option key={size.servingSizeId} value={size.servingSizeId}>
+                        {size.unitName}
+                      </Option>
+                    ))}
+                  </Select>
+                    
+                  </Form.Item>
 
-          <div className="flex justify-between space-x-4">
-            <Form.Item name="calories" label="Calories (cal)">
-              <Input disabled={!isEditing} />
-            </Form.Item>
-            <Form.Item name="protein" label="Protein (g)">
-              <Input disabled={!isEditing} />
-            </Form.Item>
-            <Form.Item name="carbs" label="Carbs (g)">
-              <Input disabled={!isEditing} />
-            </Form.Item>
-          </div>
+                    <div className="flex  space-x-3">
+                    <Form.Item
+                        {...restField}
+                        name={[name, "quantity"]}
+                        label="Số lượng"
+                      >
+                        <Input  />
+                      </Form.Item>
 
-          <div className="flex justify-between space-x-4">
-            <Form.Item name="fat" label="Fat (g)">
-              <Input disabled={!isEditing} />
-            </Form.Item>
-            <Form.Item name="glucid" label="Glucid (g)">
-              <Input disabled={!isEditing} />
-            </Form.Item>
-            <Form.Item name="fiber" label="Chất xơ (g)">
-              <Input disabled={!isEditing} />
-            </Form.Item>
-          </div>
+                      
+                      <Form.Item
+                        {...restField}
+                        name={[name, "calories"]}
+                        label="Calories (cal)"
+                      >
+                        <Input />
+                      </Form.Item>
+
+                      <Form.Item
+                        {...restField}
+                        name={[name, "protein"]}
+                        label="Protein (g)"
+                      >
+                        <Input/>
+                      </Form.Item>
+</div>
+<div className="flex space-x-3">
+
+                      <Form.Item
+                        {...restField}
+                        name={[name, "carbs"]}
+                        label="Carbs (g)"
+                      >
+                        <Input />
+                      </Form.Item>
+
+                      <Form.Item
+                        {...restField}
+                        name={[name, "fat"]}
+                        label="Fat (g)"
+                      >
+                        <Input  />
+                      </Form.Item>
+
+                      <Form.Item
+                        {...restField}
+                        name={[name, "glucid"]}
+                        label="Glucid (g)"
+                      >
+                        <Input  />
+                      </Form.Item>
+
+                      <Form.Item
+                        {...restField}
+                        name={[name, "fiber"]}
+                        label="Chất xơ (g)"
+                      >
+                        <Input />
+                      </Form.Item>
+                    </div>
+                    
+                      <Button type="link" onClick={() => remove(name)}>
+                        Xóa khẩu phần
+                      </Button>
+                  
+                  </div>
+                ))}
+
+                
+                  <Button type="dashed" onClick={() => add()} block icon={<UploadOutlined />}>
+                    Thêm khẩu phần
+                  </Button>
+                
+              </>
+            )}
+          </Form.List>
         </div>
 
         <div className="w-1/3">
-          {/* Hiển thị ảnh bên ngoài Form.Item */}
           <div className="m-4">
             {imageUrl ? (
-              <Image
-                src={imageUrl}
-                alt="Food Image"
-                className="w-full h-auto rounded-lg"
-              />
+              <Image src={imageUrl} alt="Food Image" className="w-full h-auto rounded-lg" />
             ) : (
               <span>Chưa có hình ảnh</span>
             )}
           </div>
 
-          {/* Chỉ sử dụng Form.Item cho giá trị imageUrl */}
           <Form.Item name="imageUrl" label="Hình ảnh" style={{ display: "none" }}>
             <Input />
           </Form.Item>
 
-          {/* Upload ảnh trong chế độ chỉnh sửa */}
-          {isEditing && (
+          {/* {isEditing && (
             <Upload
               listType="picture-card"
               fileList={fileList}
@@ -322,7 +376,7 @@ const DetailFoodForm: React.FC<{ form: any, foodId: number, isEditing: boolean }
             >
               {fileList.length === 0 && <Button icon={<UploadOutlined />}>Chọn ảnh</Button>}
             </Upload>
-          )}
+          )} */}
         </div>
       </div>
 
@@ -333,26 +387,21 @@ const DetailFoodForm: React.FC<{ form: any, foodId: number, isEditing: boolean }
           options={ingredientOptions}
           loading={isLoadingIngredients}
           allowClear
-          disabled={!isEditing}
+          
           showSearch
           filterOption={(input, option) => {
-            if (option && option.label) {
-   
-              return (option.label as string).toLowerCase().includes(input.toLowerCase());
-            }
-            return false;
+            return (option?.label as string).toLowerCase().includes(input.toLowerCase());
           }}
         />
       </Form.Item>
 
       <Form.Item name="description" label="Mô tả">
-        <Input.TextArea disabled={!isEditing} />
+        <Input.TextArea  />
       </Form.Item>
 
-      <Form.Item name="foodId" initialValue={foodId} hidden>
-        <Input />
-      </Form.Item>
+
     </Form>
+    
   );
 };
 

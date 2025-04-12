@@ -1,5 +1,5 @@
 "use client";
-import React, { Key, useState } from "react";
+import React, { Key, useEffect, useState } from "react";
 import {
   Table,
   Space,
@@ -25,6 +25,7 @@ import {
   useGetAllAllergies,
   useGetAllDiseases,
   useGetAllFoods,
+  useGetAllServingSizes,
 } from "@/app/data";
 import FoodModal from "@/components/FoodModal/FoodModal";
 import Loader from "@/components/common/Loader";
@@ -35,10 +36,12 @@ const FoodPage: React.FC = () => {
   const { data: diseasesData } = useGetAllDiseases(1, 100, "");
   console.log("Allergies Data:", allergiesData);
   console.log("Diseases Data:", diseasesData);
+  const [servingSizes, setServingSizes] = useState<any[]>([]);
   const [localData, setLocalData] = useState<Food[]>([]);
   const [showDuplicateModal, setShowDuplicateModal] = useState(false);
   const [duplicateFoodNames, setDuplicateFoodNames] = useState<string[]>([]);
   const [importAll, setImportAll] = useState(false);
+  const { data: servingSizesData } = useGetAllServingSizes(1, 500); 
   const [uploadedFile, setUploadedFile] = useState<File | null>(null); // Store the uploaded file
   const [searchText, setSearchText] = useState<string>("");
   const pageIndex = 1;
@@ -121,40 +124,113 @@ const FoodPage: React.FC = () => {
       },
     },
     {
+      title: "Số lượng",
+      dataIndex: "foodServingSizes",
+      render: (foodServingSizes: any[]) => {
+        return foodServingSizes.map((size, index) => (
+          <div key={index}>
+            {size.calories} 
+          </div>
+        ));}
+    },
+    {
       title: "Khẩu phần",
-      dataIndex: "servingSize",
+      dataIndex: "foodServingSizes",
+      render: (foodServingSizes: any[]) => {
+        return foodServingSizes.map((size, index) => (
+          <div key={index}>{getServingSizeName(size.servingSizeId)}</div> // Hiển thị tên khẩu phần
+        ));
+      },
     },
     {
       title: "Calories(kcal)",
-      dataIndex: "calories",
-      sorter: (a, b) => a.calories - b.calories,
+      dataIndex: "foodServingSizes",
+      render: (foodServingSizes: any[]) => {
+      return foodServingSizes.map((size, index) => (
+        <div key={index}>
+          {size.calories} 
+        </div>
+      ));
     },
+  },
     {
       title: "Protein(g)",
-      dataIndex: "protein",
-      sorter: (a, b) => a.calories - b.calories,
+      dataIndex: "foodServingSizes",
+      render: (foodServingSizes: any[]) => {
+        return foodServingSizes.map((size, index) => (
+          <div key={index}>
+            {size.protein} 
+          </div>
+        ));
+      },
+      sorter: (a, b) => {
+        const proteinA = a.foodServingSizes[0]?.protein || 0;
+        const proteinB = b.foodServingSizes[0]?.protein || 0;
+        return proteinA - proteinB;
+      },
     },
     {
       title: "Carbs (g)",
-      dataIndex: "carbs",
-      sorter: (a, b) => a.calories - b.calories,
+      dataIndex: "foodServingSizes",
+
+        render: (foodServingSizes: any[]) => {
+          return foodServingSizes.map((size, index) => (
+            <div key={index}>
+              {size.carbs} 
+            </div>
+          ));
+        },
+        sorter: (a, b) => {
+          const carbsA = a.foodServingSizes[0]?.carbs || 0;
+          const carbsB = b.foodServingSizes[0]?.carbs || 0;
+          return carbsA - carbsB;
+        },
     },
     {
       title: "Fat (g)",
-      dataIndex: "fat",
-      sorter: (a, b) => a.fat - b.fat,
+      dataIndex: "foodServingSizes",
+   
+      render: (foodServingSizes: any[]) => {
+        return foodServingSizes.map((size, index) => (
+          <div key={index}>
+            {size.fat} 
+          </div>
+        ));
+      },
     },
     {
       title: "Glucid(g)",
-      dataIndex: "glucid",
-      sorter: (a, b) => a.calories - b.calories,
+      dataIndex: "foodServingSizes",
+      
+      render: (foodServingSizes: any[]) => {
+        return foodServingSizes.map((size, index) => (
+          <div key={index}>
+            {size.glucid} 
+          </div>
+        ));
+      },// Hiển thị tất cả glucid cho các servingSizeId
+      sorter: (a, b) => {
+        const glucidA = a.foodServingSizes[0]?.glucid || 0;
+        const glucidB = b.foodServingSizes[0]?.glucid || 0;
+        return glucidA - glucidB;
+      },
     },
     {
       title: "Fiber (g)",
-      dataIndex: "fiber",
-      sorter: (a, b) => a.calories - b.calories,
+      dataIndex: "foodServingSizes",
+      render: (foodServingSizes: any[]) => {
+        return foodServingSizes.map((size, index) => (
+          <div key={index}>
+            {size.fiber} 
+          </div>
+        ));
+      },// Hiển thị tất cả fiber cho các servingSizeId
+      sorter: (a, b) => {
+        const fiberA = a.foodServingSizes[0]?.fiber || 0;
+        const fiberB = b.foodServingSizes[0]?.fiber || 0;
+        return fiberA - fiberB;
+      },
     },
-
     {
       title: "Chi tiết/Sửa/Xóa",
       dataIndex: "action",
@@ -271,13 +347,13 @@ const FoodPage: React.FC = () => {
           item.foodName,
           item.mealType,
           item.foodType,
-          item.servingSize,
-          item.calories,
-          item.protein,
-          item.carbs,
-          item.fat,
-          item.glucid,
-          item.fiber,
+          // item.servingSize,
+          // item.calories,
+          // item.protein,
+          // item.carbs,
+          // item.fat,
+          // item.glucid,
+          // item.fiber,
           item.description,
      
          
@@ -288,7 +364,17 @@ const FoodPage: React.FC = () => {
       XLSX.utils.book_append_sheet(wb, ws, "Food");
       XLSX.writeFile(wb, "foods_export.xlsx");
     };
+    useEffect(() => {
+      if (servingSizesData) {
+        setServingSizes(servingSizesData);
+      }
+    }, [servingSizesData]);
   
+    // Tìm tên khẩu phần tương ứng với servingSizeId
+    const getServingSizeName = (servingSizeId: number) => {
+      const found = servingSizes.find((size) => size.servingSizeId === servingSizeId);
+      return found ? found.unitName : "Không tìm thấy khẩu phần";
+    };
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchText(e.target.value);
   };

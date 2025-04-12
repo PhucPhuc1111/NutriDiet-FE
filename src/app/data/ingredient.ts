@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import request, { baseURL }  from "@/services/apiClient";
 import Cookies from 'js-cookie';
-import { Ingredient } from "./types";
+import { Ingredient, ServingSize } from "./types";
 import { ApiResponse } from ".";
 
 
@@ -158,6 +158,7 @@ export const useGetAllIngredients = (
     ...config,
   });
 };
+
 export const useGetIngredientById = (ingredientId: number, config?: UseQueryOptions<Ingredient>) => {
   return useQuery<Ingredient>({
     queryKey: ["ingredient", ingredientId],
