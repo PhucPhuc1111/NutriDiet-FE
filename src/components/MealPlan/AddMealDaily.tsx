@@ -215,7 +215,7 @@ const MealSelectionForm: React.FC<MealSelectionFormProps> = ({
   editMode,
   updateDay,
 }) => {
-  const { data: foodList, isLoading } = useGetAllFoods(1, 200, "");
+  const { data: foodList, isLoading } = useGetAllFoods(1, 100, "");
 
   const handleChange = (
     mealType: keyof DayMeal["foodDetails"],
