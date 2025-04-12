@@ -33,26 +33,8 @@ const AddFoodModal: React.FC = () => {
             return;
           }
   
-          const formattedData = {
-            FoodName: values.foodName,
-            MealType: values.mealType,
-            FoodType: values.foodType,
-            Description: values.description,
-            ServingSize: values.servingSize,
-            Calories: Number(values.calories),
-            Protein: Number(values.protein),
-            Carbs: Number(values.carbs),
-            Fat: Number(values.fat),
-            Glucid: Number(values.glucid),
-            Fiber: Number(values.fiber),
-            Others: values.other || "",
-            AllergyId: values.allergies || [],
-            DiseaseId: values.diseases || [],
-            Ingredients: values.ingredients || [],
-            FoodImageUrl: values.imgUrl, 
-          };
-  
-          await createFood(formattedData);
+         
+          await createFood(values);
           toast.success("Thêm thực phẩm thành công");
           setOpen(false);
           setConfirmLoading(false);

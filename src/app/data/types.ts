@@ -71,19 +71,47 @@ export type Ingredient = {
     mealType: string;          
     imageUrl: string;          
     foodType: string;          
-    description: string;       
-    servingSize: string;       
-    calories: number;          
-    protein: number;           
-    carbs: number;             
-    fat: number;               
-    glucid: number;            
-    fiber: number;             
-    others: string;       
-    allergies: Allergy[],
-    diseases: Disease[],
+    description: string;    
+    servingSizeId: number;  
+    foodServingSizes: FoodServingSize[];
     ingredients: Ingredient[]
+    // servingSize: string;       
+    // calories: number;          
+    // protein: number;           
+    // carbs: number;             
+    // fat: number;               
+    // glucid: number;            
+    // fiber: number;             
+    // others: string;       
+    // allergies: Allergy[],
+    // diseases: Disease[],
+
   };
+  export type FoodServingSize={
+    
+      servingSizeId: number,
+      quantity: number,
+      calories: number,
+      protein: number,
+      carbs: number,
+      fat: number,
+      glucid: number,
+      fiber: number
+    
+  }
+export type ServingSize={
+  servingSizeId: number;
+  unitName:string;
+description:string;
+createdAt:string;
+updatedAt:string;
+foodServingSizes:[]
+foods:[]
+
+
+}
+
+
 export type Dashboard={
   totalUser: number;
   totalPremiumUser: number;
