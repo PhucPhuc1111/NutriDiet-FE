@@ -255,36 +255,53 @@ const MealPlanDetailPage = () => {
   
 
   const transformMealPlanDetails = (mealPlanDetails: MealPlanDetail[]): Day[] => {
-    const groupedDays: Record<string, { sáng: string[]; trưa: string[]; tối: string[]; phụ: string[]; totalCalories: number }> = {};
-
+    const groupedDays: Record<string, { sáng: string[]; trưa: string[]; tối: string[]; phụ: string[]; totalCalories: number, totalByMealType: any }> = {};
+  
     mealPlanDetails.forEach((detail) => {
-        if (!groupedDays[detail.dayNumber]) {
-          groupedDays[detail.dayNumber] = { sáng: [], trưa: [], tối: [], phụ: [], totalCalories: 0 };
-        }
-
+      if (!groupedDays[detail.dayNumber]) {
+        groupedDays[detail.dayNumber] = { sáng: [], trưa: [], tối: [], phụ: [], totalCalories: 0, totalByMealType: {} };
+      }
+  
       const mealTypeMap: Record<string, keyof Day["foodDetails"]> = {
         "Breakfast": "sáng",
         "Lunch": "trưa",
         "Dinner": "tối",
         "Snacks": "phụ",
       };
-
+  
       const mealType = mealTypeMap[detail.mealType];
-
+  
       if (mealType) {
         groupedDays[detail.dayNumber][mealType].push(detail.foodName);
       }
-
+  
+      // Update total by meal type
+      if (!groupedDays[detail.dayNumber].totalByMealType[detail.mealType]) {
+        groupedDays[detail.dayNumber].totalByMealType[detail.mealType] = {
+          calories: 0,
+          carbs: 0,
+          fat: 0,
+          protein: 0,
+        };
+      }
+  
+      groupedDays[detail.dayNumber].totalByMealType[detail.mealType].calories += detail.totalCalories;
+      groupedDays[detail.dayNumber].totalByMealType[detail.mealType].carbs += detail.totalCarbs;
+      groupedDays[detail.dayNumber].totalByMealType[detail.mealType].fat += detail.totalFat;
+      groupedDays[detail.dayNumber].totalByMealType[detail.mealType].protein += detail.totalProtein;
+  
+      // Update total calories for the day
       groupedDays[detail.dayNumber].totalCalories += detail.totalCalories;
     });
-
-    return Object.entries(groupedDays).map(([dayNumber, { totalCalories, ...foodDetails }]) => ({
+  
+    return Object.entries(groupedDays).map(([dayNumber, { totalCalories, totalByMealType, ...foodDetails }]) => ({
       dayNumber,
       foodDetails,
       totalCalories,
+      totalByMealType,
     }));
   };
-
+  
   if (isLoading) {
     return (
       <DefaultLayout>
