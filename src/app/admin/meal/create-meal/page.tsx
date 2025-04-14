@@ -27,6 +27,12 @@ export interface DayMeal {
     Snacks: number[];
   };
   totalCalories: number;
+  totalByMealType?: {
+    Breakfast: { calories: number, carbs: number, fat: number, protein: number },
+    Lunch: { calories: number, carbs: number, fat: number, protein: number },
+    Dinner: { calories: number, carbs: number, fat: number, protein: number },
+    Snacks: { calories: number, carbs: number, fat: number, protein: number },
+  }
 }
 
 interface FormValues {

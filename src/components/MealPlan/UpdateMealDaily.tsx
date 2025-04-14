@@ -206,6 +206,12 @@ interface Day {
   dayNumber: string;
   foodDetails: DayFoodDetails;
   totalCalories: number;
+  totalByMealType?: {
+    Breakfast?: { calories: number };
+    Lunch?: { calories: number };
+    Dinner?: { calories: number };
+    Snacks?: { calories: number };
+  };
 }
 
 interface UpdateMealPlanProps {
@@ -323,16 +329,18 @@ const MealSelectionForm: React.FC<{
         <div>
           <p className="flex justify-center text-xl font-semibold">Tổng calo</p>
           <div className="space-y-5">
-            <p>Bữa sáng: </p>
-            <p>Bữa trưa: </p>
-            <p>Bữa tối: </p>
-            <p>Bữa phụ: </p>
+            <p>Bữa sáng: {day.totalByMealType?.Breakfast?.calories} cal</p>
+            <p>Bữa trưa: {day.totalByMealType?.Lunch?.calories} cal</p>
+            <p>Bữa tối: {day.totalByMealType?.Dinner?.calories} cal</p>
+            <p>Bữa phụ: {day.totalByMealType?.Snacks?.calories} cal</p>
+            <p>Tổng cộng: {day.totalCalories} cal</p>
           </div>
         </div>
       </div>
     </div>
   );
 };
+
 
 // Removed duplicate React import block.
 

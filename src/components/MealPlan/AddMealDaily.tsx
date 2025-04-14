@@ -208,82 +208,84 @@ interface MealSelectionFormProps {
   day: DayMeal;
   editMode: boolean;
   updateDay: (dayNumber: number, foodDetails: DayMeal["foodDetails"]) => void;
+  updateTotalCalories: (dayNumber: number, mealType: "Breakfast" | "Lunch" | "Dinner" | "Snacks", totalCalories: number) => void;
 }
 
 const MealSelectionForm: React.FC<MealSelectionFormProps> = ({
   day,
   editMode,
   updateDay,
+  updateTotalCalories,
 }) => {
   const { data: foodList, isLoading } = useGetAllFoods(1, 100, "");
+  
+  const calculateTotalCalories = (foodIds: number[]) => {
+    let totalCalories = 0;
+    foodIds.forEach((foodId) => {
+      const food = foodList?.find(item => item.foodId === foodId);
+      if (food) {
+        totalCalories += food.calories;
+      }
+    });
+    return totalCalories;
+  };
 
   const handleChange = (
     mealType: keyof DayMeal["foodDetails"],
     selectedFoods: number[],
   ) => {
     updateDay(day.dayNumber, { ...day.foodDetails, [mealType]: selectedFoods });
+    const totalCalories = calculateTotalCalories(selectedFoods);
+    updateTotalCalories(day.dayNumber, mealType, totalCalories);
   };
 
   return (
     <div className="flex w-full">
-    <div className="w-2/3" >
-    <Form
-      name={`form_${day.dayNumber}`}
-      style={{ maxWidth: 600 }}
-      disabled={!editMode}
-    >
-      {(
-        [
-          "Breakfast",
-          "Lunch",
-          "Dinner",
-          "Snacks",
-        ] as (keyof DayMeal["foodDetails"])[] 
-      ).map((mealType) => (
-        <Form.Item key={mealType} label={`Bữa ${mealType}`}>
-          <Select
-            placeholder={`Chọn bữa ${mealType}`}
-            allowClear
-            mode="multiple"
-            value={day.foodDetails[mealType]}
-            disabled={!editMode || isLoading}
-            loading={isLoading}
-            onChange={(values) => handleChange(mealType, values as number[])}
-            showSearch
-            filterOption={(input, option) => {
-              if (option?.label) {
-                return (option.label as string)
-                  .toLowerCase()
-                  .includes(input.toLowerCase());
-              }
-              return false;
-            }}
-          >
-            {foodList?.map((food) => (
-              <Select.Option key={food.foodId} value={food.foodId} label={food.foodName}>
-                {food.foodName}
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
-           
-      ))}
-    </Form>
-    </div>
-     <div className="w-1/3" >
-     <div>
- 
-    
-       <p className="flex justify-center text-xl font-semibold">Tổng calo</p>
-       <div className="space-y-5">
-       <p>Bữa sáng: </p>
-       <p>Bữa trưa: </p>
-       <p>Bữa tối: </p>
-       <p>Bữa phụ: </p>
-       </div>
-       </div>
-     </div>
+      <div className="w-2/3">
+        <Form name={`form_${day.dayNumber}`} style={{ maxWidth: 600 }} disabled={!editMode}>
+          {(["Breakfast", "Lunch", "Dinner", "Snacks"] as (keyof DayMeal["foodDetails"])[]).map((mealType) => (
+            <Form.Item key={mealType} label={`Bữa ${mealType}`}>
+              <Select
+                placeholder={`Chọn bữa ${mealType}`}
+                allowClear
+                mode="multiple"
+                value={day.foodDetails[mealType]}
+                disabled={!editMode || isLoading}
+                loading={isLoading}
+                onChange={(values) => handleChange(mealType, values as number[])}
+                showSearch
+                filterOption={(input, option) => {
+                  if (option?.label) {
+                    return (option.label as string)
+                      .toLowerCase()
+                      .includes(input.toLowerCase());
+                  }
+                  return false;
+                }}
+              >
+                {foodList?.map((food) => (
+                  <Select.Option key={food.foodId} value={food.foodId} label={food.foodName}>
+                    {food.foodName}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          ))}
+        </Form>
+      </div>
+      <div className="w-1/3">
+        <div>
+          <p className="flex justify-center text-xl font-semibold">Tổng calo</p>
+          <div className="space-y-5">
+            <p>Bữa sáng: {day.totalByMealType?.Breakfast?.calories || 0} cal</p>
+            <p>Bữa trưa: {day.totalByMealType?.Lunch?.calories || 0} cal</p>
+            <p>Bữa tối: {day.totalByMealType?.Dinner?.calories || 0} cal</p>
+            <p>Bữa phụ: {day.totalByMealType?.Snacks?.calories || 0} cal</p>
+            <p>Tổng cộng: {day.totalCalories} cal</p>
+          </div>
         </div>
+      </div>
+    </div>
   );
 };
 
@@ -309,10 +311,15 @@ const AddMealDaily: React.FC<AddMealDailyProps> = ({ onChange = () => {} }) => {
         dayNumber: prevDays.length + 1,
         foodDetails: { Breakfast: [], Lunch: [], Dinner: [], Snacks: [] },
         totalCalories: 0,
+        totalByMealType: {
+          Breakfast: { calories: 0, carbs: 0, fat: 0, protein: 0 },
+          Lunch: { calories: 0, carbs: 0, fat: 0, protein: 0 },
+          Dinner: { calories: 0, carbs: 0, fat: 0, protein: 0 },
+          Snacks: { calories: 0, carbs: 0, fat: 0, protein: 0 },
+        },
       },
     ]);
   }, []);
-
   const deleteDay = useCallback((dayNumber: number) => {
     setDays((prevDays) =>
       prevDays.filter((day) => day.dayNumber !== dayNumber),
@@ -334,6 +341,40 @@ const AddMealDaily: React.FC<AddMealDailyProps> = ({ onChange = () => {} }) => {
           ? { ...day, foodDetails, totalCalories: calculateTotalCalories(foodDetails) }
           : day,
       ),
+    );
+  };
+  
+  const updateTotalCalories = (
+    dayNumber: number,
+    mealType: "Breakfast" | "Lunch" | "Dinner" | "Snacks",
+    totalCalories: number
+  ) => {
+    setDays((prevDays) =>
+      prevDays.map((day) =>
+        day.dayNumber === dayNumber
+          ? {
+              ...day,
+              totalByMealType: {
+                ...((day.totalByMealType) || {
+                  Breakfast: { calories: 0, carbs: 0, fat: 0, protein: 0 },
+                  Lunch: { calories: 0, carbs: 0, fat: 0, protein: 0 },
+                  Dinner: { calories: 0, carbs: 0, fat: 0, protein: 0 },
+                  Snacks: { calories: 0, carbs: 0, fat: 0, protein: 0 },
+                }),
+                [mealType]: {
+                  ...((day.totalByMealType && day.totalByMealType[mealType]) || {
+                    calories: 0,
+                    carbs: 0,
+                    fat: 0,
+                    protein: 0,
+                  }),
+                  calories: totalCalories,
+                },
+              },
+              totalCalories: calculateTotalCalories(day.foodDetails),
+            }
+          : day
+      )
     );
   };
   const calculateTotalCalories = (foodDetails: DayMeal["foodDetails"]) => {
@@ -407,6 +448,7 @@ const AddMealDaily: React.FC<AddMealDailyProps> = ({ onChange = () => {} }) => {
                 day={day}
                 editMode={!!editMode[day.dayNumber]}
                 updateDay={updateDay}
+                updateTotalCalories={updateTotalCalories}
               />
               <div className="bg-green-800 p-5 text-center text-lg font-semibold text-white">
                 Tổng calo: {day.totalCalories} cal
