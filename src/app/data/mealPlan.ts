@@ -37,27 +37,47 @@ export const createMealPlan = async (params: CreateMealPlanParams) => {
 };
 
 
-export const updateMealPlan = async (id: number, params: CreateMealPlanParams) => {
-  const token = Cookies.get("accessToken");
-
-  if (!token) {
-    throw new Error("Bạn chưa đăng nhập!");
-  }
-
+// updateMealPlan gửi dữ liệu lên API
+export const updateMealPlan = async (mealPlanId: number, params: any) => {
   try {
-    const response = await request.put(`${baseURL}/api/meal-plan/${id}`, params, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await request.put(`/api/meal-plan?mealPlanId=${mealPlanId}`, {
+      data: {
+        planName: params.planName,
+        healthGoal: params.healthGoal,
+        mealPlanDetails: params.mealPlanDetails,  // Các chi tiết bữa ăn phải đúng cấu trúc
+      },
+    });
+
+    if (response.status === 200) {
+      console.log('Meal plan updated successfully');
+    }
+    return response;
+  } catch (error) {
+    console.error('Error updating meal plan:', error);
+    throw error;
+  }
+};
+
+
+// Cập nhật chi tiết bữa ăn
+export const updateMealPlanDetail = async (mealPlanDetailId: number, params: any) => {
+  try {
+    const response = await request.put('/api/meal-plan-detail', {
+      data: {
+        mealPlanDetailId,
+        foodId: params.foodId,
+        quantity: params.quantity,
+        mealType: params.mealType,
+        dayNumber: params.dayNumber,
       },
     });
 
     return response;
   } catch (error) {
-    console.error("Lỗi khi cập nhật thực đơn:", error);
+    console.error('Error updating meal plan detail:', error);
     throw error;
   }
 };
-
 
 export async function deleteMealPlanById(mealPlanId: number): Promise<void> {
   await request.delete(`${baseURL}/api/meal-plan/${mealPlanId}`);

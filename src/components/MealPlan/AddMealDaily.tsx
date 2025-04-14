@@ -225,6 +225,8 @@ const MealSelectionForm: React.FC<MealSelectionFormProps> = ({
   };
 
   return (
+    <div className="flex w-full">
+    <div className="w-2/3" >
     <Form
       name={`form_${day.dayNumber}`}
       style={{ maxWidth: 600 }}
@@ -264,8 +266,24 @@ const MealSelectionForm: React.FC<MealSelectionFormProps> = ({
             ))}
           </Select>
         </Form.Item>
+           
       ))}
     </Form>
+    </div>
+     <div className="w-1/3" >
+     <div>
+ 
+    
+       <p className="flex justify-center text-xl font-semibold">Tổng calo</p>
+       <div className="space-y-5">
+       <p>Bữa sáng: </p>
+       <p>Bữa trưa: </p>
+       <p>Bữa tối: </p>
+       <p>Bữa phụ: </p>
+       </div>
+       </div>
+     </div>
+        </div>
   );
 };
 
