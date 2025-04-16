@@ -66,20 +66,21 @@ const menuGroups = [
             />
           </svg>
         ),
-        label: "Quản lý",
+        label: "Management",
         route: "#",
         children: [
           // { label: ["Nguyên liệu"], route: "/admin/ingredient" },
-          { label: ["Bệnh nền"], route: "/admin/disease" }, 
-          { label: ["Dị ứng"], route: "/admin/allergy" },
-          { label: ["Nguyên liệu"], route: "/admin/ingredient" },
-          { label: ["Thực phẩm"], route: "/admin/food" },
-     { label: ["Bữa ăn"], route: "/admin/meal" },
-     { label: ["Gói Premium"], route: "/admin/package" },
-     { label: ["Giao dịch"], route: "/admin/transaction" },
-        { label: ["Khách hàng"], route: "/admin/customer" },
+          { label: ["Disease"], route: "/admin/disease" }, 
+          { label: ["Allergy"], route: "/admin/allergy" },
+          { label: ["Ingredient"], route: "/admin/ingredient" },
+          { label: ["Food"], route: "/admin/food" },
+     { label: ["Meal Plan"], route: "/admin/meal" },
+     { label: ["Premium package"], route: "/admin/package" },
+     { label: ["Transaction"], route: "/admin/transaction" },
+        { label: ["Account"], route: "/admin/customer" },
         
           { label: ["Feedback"], route: "/admin/feedback" },
+          { label: ["System configuration"], route: "/admin/system-configuration" },
         ],
       },
 
@@ -110,9 +111,9 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
+        <div className="flex items-center justify-between gap-2 px-14 ">
           <Link href="/">
-            <div className="text-2xl font-semibold">NutriAdmin</div>
+            <div className="text-2xl font-semibold p-2">NutriAdmin</div>
           </Link>
 
           <button
@@ -136,15 +137,15 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           </button>
         </div>
 
-        <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
-          <nav className="mt-5 px-4 py-4 lg:mt-9 lg:px-6">
+        <div className=" flex flex-col  duration-300 ease-linear">
+          <nav className=" px-4 py-4 lg:mt-9 lg:px-6">
             {menuGroups.map((group, groupIndex) => (
               <div key={groupIndex}>
                 <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
                   {group.name}
                 </h3>
 
-                <ul className="mb-6 flex flex-col gap-1.5">
+                <ul className=" flex flex-col gap-1.5">
                   {group.menuItems.map((menuItem, menuIndex) => (
                     <SidebarItem
                       key={menuIndex}
@@ -176,7 +177,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           </svg>
                 
                 <p>
-                 Đăng xuất 
+                Logout
                 </p>
               </div>
           </nav>

@@ -43,12 +43,12 @@
 //     <Form form={form} name="food-details">
 //       <div className="flex space-x-2">
 //         <div className="w-2/3">
-//           <Form.Item name="foodName" label="Tên thức ăn"
+//           <Form.Item name="foodName" label="Food name"
 //             rules={[
-//               { required: true, message: 'Tên thực phẩm là bắt buộc' },
+//               { required: true, message: 'Food name là bắt buộc' },
 //               {
 //                 pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
-//                 message: 'Tên thực phẩm không được chứa ký tự đặc biệt ',
+//                 message: 'Food name không được chứa ký tự đặc biệt ',
 //               }
 //             ]}>
 //             <Input disabled={!isEditing} />
@@ -214,12 +214,12 @@ const DetailFoodForm: React.FC<{ form: any, foodId: number, isEditing: boolean }
     <Form form={form} name="food-details">
       <div className="flex space-x-2">
         <div className="w-2/3">
-          <Form.Item name="foodName" label="Tên thức ăn"
+          <Form.Item name="foodName" label="Food name"
             rules={[
-              { required: true, message: 'Tên thực phẩm là bắt buộc' },
+              { required: true, message: 'Food name is required' },
               {
                 pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
-                message: 'Tên thực phẩm không được chứa ký tự đặc biệt ',
+                message: 'Food name must not contain special characters',
               }
             ]}>
             <Input disabled={!isEditing} />
@@ -228,17 +228,19 @@ const DetailFoodForm: React.FC<{ form: any, foodId: number, isEditing: boolean }
           <div className="flex justify-between space-x-4">
             <Form.Item
               name="mealType"
-              label="Chọn bữa"
+              label="Select meal type"
               style={{ width: "50%" }}
             >
-              <Select placeholder="Chọn bữa" allowClear disabled={!isEditing}>
-                <Option value="Main">Chính</Option>
-                <Option value="Dessert">Phụ</Option>
+              <Select placeholder="Select meal type" allowClear disabled={!isEditing}>
+              <Option value="Breakfast">Sáng</Option>
+                <Option value="Lunch">Trưa</Option>
+                <Option value="Dinner">Tối</Option>
+                <Option value="Snack">Phụ</Option>
               </Select>
             </Form.Item>
 
-            <Form.Item name="foodType" label="Loại" style={{ width: "50%" }}>
-              <Select placeholder="Chọn loại" allowClear disabled={!isEditing}>
+            <Form.Item name="foodType" label="Food type" style={{ width: "50%" }}>
+              <Select placeholder="Select food type" allowClear disabled={!isEditing}>
                 <Option value="Vegetable">Rau củ quả</Option>
                 <Option value="Fruit">Trái cây</Option>
                 <Option value="Broth">Món nước</Option>
@@ -249,7 +251,7 @@ const DetailFoodForm: React.FC<{ form: any, foodId: number, isEditing: boolean }
             </Form.Item>
           </div>
 
-          <Form.Item name="servingSize" label="Khẩu phần">
+          <Form.Item name="servingSize" label="Serving Size">
             <Input disabled={!isEditing} />
           </Form.Item>
 
@@ -272,7 +274,7 @@ const DetailFoodForm: React.FC<{ form: any, foodId: number, isEditing: boolean }
             <Form.Item name="glucid" label="Glucid (g)">
               <Input disabled={!isEditing} />
             </Form.Item>
-            <Form.Item name="fiber" label="Chất xơ (g)">
+            <Form.Item name="fiber" label="Fiber (g)">
               <Input disabled={!isEditing} />
             </Form.Item>
           </div>
@@ -288,12 +290,12 @@ const DetailFoodForm: React.FC<{ form: any, foodId: number, isEditing: boolean }
                 className="w-full h-auto rounded-lg"
               />
             ) : (
-              <span>Chưa có hình ảnh</span>
+              <span>Do not have image</span>
             )}
           </div>
 
           {/* Chỉ sử dụng Form.Item cho giá trị imageUrl */}
-          <Form.Item name="imageUrl" label="Hình ảnh" style={{ display: "none" }}>
+          <Form.Item name="imageUrl" label="Image" style={{ display: "none" }}>
             <Input />
           </Form.Item>
 
@@ -326,10 +328,10 @@ const DetailFoodForm: React.FC<{ form: any, foodId: number, isEditing: boolean }
         </div>
       </div>
 
-      <Form.Item name="ingredients" label="Nguyên liệu">
+      <Form.Item name="ingredients" label="Ingredients">
         <Select
           mode="multiple"
-          placeholder="Chọn nguyên liệu"
+          placeholder="Select ingredients"
           options={ingredientOptions}
           loading={isLoadingIngredients}
           allowClear

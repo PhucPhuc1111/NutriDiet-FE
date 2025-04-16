@@ -54,12 +54,13 @@ const handleSave = async () => {
         };
 
         await updateAllergy(payload); // Gửi yêu cầu API để cập nhật dị ứng
-        toast.success("Cập nhật dị ứng thành công!"); // Hiển thị thông báo thành công
+        toast.success("Updated allergy successfully"); // Hiển thị thông báo thành công
         setOpen(false);
         refetch();
       } catch (error) {
-        console.error("Lỗi khi cập nhật dị ứng:", error);
-        toast.error("Tên dị ứng đã tồn tại!"); // Hiển thị thông báo lỗi nếu có lỗi API
+        const err = error as any;
+        const errorMessage = err?.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
+      toast.error(errorMessage);
       } finally {
         setLoadingSave(false); // Tắt trạng thái loading
       }
@@ -91,9 +92,9 @@ useEffect(() => {
 
   return (
     <>
-      <Button style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={showDetailModal}>Chi tiết</Button>
+      <Button style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={showDetailModal}>Detail</Button>
       <Modal
-        title={isEditing ? "Sửa dị ứng" : "Chi tiết dị ứng"}
+        title={isEditing ? "Edit allergy" : "Allergy detail"}
         open={open}
         width={800}
         onCancel={handleCancel}
@@ -101,11 +102,11 @@ useEffect(() => {
         footer={[
           isEditing ? (
             <>
-              <Button key="cancel" onClick={handleCancel}>Hủy</Button>
-              <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={handleSave} loading={loadingSave}>Lưu</Button>
+              <Button key="cancel" onClick={handleCancel}>Cancel</Button>
+              <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={handleSave} loading={loadingSave}>Save</Button>
             </>
           ) : (
-            <Button key="edit" style={{ backgroundColor: '#2f855a', color: 'white' }}  onClick={enableEdit}>Sửa</Button>
+            <Button key="edit" style={{ backgroundColor: '#2f855a', color: 'white' }}  onClick={enableEdit}>Edit</Button>
           )
         ]}
       >

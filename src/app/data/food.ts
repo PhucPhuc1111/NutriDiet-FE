@@ -125,7 +125,7 @@ export async function createFood(
     Fat: number;
     Glucid: number;
     Fiber: number;
-    Others: string;
+    // Others: string;
     AllergyId: string[];
     DiseaseId: string[];
     Ingredients: string [];
@@ -143,7 +143,7 @@ export async function createFood(
   form.append("Fat", formData.Fat.toString());
   form.append("Glucid", formData.Glucid.toString());
   form.append("Fiber", formData.Fiber.toString());
-  form.append("Others", formData.Others);
+  // form.append("Others", formData.Others);
 
   if (formData.FoodImageUrl) {
     form.append("FoodImageUrl", formData.FoodImageUrl);
@@ -169,7 +169,7 @@ export async function updateFood(formData: {
   Fat?: number;
   Glucid?: number;
   Fiber?: number;
-  Others?: string;
+  // Others?: string;
   Ingredients?: string [];
 
 
@@ -194,7 +194,7 @@ export async function updateFood(formData: {
   form.append("Fat", formData.Fat?.toString() ?? oldData.fat.toString());
   form.append("Glucid", formData.Glucid?.toString() ?? oldData.glucid.toString());
   form.append("Fiber", formData.Fiber?.toString() ?? oldData.fiber.toString());
-  form.append("Others", formData.Others ?? oldData.others);
+  // form.append("Others", formData.Others ?? oldData.others);
 
   if (formData.FoodImageUrl instanceof File) {
     form.append("FoodImageUrl", formData.FoodImageUrl);

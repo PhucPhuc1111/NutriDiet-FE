@@ -44,13 +44,15 @@ const AddPackageModal: React.FC = () => {
 
        
         await createPackage(values);
-        toast.success("Thêm gói thành công");
+        toast.success("Add package successfully!");
         setOpen(false);
         setConfirmLoading(false);
         form.resetFields();
         queryClient.invalidateQueries({ queryKey: ["packages"] }); 
       } catch (error) {
-        toast.error("Có lỗi xảy ra khi thêm gói");
+        const err = error as any;
+        const errorMessage = err?.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
+      toast.error(errorMessage);
         setConfirmLoading(false);
       }
     }).catch((errorInfo) => {
@@ -71,7 +73,7 @@ const AddPackageModal: React.FC = () => {
   return (
     <>
       <Button style={{ backgroundColor: "#2f855a", color: "white" }} onClick={showModal}>
-        Thêm gói
+       Add package
       </Button>
       <Modal
         title="Thêm gói"
@@ -81,13 +83,13 @@ const AddPackageModal: React.FC = () => {
         onCancel={handleCancel}
         footer={[
           <Button key="reset" onClick={handleReset} style={{ marginRight: 10 }}>
-            Tạo lại
+            Reset
           </Button>,
           <Button key="cancel" onClick={handleCancel} style={{ marginRight: 10 }}>
-            Hủy
+            Cancel
           </Button>,
           <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} loading={confirmLoading} onClick={handleOk}>
-            Xác nhận
+            Submit
           </Button>,
         ]}
       >

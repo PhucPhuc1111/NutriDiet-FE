@@ -20,7 +20,7 @@ const AddDiseaseForm: React.FC<{ form: any }> = ({ form }) => {
         const isDuplicate = allDiseases?.some((disease) => disease.diseaseName === values.diseaseName);
     
         if (isDuplicate) {
-          toast.error("Tên bệnh đã tồn tại, vui lòng chọn tên khác!");
+          toast.error("Diseas Name đã tồn tại, vui lòng chọn tên khác!");
           return;
         }
       };
@@ -33,12 +33,12 @@ const AddDiseaseForm: React.FC<{ form: any }> = ({ form }) => {
     >
       <Form.Item
         name="diseaseName"
-        label="Tên bệnh"
+        label="Diseas Name"
         rules={[
-          { required: true, message: 'Tên bệnh là bắt buộc' },
+          { required: true, message: 'Diseas Name is required' },
          {
             pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
-            message: 'Tên bệnh không được chứa ký tự đặc biệt ngoài dấu',
+            message: 'Diseas Name must not contain special characters',
           },]}
       
       >
@@ -47,18 +47,18 @@ const AddDiseaseForm: React.FC<{ form: any }> = ({ form }) => {
 
       <Form.Item
         name="description"
-        label="Mô tả"
-        rules={[{ required: true, message: ' Mô tả là bắt buộc' }]}
+        label="Description"
+        rules={[{ required: true, message: 'Description is required' }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="ingredientIds"
-        label="Nguyên liệu cần tránh"
+        label="Ingredients to avoid"
       >
         <Select
           mode="multiple"
-          placeholder="Chọn nguyên liệu"
+          placeholder="Select ingredients to avoid"
           options={ingredientOptions}
           loading={isLoadingIngredients}
           allowClear

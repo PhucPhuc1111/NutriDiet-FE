@@ -86,47 +86,47 @@ function formatDate(dateString?: string): string {
       title: "Id",
       dataIndex: "id",
       sorter: (a, b) => a.id - b.id,
-      render: (text) => text || "Chưa có dữ liệu",
+      render: (text) => text || "None",
     },
     {
-      title: "Chủ đề",
+      title: "Type",
       dataIndex: "type",
       sorter: (a, b) => a.response.localeCompare(b.response),
-      render: (text) => text || "Chưa có dữ liệu",
+      render: (text) => text || "None",
     },
  
     {
-      title: "Tạo bởi",
+      title: "Created by",
       dataIndex: "fullName",
-      render: (text) => text || "Chưa có dữ liệu",
+      render: (text) => text || "None",
     },
     {
       title: "Feedback",
       dataIndex: "feedback",
-      render: (text) => text || "Chưa có dữ liệu",
+      render: (text) => text || "None",
     },
         {
-      title: "Lý do từ chối",
+      title: "Reject reason",
       dataIndex: "rejectReason",
-      render: (text) => text || "không có",
+      render: (text) => text || "None",
     },
     {
-      title: "Ngày gợi ý",
+      title: "Recommended At",
       dataIndex: "recommendedAt",
       sorter: (a, b) => new Date(a.recommendedAt).getTime() - new Date(b.recommendedAt).getTime(),
       render: (text) => formatDate(text), 
     },
     {
-      title: "Trạng thái",
+      title: "Status",
       dataIndex: "status",
       render: (status) => (
-        status === "Accepted" ? <span className="text-green-500">Đã chấp nhận</span> : 
-        status === "Unaccpected" ? <span className="text-red-500">Từ chối</span> : 
+        status === "Accepted" ? <span className="text-green-500">Accepted</span> : 
+        status === "Unaccpected" ? <span className="text-red-500">Rejected</span> : 
         "Chưa có dữ liệu"
       ),
     },
     {
-      title: "Chi tiết gợi ý",
+      title: "Detail recommend",
       dataIndex: "action",
       render: (_, record) => (
         <Space size="middle">
@@ -134,7 +134,7 @@ function formatDate(dateString?: string): string {
            style={{ backgroundColor: '#2f855a', color: 'white' }}
             onClick={() => handleViewDetails(record.response, record.type)} // Pass the response and type
           >
-            Chi tiết gợi ý
+            Detail
           </Button>
         </Space>
       ),
@@ -189,12 +189,12 @@ function formatDate(dateString?: string): string {
 
         {/* Modal to show details */}
         <Modal
-          title="Chi tiết"
+          title="Detail"
           open={showDetails} // Use 'open' instead of 'visible' as 'visible' is deprecated
           onCancel={handleCloseModal}
           footer={[
             <Button key="back" onClick={handleCloseModal}>
-              Đóng
+              Close
             </Button>,
           ]}
         >

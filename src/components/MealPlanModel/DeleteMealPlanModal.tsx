@@ -16,9 +16,9 @@ const DeleteMealPlanModal: React.FC<{
       refetch();
       setConfirmLoading(false);
 
-      toast.success("Xóa thực đơn thành công");
+      toast.success("Delete meal plan successfully!");
     } catch (error) {
-      toast.error("Xóa thực đơn không thành công");
+      toast.error("Delete meal plan unsuccessfully");
       setConfirmLoading(false);
     }
   };
@@ -28,14 +28,14 @@ const DeleteMealPlanModal: React.FC<{
   };
   return (
      <Popconfirm
-       title="Bạn có chắc chắn muốn xóa thực đơn này?"
+       title="Are you sure to delete this meal plan?"
        onConfirm={handleDelete}
        onCancel={handleCancel}
        okButtonProps={{ loading: confirmLoading }}
        cancelButtonProps={{ disabled: confirmLoading }}
      >
        <Button type="primary" danger>
-         Xóa
+         Delete
        </Button>
      </Popconfirm>
   );

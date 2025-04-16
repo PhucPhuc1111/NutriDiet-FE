@@ -17,9 +17,11 @@ const DeleteAllergyModal: React.FC<{
       refetch();
       setConfirmLoading(false);
 
-      toast.success("Xóa dị ứng thành công");
+      toast.success("Delete allergy successfully!");
     } catch (error) {
-      toast.error("Xóa dị ứng không thành công");
+      const err = error as any;
+      const errorMessage = err?.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
+    toast.error(errorMessage);
       setConfirmLoading(false);
     }
   };
@@ -30,14 +32,14 @@ const DeleteAllergyModal: React.FC<{
 
   return (
     <Popconfirm
-      title="Bạn có chắc chắn muốn xóa dị ứng này?"
+      title="Are you sure you want to delete this allergy?"
       onConfirm={handleDelete}
       onCancel={handleCancel}
       okButtonProps={{ loading: confirmLoading }}
       cancelButtonProps={{ disabled: confirmLoading }}
     >
       <Button type="primary" danger>
-        Xóa
+        Delete
       </Button>
     </Popconfirm>
   );

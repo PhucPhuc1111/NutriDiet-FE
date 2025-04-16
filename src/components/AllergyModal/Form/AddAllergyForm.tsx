@@ -20,7 +20,7 @@ const AddAllergyForm: React.FC<{ form: any }> = ({ form }) => {
         const isDuplicate = allAllergies?.some((allergy) => allergy.allergyName === values.allergyName);
     
         if (isDuplicate) {
-          toast.error("Tên dị ứng đã tồn tại, vui lòng chọn tên khác!");
+          toast.error("Allergy name đã tồn tại, vui lòng chọn tên khác!");
           return;
         }
       };
@@ -33,11 +33,11 @@ const AddAllergyForm: React.FC<{ form: any }> = ({ form }) => {
     >
       <Form.Item
         name="allergyName"
-        label="Tên dị ứng"
-        rules={[{ required: true, message: 'Tên dị ứng là bắt buộc' },
+        label="Allergy name"
+        rules={[{ required: true, message: 'Allergy name is required' },
           {
             pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
-            message: 'Tên dị ứng không được chứa ký tự đặc biệt ',
+            message: 'Allergy name must not contain special characters',
           }
         ]}
       >
@@ -46,18 +46,18 @@ const AddAllergyForm: React.FC<{ form: any }> = ({ form }) => {
 
       <Form.Item
         name="notes"
-        label="Ghi chú"
-        rules={[{ required: true, message: 'Ghi chú là bắt buộc' }]}
+        label="Note"
+        rules={[{ required: true, message: 'Note is requied' }]}
       >
         <Input />
       </Form.Item>
       <Form.Item
         name="ingredientIds"
-        label="Nguyên liệu cần tránh"
+        label="Ingredients to avoid"
       >
         <Select
           mode="multiple"
-          placeholder="Chọn nguyên liệu"
+          placeholder="Select ingredients to avoid"
           options={ingredientOptions}
           loading={isLoadingIngredients}
           allowClear

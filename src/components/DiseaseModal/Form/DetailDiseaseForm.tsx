@@ -39,26 +39,26 @@ const DetailDiseaseForm: React.FC<{form:any,diseaseId: number,isEditing: boolean
   return (
    <Form form={form} name="">
 
-          <Form.Item name="diseaseName" label="Tên bệnh"
+          <Form.Item name="diseaseName" label="Disease Name"
           rules={[
-            { required: true, message: 'Tên bệnh là bắt buộc' },  {
+            { required: true, message: 'Disease Name is required' },  {
            pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
-           message: 'Tên bệnh không được chứa ký tự đặc biệt ',
+           message: 'Disease Name should not contain special characters',
          }]}>
             <Input disabled={!isEditing} />
           </Form.Item>
 
          
 
-          <Form.Item name="description" label="Mô tả">
+          <Form.Item name="description" label="Description">
             <Input disabled={!isEditing} />
           </Form.Item>
 
          
-          <Form.Item name="ingredientIds" label="Nguyên liệu cần tránh">
+          <Form.Item name="ingredientIds" label="Ingredients to avoid">
         <Select
           mode="multiple"
-          placeholder="Chọn nguyên liệu"
+          placeholder="Select ingredients to avoid"
           options={ingredientOptions}
           loading={isLoadingIngredients}
           allowClear

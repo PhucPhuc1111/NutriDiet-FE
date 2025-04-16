@@ -13,9 +13,11 @@ const DeleteDiseaseModal: React.FC<{ diseaseId: number; refetch: () => void }> =
       await deleteDiseaseById(diseaseId);
       refetch(); // Làm mới danh sách sau khi xóa
       setConfirmLoading(false);
-      toast.success("Xóa bệnh nền thành công!");
+      toast.success("Delete disease successfully!");
     } catch (error) {
-      toast.error("Xóa bệnh nền không thành công!");
+      const err = error as any;
+      const errorMessage = err?.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
+    toast.error(errorMessage);
       setConfirmLoading(false);
     }
   };
@@ -26,14 +28,14 @@ const DeleteDiseaseModal: React.FC<{ diseaseId: number; refetch: () => void }> =
 
   return (
     <Popconfirm
-      title="Bạn có chắc chắn muốn xóa bệnh nền này?"
+      title="Are you sure you to delete this disease?"
       onConfirm={handleDelete}
       onCancel={handleCancel}
       okButtonProps={{ loading: confirmLoading }}
       cancelButtonProps={{ disabled: confirmLoading }}
     >
       <Button type="primary" danger>
-        Xóa
+        Delete
       </Button>
     </Popconfirm>
   );

@@ -88,24 +88,27 @@ const CreateMealPlanPage: React.FC = () => {
     <DefaultLayout>
       <div className="flex justify-between">
         <Link href="/admin/meal">
-          <div className="cursor-pointer p-3">Trở về</div>
+          <div className="cursor-pointer p-3">Back</div>
         </Link>
         <div className="flex space-x-4">
-          <Button className="h-10 w-20 p-3">Hủy</Button>
+        <Link href="/admin/meal">
+        <Button className="h-10 w-20 p-3">Cancel</Button>
+        </Link>
+     
           <Button
             className="h-10 w-20 bg-green-800 p-3 text-white"
             form="mealPlanForm"
             htmlType="submit"
             loading={loading}
           >
-            Thêm
+            Add
           </Button>
         </div>
       </div>
 
       <div className="w-full rounded-lg border-2 border-green-800">
         <div className="px-10 py-5 text-lg font-bold">
-          Chi tiết kế hoạch bữa ăn
+          Meal plan detail
         </div>
         <div className="px-10">
           <Form
@@ -116,12 +119,12 @@ const CreateMealPlanPage: React.FC = () => {
           >
             <Form.Item
               name="planName"
-              label="Tên kế hoạch"
+              label="Meal plan name"
               rules={[
-                { required: true, message: "Vui lòng nhập tên kế hoạch" },
+                { required: true, message: "Meal plan name is required" },
                 {
                   pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
-                  message: 'Tên kế hoạch không được chứa ký tự đặc biệt ',
+                  message: 'Meal plan name must not contain special characters',
                 }
               ]}
             >
@@ -129,15 +132,15 @@ const CreateMealPlanPage: React.FC = () => {
             </Form.Item>
             <Form.Item
               name="healthGoal"
-              label="Mục tiêu sức khỏe"
+              label="Heal Goal"
               rules={[
-                { required: true, message: "Vui lòng chọn mục tiêu sức khỏe" },
+                { required: true, message: "Heal goal is required" },
               ]}
             >
               <Select placeholder="Chọn mục tiêu sức khỏe">
                 <Select.Option value="Tăng cân">Tăng cân</Select.Option>
                 <Select.Option value="Giảm cân">Giảm cân</Select.Option>
-                <Select.Option value="Giữ cân">Giữ cân</Select.Option>
+                <Select.Option value="Duy trì cân nặng">Duy trì cân nặng</Select.Option>
               </Select>
             </Form.Item>
           </Form>

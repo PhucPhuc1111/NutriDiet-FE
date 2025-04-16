@@ -11,7 +11,7 @@ const AddIngredientForm: React.FC<{ form: any }> = ({ form }) => {
    const isDuplicate = allIngredients?.some((ingredient) => ingredient.ingredientName === values.ingredientName);
      
          if (isDuplicate) {
-           toast.error("Tên nguyên đã tồn tại, vui lòng chọn tên khác!");
+           console.error("Tên nguyên đã tồn tại, vui lòng chọn tên khác!");
            return;
          }
   };
@@ -25,11 +25,11 @@ const AddIngredientForm: React.FC<{ form: any }> = ({ form }) => {
     >
       <Form.Item
         name="ingredientName"
-        label="Tên nguyên liệu"
-        rules={[{ required: true, message: "Tên nguyên liệu là bắt buộc" },
+        label="Ingredient name"
+        rules={[{ required: true, message: "Ingredient name is required" },
           {
             pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
-            message: 'Tên nguyên liệu không được chứa ký tự đặc biệt ',
+            message: 'Ingredient name must not contain special characters',
           }
         ]}
       >
@@ -39,28 +39,28 @@ const AddIngredientForm: React.FC<{ form: any }> = ({ form }) => {
       <Form.Item
         name="calories"
         label="Calories"
-        rules={[{ required: true, message: "Calories là bắt buộc" }]}
+        rules={[{ required: true, message: "Calories is required" }]}
       >
         <InputNumber type="number" />
       </Form.Item>
       <Form.Item
         name="carbs"
         label="Carbs"
-        rules={[{ required: true, message: "Carbs là bắt buộc" }]}
+        rules={[{ required: true, message: "Carbs is required" }]}
       >
         <InputNumber type="number" />
       </Form.Item>
       <Form.Item
         name="fat"
         label="Fat"
-        rules={[{ required: true, message: "Fat là bắt buộc" }]}
+        rules={[{ required: true, message: "Fat is required" }]}
       >
         <InputNumber type="number" />
       </Form.Item>
       <Form.Item
         name="protein"
         label="Protein"
-        rules={[{ required: true, message: "Protein là bắt buộc" }]}
+        rules={[{ required: true, message: "Protein is required" }]}
       >
         <InputNumber type="number" />
       </Form.Item>

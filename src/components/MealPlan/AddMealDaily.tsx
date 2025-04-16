@@ -221,7 +221,7 @@ const MealSelectionForm: React.FC<MealSelectionFormProps> = ({
   updateDay,
   updateTotalCalories,
 }) => {
-  const { data: foodList, isLoading } = useGetAllFoods(1, 100, "");
+  const { data: foodList, isLoading } = useGetAllFoods(1, 500, "");
 
   const calculateTotalCalories = (foodIds: number[]) => {
     let totalCalories = 0;
@@ -259,7 +259,7 @@ const MealSelectionForm: React.FC<MealSelectionFormProps> = ({
               "Snacks",
             ] as (keyof DayMeal["foodDetails"])[]
           ).map((mealType) => (
-            <Form.Item key={mealType} label={`Bữa ${mealType}`}>
+            <Form.Item key={mealType} label={` ${mealType}`}>
               <Select
                 placeholder={`Chọn bữa ${mealType}`}
                 allowClear
@@ -296,13 +296,13 @@ const MealSelectionForm: React.FC<MealSelectionFormProps> = ({
       </div>
       <div className="w-1/3">
         <div>
-          <p className="flex justify-center text-xl font-semibold">Tổng calo</p>
+          <p className="flex justify-center text-xl font-semibold">Total calories</p>
           <div className="space-y-5">
-            <p>Bữa sáng: {day.totalByMealType?.Breakfast?.calories || 0} cal</p>
-            <p>Bữa trưa: {day.totalByMealType?.Lunch?.calories || 0} cal</p>
-            <p>Bữa tối: {day.totalByMealType?.Dinner?.calories || 0} cal</p>
-            <p>Bữa phụ: {day.totalByMealType?.Snacks?.calories || 0} cal</p>
-            <p>Tổng cộng: {day.totalCalories} cal</p>
+            <p>Breakfast: {day.totalByMealType?.Breakfast?.calories || 0} cal</p>
+            <p>Lunch: {day.totalByMealType?.Lunch?.calories || 0} cal</p>
+            <p>Dinner: {day.totalByMealType?.Dinner?.calories || 0} cal</p>
+            <p>Snacks: {day.totalByMealType?.Snacks?.calories || 0} cal</p>
+            
           </div>
         </div>
       </div>
@@ -423,9 +423,9 @@ const AddMealDaily: React.FC<AddMealDailyProps> = ({ onChange = () => {} }) => {
   return (
     <div>
       <div className="mb-3 flex items-center justify-between">
-        <div className="text-lg font-semibold">Danh sách các ngày</div>
+        <div className="text-lg font-semibold">Days list</div>
         <Button className="bg-green-800 text-white" onClick={addDay}>
-          Thêm ngày
+          Add day
         </Button>
       </div>
 
@@ -437,7 +437,7 @@ const AddMealDaily: React.FC<AddMealDailyProps> = ({ onChange = () => {} }) => {
               setOpen(open === day.dayNumber ? null : day.dayNumber)
             }
           >
-            <div>{`Ngày ${day.dayNumber}`}</div>
+            <div>{`Day ${day.dayNumber}`}</div>
             <div className="action-buttons flex space-x-3">
               <DownOutlined
                 className={`${open === day.dayNumber ? "rotate-180" : ""}`}
@@ -448,22 +448,22 @@ const AddMealDaily: React.FC<AddMealDailyProps> = ({ onChange = () => {} }) => {
                     type="primary"
                     onClick={() => toggleEditMode(day.dayNumber)}
                   >
-                    Lưu
+                    Save
                   </Button>
                   <Button onClick={() => toggleEditMode(day.dayNumber)}>
-                    Hủy
+                    Cancel
                   </Button>
                 </>
               ) : (
                 <Button onClick={() => toggleEditMode(day.dayNumber)}>
-                  Sửa
+                  Edit
                 </Button>
               )}
               <Button
                 className="bg-red-600 text-white"
                 onClick={() => deleteDay(day.dayNumber)}
               >
-                Xóa
+                Delete
               </Button>
             </div>
           </div>
@@ -477,7 +477,7 @@ const AddMealDaily: React.FC<AddMealDailyProps> = ({ onChange = () => {} }) => {
                 updateTotalCalories={updateTotalCalories}
               />
               <div className="bg-green-800 p-5 text-center text-lg font-semibold text-white">
-                Tổng calo: {day.totalCalories} cal
+                Total calo: {day.totalCalories} cal
               </div>
             </div>
           )}

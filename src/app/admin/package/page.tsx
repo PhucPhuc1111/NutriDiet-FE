@@ -44,29 +44,29 @@ const PackagePage: React.FC = () => {
       sorter: (a, b) => a.packageId - b.packageId,
     },
     {
-      title: "Tên gói",
+      title: "Package name",
       dataIndex: "packageName",
       sorter: (a, b) => a.packageName.localeCompare(b.packageName),
     },
  
     {
-      title: "Thời gian (ngày)",
+      title: "Duration (ngày)",
       dataIndex: "duration",
       sorter: (a, b) => a.duration - b.duration,
     },
     {
-        title: "Giá (VNĐ)",
+        title: "Price (VNĐ)",
         dataIndex: "price",
         sorter: (a, b) => a.price - b.price,
       },
     {
-      title: "Mô tả",
+      title: "Description",
       dataIndex: "description",
       sorter: (a, b) => a.description.localeCompare(b.description),
     },
    
     {
-      title: "Sửa/Xóa",
+      title: "Edit/Delete",
       dataIndex: "action",
       render: (_: any, record: Package) => (
         <Space size="middle">
@@ -95,9 +95,9 @@ const PackagePage: React.FC = () => {
     <DefaultLayout>
       <div>
         <div className="flex justify-between">
-          <div className="mb-2">Tổng cộng: {data?.length}</div>
+          <div className="mb-2">Total: {data?.length}</div>
           <Input
-            placeholder="Tìm kiếm thực phẩm"
+            placeholder="Serch package name"
             value={searchText}
             onChange={handleSearch}
             style={{ marginBottom: 20, width: 300 }}

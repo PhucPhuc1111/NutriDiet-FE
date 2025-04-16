@@ -17,9 +17,11 @@ const DeletePackageModal: React.FC<{
       refetch();
       setConfirmLoading(false);
 
-      toast.success("Xóa gói thành công");
+      toast.success("Delete package successfully!");
     } catch (error) {
-      toast.error("Xóa gói không thành công");
+      const err = error as any;
+      const errorMessage = err?.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
+    toast.error(errorMessage);
       setConfirmLoading(false);
     }
   };
@@ -29,14 +31,14 @@ const DeletePackageModal: React.FC<{
   };
   return (
     <Popconfirm
-    title="Bạn có chắc chắn muốn xóa gói này?"
+    title="Are you sure to delete this package ?"
     onConfirm={handleDelete}
     onCancel={handleCancel}
     okButtonProps={{ loading: confirmLoading }}
     cancelButtonProps={{ disabled: confirmLoading }}
   >
     <Button type="primary" danger>
-      Xóa
+      Delete
     </Button>
   </Popconfirm>
   );

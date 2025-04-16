@@ -48,13 +48,15 @@ const AddDiseaseModal: React.FC = () => {
         };
 
         await createDisease(formattedData);
-        toast.success("Thêm bệnh thành công");
+        toast.success("Add disease successfully!");
         setOpen(false);
         setConfirmLoading(false);
         form.resetFields();
         queryClient.invalidateQueries({ queryKey: ["diseases"] });
       } catch (error) {
-        toast.error("Bệnh đã tồn tại");
+        const err = error as any;
+        const errorMessage = err?.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
+      toast.error(errorMessage);
         setConfirmLoading(false);
       }
     }).catch((errorInfo) => {
@@ -74,23 +76,23 @@ const AddDiseaseModal: React.FC = () => {
   return (
     <>
       <Button style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={showModal}>
-        Thêm bệnh
+        Add disease
       </Button>
       <Modal
-        title="Thêm bệnh"
+        title="Add disease"
         open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
         footer={[
           <Button key="reset" onClick={handleReset} style={{ marginRight: 10 }}>
-            Tạo lại
+            Reset
           </Button>,
           <Button key="cancel" onClick={handleCancel} style={{ marginRight: 10 }}>
-            Hủy
+            Cancel
           </Button>,
           <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} loading={confirmLoading} onClick={handleOk}>
-            Xác nhận
+            Submit
           </Button>,
         ]}
       >

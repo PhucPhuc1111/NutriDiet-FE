@@ -51,7 +51,7 @@ const IngredientPage: React.FC = () => {
       sorter: (a, b) => a.ingredientId - b.ingredientId,
     },
     {
-      title: "Tên nguyên liệu",
+      title: "Ingredient Name",
       dataIndex: "ingredientName",
       sorter: (a, b) => a.ingredientName.localeCompare(b.ingredientName),
     },
@@ -76,7 +76,7 @@ const IngredientPage: React.FC = () => {
       sorter: (a, b) => a.carbs - b.carbs,
     },
     {
-      title: "Sửa/Xóa",
+      title: "Edit/Delete",
       dataIndex: "action",
       render: (_: any, record: Ingredient) => (
         <Space size="middle">
@@ -194,7 +194,7 @@ const IngredientPage: React.FC = () => {
    };
   const handleFileExport = () => {
     const ws = XLSX.utils.aoa_to_sheet([
-      ["Nguyên liệu", "Calories(kcal)", "Protein(g)", "Fat(g)", "Carbs(g)"], // Header row
+      ["Ingredient Name", "Calories(kcal)", "Protein(g)", "Fat(g)", "Carbs(g)"], // Header row
       ...filteredData.map((item) => [
         item.ingredientName,
         item.calories,
@@ -224,9 +224,9 @@ const IngredientPage: React.FC = () => {
     <DefaultLayout>
       <div>
         <div className="flex justify-between">
-          <div className="mb-2">Tổng cộng: {data?.length}</div>
+          <div className="mb-2">Total: {data?.length}</div>
           <Input
-            placeholder="Tìm kiếm thực phẩm"
+            placeholder="Search ingredient name"
             value={searchText}
             onChange={handleSearch}
             style={{ marginBottom: 20, width: 300 }}
@@ -262,17 +262,17 @@ const IngredientPage: React.FC = () => {
           />
         )}
          <Modal
-        title="Nguyên liệu bị trùng"
+        title="Duplicate ingredient"
         visible={showDuplicateModal}
         onCancel={handleCancelImport}
         footer={[
-          <Button key="cancel"  onClick={handleCancelImport}>Hủy</Button>,
-          <Button key="importNew" style={{ backgroundColor: "#2f855a", color: "white" }} type="primary" onClick={handleImportNewOnly}>Import Món Mới</Button>,
-          <Button key="importAll" type="primary" style={{ backgroundColor: "#2f855a", color: "white" }} onClick={handleImportAll}>Import Tất Cả</Button>,
+          <Button key="cancel"  onClick={handleCancelImport}>Cancel</Button>,
+          <Button key="importNew" style={{ backgroundColor: "#2f855a", color: "white" }} type="primary" onClick={handleImportNewOnly}>Import new ingredient</Button>,
+          <Button key="importAll" type="primary" style={{ backgroundColor: "#2f855a", color: "white" }} onClick={handleImportAll}>Import all ingredient</Button>,
         ]}
       >
         <div>
-          <p>Các nguyên liệu ăn bị trùng:</p>
+          <p>Duplicate ingredients:</p>
           <ul>
             {duplicateIngredientNames.map((name, index) => (
               <li key={index}>{name}</li>

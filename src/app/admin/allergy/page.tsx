@@ -28,7 +28,7 @@ const AllergyPage: React.FC = () => {
 
   const [searchText, setSearchText] = useState<string>("");
   const pageIndex = 1;
-  const pageSize = 100;
+  const pageSize = 500;
 
   const { data, isLoading, isError, error, refetch } = useGetAllAllergies(
     pageIndex,
@@ -47,7 +47,7 @@ const AllergyPage: React.FC = () => {
   // Handle file export
   const handleFileExport = () => {
     const ws = XLSX.utils.aoa_to_sheet([
-      ["Id", "Tên dị ứng", "Chú ý","Ngày tạo", "Ngày cập nhật"], // Header row
+      ["Id", "Allergy Name", "Note","Created At", "Updated At"], // Header row
       ...filteredData.map((item) => [
         item.allergyId,
         item.allergyName,
@@ -68,28 +68,28 @@ const AllergyPage: React.FC = () => {
       sorter: (a, b) => a.allergyId - b.allergyId,
     },
     {
-      title: "Tên dị ứng",
+      title: "Allergy Name",
       dataIndex: "allergyName",
       sorter: (a, b) => a.allergyName.localeCompare(b.allergyName),
     },
     {
-      title: "Chú ý",
+      title: "Note",
       dataIndex: "notes",
     },
     {
-      title: "Ngày tạo",
+      title: "Created At",
       dataIndex: "createdAt",
       sorter: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
       render: (text) => formatDate(text), 
     },
     {
-      title: "Ngày cập nhật",
+      title: "Updated At",
       dataIndex: "updatedAt",
       sorter: (a, b) => new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
       render: (text) => formatDate(text), 
     },
     {
-      title: "Sửa/Xóa",
+      title: "Edit/Delete",
       dataIndex: "action",
       render: (_: any, record: Allergy) => (
         <Space size="middle">
@@ -123,9 +123,9 @@ const AllergyPage: React.FC = () => {
     <DefaultLayout>
       <div className="">
         <div className="flex justify-between">
-          <div className="mb-2">Tổng cộng: {data?.length}</div>
+          <div className="mb-2">Total: {data?.length}</div>
           <Input
-            placeholder="Tìm kiếm dị ứng"
+            placeholder="Search allergy name"
             value={searchText}
             onChange={handleSearch}
             style={{ marginBottom: 20, width: 300 }}

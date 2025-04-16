@@ -42,13 +42,15 @@ const AddIngredientModal: React.FC = () => {
 
        
         await createIngredient(values);
-        toast.success("Thêm nguyên liệu thành công");
+        toast.success("Add ingredient successfully!");
         setOpen(false);
         setConfirmLoading(false);
         form.resetFields(); // Reset form fields after successful creation
         queryClient.invalidateQueries({ queryKey: ["ingredients"] }); 
       } catch (error) {
-        toast.error("Tên nguyên liệu đã tồn tại");
+        const err = error as any;
+        const errorMessage = err?.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
+      toast.error(errorMessage);
         setConfirmLoading(false);
       }
     }).catch((errorInfo) => {
@@ -69,23 +71,23 @@ const AddIngredientModal: React.FC = () => {
   return (
     <>
       <Button style={{ backgroundColor: "#2f855a", color: "white" }} onClick={showModal}>
-        Thêm nguyên liệu
+        Add ingredient
       </Button>
       <Modal
-        title="Thêm nguyên liệu"
+        title="Add ingredient"
         open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
         footer={[
           <Button key="reset" onClick={handleReset} style={{ marginRight: 10 }}>
-            Tạo lại
+            Reset
           </Button>,
           <Button key="cancel" onClick={handleCancel} style={{ marginRight: 10 }}>
-            Hủy
+            Cancel
           </Button>,
           <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} loading={confirmLoading} onClick={handleOk}>
-            Xác nhận
+            Submit
           </Button>,
         ]}
       >

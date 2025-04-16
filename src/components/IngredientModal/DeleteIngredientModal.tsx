@@ -16,9 +16,11 @@ const DeleteIngredientModal: React.FC<{
       refetch();
       setConfirmLoading(false);
 
-      toast.success("Xóa dị ứng thành công");
+      toast.success("Delete ingredient successfully!");
     } catch (error) {
-      toast.error("Xóa dị ứng không thành công");
+      const err = error as any;
+        const errorMessage = err?.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
+      toast.error(errorMessage);
       setConfirmLoading(false);
     }
   };
@@ -28,14 +30,14 @@ const DeleteIngredientModal: React.FC<{
   };
   return (
     <Popconfirm
-    title="Bạn có chắc chắn muốn xóa nguyên liệu này?"
+    title="Are you sure to delete this ingredient?"
     onConfirm={handleDelete}
     onCancel={handleCancel}
     okButtonProps={{ loading: confirmLoading }}
     cancelButtonProps={{ disabled: confirmLoading }}
   >
     <Button type="primary" danger>
-      Xóa
+      Delete
     </Button>
   </Popconfirm>
   );
