@@ -60,18 +60,9 @@ const AddFoodModal: React.FC = () => {
           queryClient.invalidateQueries({ queryKey: ["foods"] });
         } catch (error) {
           const err = error as any;
-        
-          // Check if it's a 500 error (Internal Server Error)
-          if (err?.response?.status === 500) {
-            // For a 500 error, show a custom message for failure
-            toast.error("Thực phẩm thất bại, vui lòng thử lại sau!");
-          } else {
-            
-            // For other errors, show a general message (e.g., item already exists)
-            toast.error("Thực phẩm đã tồn tại");
-          }
-        
-          // Ensure loading state is reset even when there’s an error
+        const errorMessage = err?.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
+      toast.error(errorMessage);
+        setConfirmLoading(false);
           setConfirmLoading(false);
         }
         

@@ -18,7 +18,7 @@ export default function DefaultLayout({
   useEffect(() => {
     const role = Cookies.get("userRole");
 
-    if (role !== "Admin") {
+    if (role !== "Admin" && role !== "Nutritionist") {
       toast.error("Bạn không có quyền truy cập!");
       router.push("/");
     }
