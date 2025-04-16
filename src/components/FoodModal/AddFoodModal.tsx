@@ -53,15 +53,28 @@ const AddFoodModal: React.FC = () => {
           };
   
           await createFood(formattedData);
-          toast.success("Thêm thực phẩm thành công");
+          toast.success("Add food successfully!");
           setOpen(false);
           setConfirmLoading(false);
           form.resetFields();
           queryClient.invalidateQueries({ queryKey: ["foods"] });
         } catch (error) {
-          toast.error("Thực phẩm đã tồn tại");
+          const err = error as any;
+        
+          // Check if it's a 500 error (Internal Server Error)
+          if (err?.response?.status === 500) {
+            // For a 500 error, show a custom message for failure
+            toast.error("Thực phẩm thất bại, vui lòng thử lại sau!");
+          } else {
+            
+            // For other errors, show a general message (e.g., item already exists)
+            toast.error("Thực phẩm đã tồn tại");
+          }
+        
+          // Ensure loading state is reset even when there’s an error
           setConfirmLoading(false);
         }
+        
       })
       .catch(() => {
         setConfirmLoading(false);
@@ -79,10 +92,10 @@ const AddFoodModal: React.FC = () => {
   return (
     <>
       <Button style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={showModal}>
-        Thêm thực phẩm
+        Add food
       </Button>
       <Modal
-        title="Thêm thực phẩm"
+        title="Add food"
         open={open}
        width={800}
         onOk={handleOk}
@@ -90,13 +103,13 @@ const AddFoodModal: React.FC = () => {
         onCancel={handleCancel}
         footer={[
           <Button key="reset" onClick={handleReset} style={{ marginRight: 10 }}>
-            Tạo lại
+            Reset
           </Button>,
           <Button key="cancel" onClick={handleCancel} style={{ marginRight: 10 }}>
-            Hủy
+            Cancel
           </Button>,
           <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} loading={confirmLoading} onClick={handleOk}>
-            Xác nhận
+            Submit
           </Button>, 
         ]}
       >

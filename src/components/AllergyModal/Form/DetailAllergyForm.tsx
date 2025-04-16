@@ -39,26 +39,26 @@ const DetailAllergyForm: React.FC<{form:any,allergyId: number,isEditing: boolean
   return (
    <Form form={form} name="food-details">
 
-          <Form.Item name="allergyName" label="Tên dị ứng"
+          <Form.Item name="allergyName" label="Allergy name"
           rules={[
-             { required: true, message: 'Tên bệnh là bắt buộc' },  {
+             { required: true, message: 'Allergy name is requires' },  {
             pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
-            message: 'Tên bệnh không được chứa ký tự đặc biệt ',
+            message: 'Allergy name must not contain special characters',
           }]}>
             <Input disabled={!isEditing} />
           </Form.Item>
 
          
 
-          <Form.Item name="notes" label="Ghi chú">
+          <Form.Item name="notes" label="Note">
             <Input disabled={!isEditing} />
           </Form.Item>
 
          
-          <Form.Item name="ingredientIds" label="Nguyên liệu cần tránh">
+          <Form.Item name="ingredientIds" label="Ingredients to avoid">
         <Select
           mode="multiple"
-          placeholder="Chọn nguyên liệu"
+          placeholder="select ingredients to avoid"
           options={ingredientOptions}
           loading={isLoadingIngredients}
           allowClear

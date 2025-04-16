@@ -191,10 +191,10 @@ feedback: string;
     
    }
    export interface DayFoodDetails {
-    sáng: string[];
-    trưa: string[];
-    tối: string[];
-    phụ: string[];
+    Breakfast: string[];
+    Lunch: string[];
+    Dinner: string[];
+    Snacks: string[];
   }
   
   export interface Day {

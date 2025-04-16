@@ -63,7 +63,7 @@ const FoodPage: React.FC = () => {
       sorter: (a, b) => a.foodId - b.foodId,
     },
     {
-      title: "Hình ảnh",
+      title: "Image",
       dataIndex: "imageUrl",
       render: (imageUrl: string) => (
         <Image
@@ -79,12 +79,12 @@ const FoodPage: React.FC = () => {
       ),
     },
     {
-      title: "Tên món ăn",
+      title: "Food Name",
       dataIndex: "foodName",
       sorter: (a, b) => a.foodName.localeCompare(b.foodName),
     },
     {
-      title: "Bữa ăn",
+      title: "Meal Type",
       dataIndex: "mealType",
       filters: [
         { text: "Bữa sáng", value: "breakfast" },
@@ -101,7 +101,7 @@ const FoodPage: React.FC = () => {
       },
     },
     {
-      title: "Loại",
+      title: "Food Type",
       dataIndex: "foodType",
       filters: [
         { text: "Rau củ quả", value: "Vegetable" },
@@ -121,7 +121,7 @@ const FoodPage: React.FC = () => {
       },
     },
     {
-      title: "Khẩu phần",
+      title: "Serving Size",
       dataIndex: "servingSize",
     },
     {
@@ -156,7 +156,7 @@ const FoodPage: React.FC = () => {
     },
 
     {
-      title: "Chi tiết/Sửa/Xóa",
+      title: "Detail/Delete",
       dataIndex: "action",
       render: (_, record) => (
         <Space size="middle">
@@ -265,7 +265,7 @@ const FoodPage: React.FC = () => {
   };
     const handleFileExport = () => {
       const ws = XLSX.utils.aoa_to_sheet([
-        [ "Tên món ăn", "Bữa ăn","Loại","Khẩu phần", "Calories(kcal)", "Protein(g)","Carbs(g)","Fat(g)","Glucide(g)", "Fiber(g)","Mô tả"], // Header row
+        [ "Food Name", "Meal Type","Food Type","Serving Size", "Calories(kcal)", "Protein(g)","Carbs(g)","Fat(g)","Glucide(g)", "Fiber(g)","Description"], // Header row
         ...filteredData.map((item) => [
          
           item.foodName,
@@ -302,9 +302,9 @@ const FoodPage: React.FC = () => {
     <DefaultLayout>
       <div className="">
         <div className="flex justify-between">
-          <div className="mb-2">Tổng cộng: {data?.length}</div>
+          <div className="mb-2">Total: {data?.length}</div>
           <Input
-            placeholder="Tìm kiếm thực phẩm"
+            placeholder="Search food name"
             value={searchText}
             onChange={handleSearch}
             style={{ marginBottom: 20, width: 300 }}
@@ -337,17 +337,17 @@ const FoodPage: React.FC = () => {
          
         
          <Modal
-        title="Món ăn bị trùng"
+        title="Duplicate Foods"
         visible={showDuplicateModal}
         onCancel={handleCancelImport}
         footer={[
-          <Button key="cancel" onClick={handleCancelImport}>Hủy</Button>,
-          <Button key="importNew" type="primary" style={{ backgroundColor: "#2f855a", color: "white" }} onClick={handleImportNewOnly}>Import Món Mới</Button>,
-          <Button key="importAll" type="primary" style={{ backgroundColor: "#2f855a", color: "white" }} onClick={handleImportAll}>Import Tất Cả</Button>,
+          <Button key="cancel" onClick={handleCancelImport}>Cancel</Button>,
+          <Button key="importNew" type="primary" style={{ backgroundColor: "#2f855a", color: "white" }} onClick={handleImportNewOnly}>Import only new food</Button>,
+          <Button key="importAll" type="primary" style={{ backgroundColor: "#2f855a", color: "white" }} onClick={handleImportAll}>Import all food</Button>,
         ]}
       >
         <div>
-          <p>Các món ăn bị trùng:</p>
+          <p>Duplicate foods:</p>
           <ul>
             {duplicateFoodNames.map((name, index) => (
               <li key={index}>{name}</li>

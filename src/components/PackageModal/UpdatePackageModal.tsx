@@ -41,7 +41,7 @@ const UpdatePackageModal: React.FC<{ packageId: number; refetch: () => void }> =
               errors: ['Tên gói đã tồn tại'],
             },
           ]);
-          toast.error('Tên gói đã tồn tại!', { position: 'top-right' });
+          console.error('Tên gói đã tồn tại!', { position: 'top-right' });
           setConfirmLoading(false);
           return;
         }
@@ -51,10 +51,11 @@ const UpdatePackageModal: React.FC<{ packageId: number; refetch: () => void }> =
         setOpen(false);
         setConfirmLoading(false);
         form.resetFields();
-        toast.success('Cập nhật gói thành công!', { position: 'top-right' });
+        toast.success('Update package successfully !', { position: 'top-right' });
       } catch (error) {
-        console.error('Lỗi khi cập nhật gói:', error);
-        toast.error('Lỗi khi cập nhật gói!', { position: 'top-right' });
+        const err = error as any;
+        const errorMessage = err?.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
+      toast.error(errorMessage);
         setConfirmLoading(false);
       }
     }).catch((errorInfo) => {
@@ -90,20 +91,20 @@ const UpdatePackageModal: React.FC<{ packageId: number; refetch: () => void }> =
   return (
     <>
       <Button style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={showModal}>
-        Sửa
+        Edit
       </Button>
       <Modal
-        title="Sửa Thành Phần"
+        title="Edit package"
         open={open}
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
         footer={[
           <Button key="cancel" onClick={handleCancel} style={{ marginRight: 10 }}>
-            Hủy
+            Cancel
           </Button>,
           <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} loading={confirmLoading} onClick={handleOk}>
-            Xác nhận
+           Submit
           </Button>,
         ]}
       >

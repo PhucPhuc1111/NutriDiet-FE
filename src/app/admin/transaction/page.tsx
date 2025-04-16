@@ -29,7 +29,7 @@ function formatDate(dateString?: string): string {
 const TransactionPage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
   const pageIndex = 1;
-  const pageSize = 100;
+  const pageSize = 500;
     
   
      const { data, isLoading, isError, error, refetch } = useGetAllTransactions(
@@ -64,27 +64,27 @@ const columns: TableColumnsType<Transaction> = [
 
   
   {
-    title: "Mua",
+    title: "Package",
     dataIndex: "packageName",
     sorter: (a, b) => a.packageName.localeCompare(b.packageName),
     render: (text) => text || "Chưa có dữ liệu",
   },
   
   {
-    title: "Giá",
+    title: "Price",
     dataIndex: "price",
     sorter: (a,b) => a.price - b.price,
     render: (text) => text || "Chưa có dữ liệu",
   },
 
   {
-    title: "Ngày mua",
+    title: "Paid At",
     dataIndex: "paidAt",
     sorter: (a, b) => a.paidAt.localeCompare(b.paidAt),
     render: (text) => formatDate(text) || "Chưa có dữ liệu",
   },
   {
-    title: "Ngày hết hạn",
+    title: "Expired At",
     dataIndex: "expiryDate",
     sorter: (a, b) => a.expiryDate.localeCompare(b.expiryDate),
     render: (text) => formatDate(text) || "Chưa có dữ liệu",
@@ -112,7 +112,7 @@ const columns: TableColumnsType<Transaction> = [
     <DefaultLayout>
     <div className="">
       <div className="flex justify-between">
-        <div className="mb-2">Tổng cộng: {data?.length}</div>
+        <div className="mb-2">Total: {data?.length}</div>
         <Input
           placeholder="Tìm kiếm dị ứng"
           value={searchText}

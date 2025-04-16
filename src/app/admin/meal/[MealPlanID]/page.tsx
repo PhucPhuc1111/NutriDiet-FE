@@ -255,18 +255,18 @@ const MealPlanDetailPage = () => {
   
 
   const transformMealPlanDetails = (mealPlanDetails: MealPlanDetail[]): Day[] => {
-    const groupedDays: Record<string, { sáng: string[]; trưa: string[]; tối: string[]; phụ: string[]; totalCalories: number, totalByMealType: any }> = {};
+    const groupedDays: Record<string, { Breakfast: string[]; Lunch: string[]; Dinner: string[]; Snacks: string[]; totalCalories: number, totalByMealType: any }> = {};
   
     mealPlanDetails.forEach((detail) => {
       if (!groupedDays[detail.dayNumber]) {
-        groupedDays[detail.dayNumber] = { sáng: [], trưa: [], tối: [], phụ: [], totalCalories: 0, totalByMealType: {} };
+        groupedDays[detail.dayNumber] = { Breakfast: [], Lunch: [], Dinner: [], Snacks: [], totalCalories: 0, totalByMealType: {} };
       }
   
       const mealTypeMap: Record<string, keyof Day["foodDetails"]> = {
-        "Breakfast": "sáng",
-        "Lunch": "trưa",
-        "Dinner": "tối",
-        "Snacks": "phụ",
+        "Breakfast": "Breakfast",
+        "Lunch": "Lunch",
+        "Dinner": "Dinner",
+        "Snacks": "Snacks",
       };
   
       const mealType = mealTypeMap[detail.mealType];
@@ -315,7 +315,7 @@ const MealPlanDetailPage = () => {
   if (isError || !mealPlan) {
     return (
       <DefaultLayout>
-        <p className="text-center text-red-500">Không tìm thấy kế hoạch ăn.</p>
+        <p className="text-center text-red-500">do not have any meal plans</p>
       </DefaultLayout>
     );
   }
@@ -324,52 +324,52 @@ const MealPlanDetailPage = () => {
     <DefaultLayout>
       <div className="flex justify-between">
         <Link href="/admin/meal">
-          <div className="cursor-pointer p-3">Trở về</div>
+          <div className="cursor-pointer p-3">Back</div>
         </Link>
         <div className="flex space-x-4">
           {isEditing ? (
             <>
               <Button className="h-10 p-3" onClick={handleCancel}>
-                Hủy
+                Cancel
               </Button>
               <Button className="h-10 p-3" type="primary" onClick={saveChanges}>
-                Lưu kế hoạch bữa ăn
+                Save meal plan
               </Button>
             </>
           ) : (
             <Button className="h-10 p-3" onClick={handleEdit}>
-              Sửa kế hoạch bữa ăn
+              Edit meal plan
             </Button>
           )}
         </div>
       </div>
 
       <div className="w-full rounded-lg border-2 border-green-800">
-        <div className="px-10 py-5 text-lg font-bold">Chi tiết kế hoạch bữa ăn</div>
+        <div className="px-10 py-5 text-lg font-bold">Meal plan detail</div>
         <div className="px-10">
           <Form name="mealPlanForm">
-            <Form.Item name="planName" label="Tên kế hoạch">
+            <Form.Item name="planName" label="Meal plan name">
               <Input defaultValue={mealPlan.planName} disabled={isDisabled} />
             </Form.Item>
 
-            <Form.Item name="healthGoal" label="Mục tiêu sức khỏe">
+            <Form.Item name="healthGoal" label="Health goal">
               <Select defaultValue={mealPlan.healthGoal} disabled={isDisabled}>
                 <Select.Option value="Tăng cân">Tăng cân</Select.Option>
                 <Select.Option value="Giảm cân">Giảm cân</Select.Option>
-                <Select.Option value="Giữ cân">Giữ cân</Select.Option>
-                <Select.Option value="Tăng cân giảm mỡ">Tăng cân giảm mỡ</Select.Option>
+                <Select.Option value="Duy trì cân nặng">Duy trì cân nặng</Select.Option>
+                {/* <Select.Option value="Tăng cân giảm mỡ">Tăng cân giảm mỡ</Select.Option> */}
               </Select>
             </Form.Item>
 
-            <Form.Item name="duration" label="Thời gian hoàn thành">
+            <Form.Item name="duration" label="Duration (days)">
               <InputNumber defaultValue={mealPlan.duration} disabled={isDisabled} />
             </Form.Item>
 
-            <Form.Item name="createdBy" label="Tạo bởi">
+            <Form.Item name="createdBy" label="Created by">
               <Input defaultValue={mealPlan.createdBy} disabled={isDisabled} />
             </Form.Item>
 
-            <Form.Item name="createdAt" label="Tạo vào">
+            <Form.Item name="createdAt" label="Created At">
               <Input defaultValue={mealPlan.createdAt} disabled={isDisabled} />
             </Form.Item>
           </Form>

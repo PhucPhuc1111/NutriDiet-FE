@@ -21,7 +21,7 @@ function formatDate(dateString?: string): string {
 const CustomerPage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
   const pageIndex = 1;
-  const pageSize = 100;
+  const pageSize = 500;
   const [editingUserId, setEditingUserId] = useState<number | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string>('');
   const [originalStatus, setOriginalStatus] = useState<string>(''); // Lưu trạng thái gốc
@@ -66,12 +66,12 @@ const CustomerPage: React.FC = () => {
       render: (text) => text || "Chưa có dữ liệu",
     },
     {
-      title: "Hình ảnh",
+      title: "Avatar",
       dataIndex: "avatar",
       render: (avatar) => avatar ? <Image src={avatar} height={40} width={40} alt="Avatar" className="w-6 h-6 rounded-full" /> : "Chưa có dữ liệu",
     },
     {
-      title: "Tên khách hàng",
+      title: "Full Name",
       dataIndex: "fullName",
       sorter: (a, b) => a.fullName.localeCompare(b.fullName),
       render: (text) => text || "Chưa cập nhật",
@@ -83,13 +83,13 @@ const CustomerPage: React.FC = () => {
     },
  
     {
-      title: "Tuổi",
+      title: "Age",
       dataIndex: "age",
       sorter: (a, b) => a.age - b.age,
       render: (text) => (text !== null && text !== undefined ? text : "Chưa có dữ liệu"),
     },
     {
-      title: "Địa chỉ",
+      title: "Address",
       dataIndex: "location",
       render: (text) => text || "Chưa có dữ liệu",
     },
@@ -99,9 +99,9 @@ const CustomerPage: React.FC = () => {
       render: (userPackages) => {
         if (userPackages && userPackages.length > 0) {
           const statusMapping: { [key: string]: string } = {
-            active: "Đã kích hoạt",
-            expired: "Hết hạn",
-            default: "Không có",
+            active: "Active",
+            expired: "Expired",
+            default: "None",
           };
     
           // Kiểm tra nếu có gói hoạt động hay không
@@ -119,16 +119,16 @@ const CustomerPage: React.FC = () => {
     
           return <span style={{ fontWeight: "bold", color }}>{statusLabels}</span>;
         }
-        return <span style={{ fontWeight: "bold", color: "red" }}>Không có</span>;
+        return <span style={{ fontWeight: "bold", color: "red" }}>None</span>;
       },
     },
     {
-      title: "Trạng thái",
+      title: "Status",
       dataIndex: "status",
       render: (status, record) => {
         const statusMapping: { [key: string]: string } = {
-          active: "Kích hoạt",
-          inactive: "Hủy kích hoạt",
+          active: "Active",
+          inactive: "Inactive",
         };
     
         if (editingUserId === record.userId) {
@@ -139,38 +139,38 @@ const CustomerPage: React.FC = () => {
               onChange={(value) => setSelectedStatus(value)} // Cập nhật trạng thái mới khi chọn
               style={{ width: 120 }}
             >
-              <Select.Option value="active">Kích hoạt</Select.Option>
-              <Select.Option value="inactive">Hủy kích hoạt</Select.Option>
+              <Select.Option value="active">Active</Select.Option>
+              <Select.Option value="inactive">Inactive</Select.Option>
             </Select>
           );
         } else {
           // Hiển thị trạng thái mặc định nếu không đang chỉnh sửa
           const normalizedStatus = status.toLowerCase();
           return normalizedStatus === "active" ? (
-            <span className="text-green-500 font-bold">Kích hoạt</span>
+            <span className="text-green-500 font-bold">Active</span>
           ) : normalizedStatus === "inactive" ? (
-            <span className="text-red-500 font-bold">Hủy kích hoạt</span>
+            <span className="text-red-500 font-bold">Inactive</span>
           ) : (
-            <span className="text-gray-500">Chưa có dữ liệu</span>
+            <span className="text-gray-500">None</span>
           );
         }
       },
     },
     {
-      title: "Sửa",
+      title: "Edit",
       dataIndex: "action",
       render: (_, record) => (
         <div>
           {editingUserId === record.userId ? (
             <>
-              <Button  onClick={handleCancel}>Hủy</Button>
+              <Button  onClick={handleCancel}>Cancel</Button>
               <Button
                 type="primary"
                 style={{ backgroundColor: "#2f855a", color: "white" }}
                 loading={isLoadingStatus} // Hiển thị loading khi đang cập nhật
                 onClick={() => handleSave(record.userId)}
               >
-                Lưu 
+                Save 
               </Button>
             </>
           ) : (
@@ -183,7 +183,7 @@ const CustomerPage: React.FC = () => {
                 setSelectedStatus(record.status); // Chọn trạng thái hiện tại
               }}
             >
-              Sửa
+              Edit
             </Button>
           )}
         </div>
@@ -205,9 +205,9 @@ const CustomerPage: React.FC = () => {
     <DefaultLayout>
       <div className="">
         <div className="flex justify-between">
-          <div className="mb-2">Tổng cộng: {data?.length}</div>
+          <div className="mb-2">Total: {data?.length}</div>
           <Input
-            placeholder="Tìm kiếm khách hàng"
+            placeholder="Search customer name"
             value={searchText}
             onChange={handleSearch}
             style={{ marginBottom: 20, width: 300 }}

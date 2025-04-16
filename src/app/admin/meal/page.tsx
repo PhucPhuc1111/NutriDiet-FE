@@ -37,17 +37,17 @@ const MealPage: React.FC = () => {
       sorter: (a, b) => a.mealPlanId - b.mealPlanId,
     },
     {
-      title: "Tên kế hoạch",
+      title: "Plan name",
       dataIndex: "planName",
       sorter: (a, b) => a.planName.localeCompare(b.planName),
     },
     {
-      title: "Mục tiêu",
+      title: "Health goal",
       dataIndex: "healthGoal",
       filters: [
         { text: "Giảm cân", value: "Giảm cân" },
         { text: "Tăng cân", value: "Tăng cân" },
-        { text: "Giữ cân", value: "Giữ cân" },
+        { text: "Duy trì cân nặng", value: "Duy trì cân nặng" },
       ],
       onFilter: (value: string | boolean | Key, record: MealPlan) => {
         if (
@@ -64,17 +64,17 @@ const MealPage: React.FC = () => {
       width: "30",
     },
     {
-      title: "Thời gian",
+      title: "Duration (days)",
       dataIndex: "duration",
       sorter: (a, b) => a.duration - b.duration,
     },
     {
-      title: "Tạo bởi",
+      title: "Created By",
       dataIndex: "createdBy",
       sorter: (a, b) => a.duration - b.duration,
     },
     {
-      title: "Ngày tạo",
+      title: "Created At ",
       dataIndex: "createdAt",
       sorter: (a, b) =>
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
@@ -82,13 +82,13 @@ const MealPage: React.FC = () => {
     },
 
     {
-      title: "Sửa/Xóa",
+      title: "Edit/Delete",
       dataIndex: "action",
       render: (_: any, record: MealPlan) => (
         <Space size="middle">
           <Link href={`/admin/meal/${record.mealPlanId}`}>
             <Button style={{ backgroundColor: "#2f855a", color: "white" }}>
-              Chi tiết
+              Detail
             </Button>
           </Link>
 
@@ -132,9 +132,9 @@ const MealPage: React.FC = () => {
     <DefaultLayout>
       <div className="">
         <div className="flex justify-between">
-          <div className="mb-2">Tổng cộng: {data?.length}</div>
+          <div className="mb-2">Total: {data?.length}</div>
           <Input
-            placeholder="Tìm kiếm thực phẩm"
+            placeholder="Search meal plan name"
             value={searchText}
             onChange={handleSearch}
             style={{ marginBottom: 20, width: 300 }}
@@ -143,7 +143,7 @@ const MealPage: React.FC = () => {
           <div className="mb-2 flex space-x-3">
             <Link href={"/admin/meal/create-meal"}>
               <Button style={{ backgroundColor: "#2f855a", color: "white" }}>
-                Thêm kế hoạch
+                Add meal plan
               </Button>{" "}
             </Link>
           </div>

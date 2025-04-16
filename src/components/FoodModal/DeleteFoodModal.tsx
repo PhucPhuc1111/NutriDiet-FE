@@ -12,10 +12,13 @@ const DeleteFoodModal: React.FC<{ foodId: number; refetch: () => void }> = ({ fo
         await deleteFoodById(foodId);
         refetch(); // Làm mới danh sách sau khi xóa
         setConfirmLoading(false);
-        toast.success("Xóa thực phẩm thành công!");
-      } catch (error) {
-        toast.error("Xóa thực phẩm không thành công!");
-        setConfirmLoading(false);
+        toast.success("Delete food successfully!");
+      } 
+        catch (error) {
+          const err = error as any;
+          const errorMessage = err?.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
+        toast.error(errorMessage);
+          setConfirmLoading(false);
       }
     };
   
@@ -32,7 +35,7 @@ const DeleteFoodModal: React.FC<{ foodId: number; refetch: () => void }> = ({ fo
         cancelButtonProps={{ disabled: confirmLoading }}
       >
         <Button type="primary" danger>
-          Xóa
+          Delete
         </Button>
       </Popconfirm>
     );

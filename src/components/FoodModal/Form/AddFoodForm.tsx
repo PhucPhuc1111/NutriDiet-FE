@@ -23,7 +23,7 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
     const isDuplicate = allFoods?.some((food) => food.foodName === values.foodName);
 
     if (isDuplicate) {
-      toast.error("Tên thực phẩm đã tồn tại, vui lòng chọn tên khác!");
+      console.error("Food name đã tồn tại, vui lòng chọn tên khác!");
       return;
     }
   };
@@ -34,11 +34,11 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
         <div className="w-2/3">
           <Form.Item
             name="foodName"
-            label="Tên thực phẩm"
-            rules={[{ required: true, message: "Tên thực phẩm là bắt buộc" },
+            label="Food name"
+            rules={[{ required: true, message: "Food name is required" },
               {
                 pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
-                message: 'Tên thực phẩm không được chứa ký tự đặc biệt ',
+                message: 'Food name must not contain special characters',
               }
             ]}
           >
@@ -48,24 +48,25 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
           <div className="flex justify-between space-x-4">
             <Form.Item
               name="mealType"
-              label="Chọn bữa"
-              rules={[{ required: true, message: "Bữa là bắt buộc" }]}
+              label="Select meal type"
+              rules={[{ required: true, message: "Meal type is required" }]}
               style={{ width: '50%' }}
             >
-              <Select placeholder="Chọn bữa" allowClear>
-                <Option value="Main">Chính</Option>
+              <Select placeholder="Select meal type" allowClear>
+                <Option value="Breakfast">Sáng</Option>
+                <Option value="Lunch">Trưa</Option>
+                <Option value="Dinner">Tối</Option>
                 <Option value="Snack">Phụ</Option>
-                
               </Select>
             </Form.Item>
 
             <Form.Item
               name="foodType"
-              label="Loại"
+              label="Select food type"
               style={{ width: '50%' }}
-              rules={[{ required: true, message: "Loại là bắt buộc" }]}
+              rules={[{ required: true, message: "Food type is required" }]}
             >
-              <Select placeholder="Chọn loại" allowClear>
+              <Select placeholder="Select food type" allowClear>
                 <Option value="Vegetable">Rau củ quả</Option>
                 <Option value="Fruit">Trái cây</Option>
                 <Option value="Broth">Món nước</Option>
@@ -78,8 +79,8 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
 
           <Form.Item
             name="servingSize"
-            label="Khẩu phần"
-            rules={[{ required: true, message: "Khẩu phần là bắt buộc" }]}
+            label="Serving size"
+            rules={[{ required: true, message: "Serving size is required" }]}
           >
             <Input />
           </Form.Item>
@@ -88,7 +89,7 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
             <Form.Item
               name="calories"
               label="Calories (cal)"
-              rules={[{ required: true, message: "Calories là bắt buộc" }]}
+              rules={[{ required: true, message: "Calories is required" }]}
             >
               <Input />
             </Form.Item>
@@ -96,7 +97,7 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
             <Form.Item
               name="protein"
               label="Protein (g)"
-              rules={[{ required: true, message: "Protein là bắt buộc" }]}
+              rules={[{ required: true, message: "Protein is required" }]}
             >
               <Input />
             </Form.Item>
@@ -104,7 +105,7 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
             <Form.Item
               name="carbs"
               label="Carbs (g)"
-              rules={[{ required: true, message: "Carbs là bắt buộc" }]}
+              rules={[{ required: true, message: "Carbs is required" }]}
             >
               <Input />
             </Form.Item>
@@ -114,7 +115,7 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
             <Form.Item
               name="fat"
               label="Fat (g)"
-              rules={[{ required: true, message: "Chất béo là bắt buộc" }]}
+              rules={[{ required: true, message: "Fat is required" }]}
             >
               <Input />
             </Form.Item>
@@ -122,15 +123,15 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
             <Form.Item
               name="glucid"
               label="Glucid (g)"
-              rules={[{ required: true, message: "Chất đường bột là bắt buộc" }]}
+              rules={[{ required: true, message: "Glucid is required" }]}
             >
               <Input />
             </Form.Item>
 
             <Form.Item
               name="fiber"
-              label="Chất xơ (g)"
-              rules={[{ required: true, message: "Chất xơ là bắt buộc" }]}
+              label="Fiber(g)"
+              rules={[{ required: true, message: "fiber is required" }]}
             >
               <Input />
             </Form.Item>
@@ -140,7 +141,7 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
         <div className="w-1/3">
           <Form.Item
             name="imgUrl"
-            label="Hình ảnh"
+            label="Image"
           >
             <ImageUpload />
           </Form.Item>
@@ -150,11 +151,11 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
       {/* Ingredients Field with Search */}
       <Form.Item
         name="ingredients"
-        label="Nguyên liệu"
+        label="Ingredients"
       >
         <Select
           mode="multiple"
-          placeholder="Chọn nguyên liệu"
+          placeholder="Select ingredients"
           options={ingredientOptions}
           loading={isLoadingIngredients}
           allowClear
@@ -171,18 +172,18 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
 
       <Form.Item
         name="description"
-        label="Mô tả"
-        rules={[{ required: true, message: "Mô tả là bắt buộc" }]}
+        label="Description"
+        rules={[{ required: true, message: "Description is required" }]}
       >
         <Input.TextArea />
       </Form.Item>
 
-      <Form.Item
+      {/* <Form.Item
         name="other"
         label="Khác"
       >
         <Input.TextArea />
-      </Form.Item>
+      </Form.Item> */}
     </Form>
   );
 };

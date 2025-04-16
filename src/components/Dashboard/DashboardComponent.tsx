@@ -16,81 +16,21 @@ const ChartThree = dynamic(() => import("@/components/Charts/ChartThree"), {
 const DashboardComponent: React.FC = () => {
   const [dashboardData, setDashboardData] = useState<Dashboard | null>(null);
   const [revenueData, setRevenueData] = useState<any | null>(null);
-  const [selectedFilter, setSelectedFilter] = useState<string>("Hôm nay");
+  const [selectedFilter, setSelectedFilter] = useState<string>("Today");
   const [isLoading, setIsLoading] = useState(true);
 
-  // Hàm để fetch doanh thu theo filter
-  // const fetchRevenueData = async (filter: string) => {
-  //   try {
-  //     setIsLoading(true);
-  //     const response = await getAllRevenue(); // Lấy dữ liệu doanh thu từ API
 
-  //     let filteredData = { totalRevenue: 0, packageSold: 0 };
-
-  //     // Hàm để chuyển đổi định dạng ngày (YYYY-MM-DD)
-  //     const formatDate = (date: string) => date.split('T')[0]; 
-
-  //     switch (filter) {
-  //       case "Hôm nay":
-  //         const today = new Date().toISOString().split('T')[0]; // Lấy ngày hôm nay
-  //         const todayData = response.data.revenue.daily.find((day: any) => formatDate(day.date) === today);
-  //         if (todayData) {
-  //           filteredData.totalRevenue = todayData.totalRevenue;
-  //           filteredData.packageSold = todayData.packageSold;
-  //         }
-  //         break;
-  //       case "Hôm qua":
-  //         const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toISOString().split('T')[0]; // Ngày hôm qua
-  //         const yesterdayData = response.data.revenue.daily.find((day: any) => formatDate(day.date) === yesterday);
-  //         if (yesterdayData) {
-  //           filteredData.totalRevenue = yesterdayData.totalRevenue;
-  //           filteredData.packageSold = yesterdayData.packageSold;
-  //         } else {
-  //           // Nếu không có dữ liệu cho ngày hôm qua, bạn có thể hiển thị giá trị mặc định
-  //           filteredData.totalRevenue = 0;
-  //           filteredData.packageSold = 0;
-  //         }
-  //         break;
-  //       case "Tuần này":
-  //         const thisWeekData = response.data.revenue.weekly.find(
-  //           (week: any) => week.year === new Date().getFullYear()
-  //         );
-  //         if (thisWeekData) {
-  //           filteredData.totalRevenue = thisWeekData.totalRevenue;
-  //           filteredData.packageSold = thisWeekData.packageSold;
-  //         }
-  //         break;
-  //       case "Tuần trước":
-  //         const lastWeekData = response.data.revenue.weekly.find(
-  //           (week: any) => week.year === new Date().getFullYear() - 1
-  //         );
-  //         if (lastWeekData) {
-  //           filteredData.totalRevenue = lastWeekData.totalRevenue;
-  //           filteredData.packageSold = lastWeekData.packageSold;
-  //         }
-  //         break;
-  //       default:
-  //         break;
-  //     }
-
-  //     setRevenueData(filteredData); // Cập nhật dữ liệu doanh thu vào state
-  //     setIsLoading(false);
-  //   } catch (error) {
-  //     console.error("Error fetching revenue data:", error);
-  //     setIsLoading(false);
-  //   }
-  // };
   const fetchRevenueData = async (filter: string) => {
     try {
       setIsLoading(true);
-      const response = await getAllRevenue(); // Lấy dữ liệu doanh thu từ API
+      const response = await getAllRevenue(); // Lấy dữ liệu Revenue từ API
   
       let filteredData = { totalRevenue: 0, packageSold: 0 };
   
       // Hàm để chuyển đổi định dạng ngày (YYYY-MM-DD)
       const formatDate = (date: string) => date.split('T')[0]; 
   
-      // Lấy ngày hôm nay và tuần hiện tại
+      // Lấy ngày Today và tuần hiện tại
       const today = new Date();
       const currentYear = today.getFullYear();
       const currentMonth = today.getMonth() + 1; // Tháng hiện tại (1-12)
@@ -105,7 +45,7 @@ const DashboardComponent: React.FC = () => {
       const currentWeek = getWeekOfMonth(today);
   
       switch (filter) {
-        case "Hôm nay":
+        case "Today":
           const todayDate = today.toISOString().split('T')[0];
           const todayData = response.data.revenue.daily.find((day: any) => formatDate(day.date) === todayDate);
           if (todayData) {
@@ -114,7 +54,7 @@ const DashboardComponent: React.FC = () => {
           }
           break;
   
-        case "Hôm qua":
+        case "Yesterday":
           const yesterday = new Date(today);
           yesterday.setDate(today.getDate() - 1);
           const yesterdayData = response.data.revenue.daily.find((day: any) => formatDate(day.date) === formatDate(yesterday.toISOString()));
@@ -124,7 +64,7 @@ const DashboardComponent: React.FC = () => {
           }
           break;
   
-        case "Tuần này":
+        case "This week":
           const currentWeekData = response.data.revenue.weekly.find(
             (week: any) => week.year === currentYear && week.month === currentMonth && week.week === currentWeek
           );
@@ -134,7 +74,7 @@ const DashboardComponent: React.FC = () => {
           }
           break;
   
-        case "Tuần trước":
+        case "Last week":
           const lastWeek = currentWeek - 1;
           const lastWeekData = response.data.revenue.weekly.find(
             (week: any) => week.year === currentYear && week.month === currentMonth && week.week === lastWeek
@@ -149,7 +89,7 @@ const DashboardComponent: React.FC = () => {
           break;
       }
   
-      setRevenueData(filteredData); // Cập nhật dữ liệu doanh thu vào state
+      setRevenueData(filteredData); // Cập nhật dữ liệu Revenue vào state
       setIsLoading(false);
     } catch (error) {
       console.error("Error fetching revenue data:", error);
@@ -174,13 +114,13 @@ const DashboardComponent: React.FC = () => {
     fetchDashboardData(); 
   }, []); // Chạy chỉ một lần khi component mount
 
-  // Cập nhật dữ liệu doanh thu khi thay đổi filter
+  // Cập nhật dữ liệu Revenue khi thay đổi filter
   useEffect(() => {
     fetchRevenueData(selectedFilter); // Gọi lại hàm fetch chỉ khi filter thay đổi
   }, [selectedFilter]); // Chạy lại chỉ khi selectedFilter thay đổi
 
   const handleFilterChange = (value: string) => {
-    setSelectedFilter(value); // Cập nhật filter khi người dùng thay đổi
+    setSelectedFilter(value); // Cập nhật filter khi Accounts thay đổi
   };
 
 
@@ -193,7 +133,7 @@ const DashboardComponent: React.FC = () => {
       <div className="w-1/4 " >
       <div className=" mt-4  h-[170px] w-[262px]  bg-white ">
         <div className="flex justify-between p-4">
-<div className="text-lg text-green-800 font-bold">Doanh thu</div>
+<div className="text-lg text-green-800 font-bold">Revenue</div>
          
          
           <div className="">
@@ -203,10 +143,10 @@ const DashboardComponent: React.FC = () => {
                   onChange={handleFilterChange} // Cập nhật khi chọn filter mới
                   style={{ width: "100%" }}
                 >
-                  <Select.Option value="Hôm nay">Hôm nay</Select.Option>
-                  <Select.Option value="Hôm qua">Hôm qua</Select.Option>
-                  <Select.Option value="Tuần này">Tuần này</Select.Option>
-                  <Select.Option value="Tuần trước">Tuần trước</Select.Option>
+                  <Select.Option value="Today">Today</Select.Option>
+                  <Select.Option value="Yesterday">Yesterday</Select.Option>
+                  <Select.Option value="This week">This week</Select.Option>
+                  <Select.Option value="Last week">Last week</Select.Option>
                 </Select>
           </div>
         </div>
@@ -214,11 +154,11 @@ const DashboardComponent: React.FC = () => {
               {revenueData ? `${revenueData.totalRevenue} VNĐ` : "0 VNĐ"}
             </div>
             <div className=" pl-7 text-md   ">
-            <span>Đã bán được:</span> <span> {revenueData ? `${revenueData.packageSold} Gói` : "0 Gói"}</span>
+            <span>Package sold:</span> <span> {revenueData ? `${revenueData.packageSold} Package` : "0 Package"}</span>
             </div>
       </div>
       <div className=" mt-4  h-[170px] w-[262px]  ">
-      <CardDataStats title="Dị ứng" total={dashboardData?.totalAllergy?.toString() || "0"} rate="" >
+      <CardDataStats title="Allergies" total={dashboardData?.totalAllergy?.toString() || "0"} rate="" >
      
      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className=" stroke-white lucide lucide-bean-off-icon lucide-bean-off"><path d="M9 9c-.64.64-1.521.954-2.402 1.165A6 6 0 0 0 8 22a13.96 13.96 0 0 0 9.9-4.1"/><path d="M10.75 5.093A6 6 0 0 1 22 8c0 2.411-.61 4.68-1.683 6.66"/><path d="M5.341 10.62a4 4 0 0 0 6.487 1.208M10.62 5.341a4.015 4.015 0 0 1 2.039 2.04"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
      
@@ -226,7 +166,7 @@ const DashboardComponent: React.FC = () => {
              </CardDataStats>
              </div>
              <div className=" mt-4  h-[170px] w-[262px] ">
-             <CardDataStats title="Bệnh" total={dashboardData?.totalDisease?.toString() || "0"} rate="">
+             <CardDataStats title="Diseases" total={dashboardData?.totalDisease?.toString() || "0"} rate="">
           
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 stroke-white">
     <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
@@ -237,7 +177,7 @@ const DashboardComponent: React.FC = () => {
           </div>
       {/* <div className=" mt-4  h-[170px] w-[262px] bg-white shadow-3">
         <div className="flex justify-between p-4">
-          <div>Gói bán được</div>
+          <div>Package bán được</div>
           <div className="">
             {" "}
               <Select
@@ -245,19 +185,19 @@ const DashboardComponent: React.FC = () => {
                   onChange={handlePackageSoldFilterChange} // Cập nhật khi chọn filter mới
                   style={{ width: "100%" }}
                 >
-                  <Select.Option value="Hôm nay">Hôm nay</Select.Option>
-                  <Select.Option value="Hôm qua">Hôm qua</Select.Option>
-                  <Select.Option value="Tuần này">Tuần này</Select.Option>
-                  <Select.Option value="Tuần trước">Tuần trước</Select.Option>
+                  <Select.Option value="Today">Today</Select.Option>
+                  <Select.Option value="Yesterday">Yesterday</Select.Option>
+                  <Select.Option value="This week">This week</Select.Option>
+                  <Select.Option value="Last week">Last week</Select.Option>
                 </Select>
           </div>
         </div>
        <div className="text-2xl font-bold p-7 pt-8 text-green-700">
-              {revenueData ? `${revenueData.packageSold} Gói` : "0 Gói"}
+              {revenueData ? `${revenueData.packageSold} Package` : "0 Package"}
             </div>
       </div> */}
      <div className=" mt-4  h-[170px] w-[262px] ">
-      <CardDataStats title="Nguyên liệu" total={dashboardData?.totalIngredient?.toString() || "0"} rate="">
+      <CardDataStats title="Ingredients" total={dashboardData?.totalIngredient?.toString() || "0"} rate="">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className="stroke-white lucide lucide-banana-icon lucide-banana"><path d="M4 13c3.5-2 8-2 10 2a5.5 5.5 0 0 1 8 5"/><path d="M5.15 17.89c5.52-1.52 8.65-6.89 7-12C11.55 4 11.5 2 13 2c3.22 0 5 5.5 5 8 0 6.5-4.2 12-10.49 12C5.11 22 2 22 2 20c0-1.5 1.14-1.55 3.15-2.11Z"/></svg>      </CardDataStats>
       </div>
       </div>
@@ -272,7 +212,7 @@ const DashboardComponent: React.FC = () => {
        
        
         <CardDataStats
-          title="Món ăn"
+          title="Foods"
           total={dashboardData?.totalFood?.toString() || "0"}
           rate=""
         >
@@ -295,7 +235,7 @@ const DashboardComponent: React.FC = () => {
             <path d="M21.964 20.732a1 1 0 0 1-1.232 1.232l-18-5a1 1 0 0 1-.695-1.232A19.68 19.68 0 0 1 15.732 2.037a1 1 0 0 1 1.232.695z" />
           </svg>{" "}
         </CardDataStats>
-        <CardDataStats title="Bữa ăn có sẵn" total={dashboardData?.totalMealPlan?.toString() || "0"} rate="">
+        <CardDataStats title="Meal plans" total={dashboardData?.totalMealPlan?.toString() || "0"} rate="">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 stroke-white">
   <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
 </svg>
@@ -309,7 +249,7 @@ const DashboardComponent: React.FC = () => {
 
         </CardDataStats> */}
         <CardDataStats
-          title="Người dùng"
+          title="Accounts"
           total={dashboardData?.totalUser?.toString() || "0"}
           rate=""
         >
@@ -336,7 +276,7 @@ const DashboardComponent: React.FC = () => {
           </svg>
         </CardDataStats>
         <CardDataStats
-          title="Tài khoản premium"
+          title="Premium accounts"
           total={dashboardData?.totalPremiumUser?.toString() || "0"}
           rate=""
         >
@@ -356,7 +296,7 @@ const DashboardComponent: React.FC = () => {
           </svg>
         </CardDataStats>
         <CardDataStats
-          title="Gói"
+          title="Package"
           total={dashboardData?.totalPackage?.toString() || "0"}
           rate=""
         >

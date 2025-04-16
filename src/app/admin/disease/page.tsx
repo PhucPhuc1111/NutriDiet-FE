@@ -36,7 +36,7 @@ const DiseasePage: React.FC = () => {
   );
    const handleFileExport = () => {
       const ws = XLSX.utils.aoa_to_sheet([
-        ["Id", "Tên bệnh", "Mô tả","Ngày tạo", "Ngày cập nhật"], // Header row
+        ["Id", "Disease Name", "Description","Created At", "Updated At"], // Header row
         ...filteredData.map((item) => [
           item.diseaseId,
           item.diseaseName,
@@ -65,23 +65,23 @@ const DiseasePage: React.FC = () => {
       sorter: (a, b) => a.diseaseId - b.diseaseId,
     },
     {
-      title: "Tên bệnh",
+      title: "Disease Name",
       dataIndex: "diseaseName",
       sorter: (a, b) => a.diseaseName.localeCompare(b.diseaseName),
     },
     {
-      title: "Mô tả",
+      title: "Description",
       dataIndex: "description",
     },
     {
-      title: "Ngày tạo",
+      title: "Created At",
       dataIndex: "createdAt",
       sorter: (a, b) =>
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
       render: (text) => formatDate(text),
     },
     {
-      title: "Ngày cập nhật",
+      title: "Updated At",
       dataIndex: "updatedAt",
       sorter: (a, b) =>
         new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
@@ -89,7 +89,7 @@ const DiseasePage: React.FC = () => {
     },
 
     {
-      title: "Sửa/Xóa",
+      title: "Edit/Delete",
       dataIndex: "action",
       render: (_: any, record: Disease) => (
         <Space size="middle">
@@ -115,9 +115,9 @@ const DiseasePage: React.FC = () => {
     <DefaultLayout>
       <div className="">
         <div className="flex justify-between">
-          <div className="mb-2">Tổng cộng: {data?.length}</div>
+          <div className="mb-2">Total: {data?.length}</div>
           <Input
-            placeholder="Tìm kiếm thực phẩm"
+            placeholder="Search disease "
             value={searchText}
             onChange={handleSearch}
             style={{ marginBottom: 20, width: 300 }}

@@ -15,11 +15,11 @@ const AddPackageForm: React.FC<{ form: any }> = ({ form }) => {
     >
       <Form.Item
         name="packageName"
-        label="Tên gói"
-        rules={[{ required: true, message: "Tên gói là bắt buộc" },
+        label="Package name"
+        rules={[{ required: true, message: "Package name is requird" },
           {
             pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
-            message: 'Tên gói không được chứa ký tự đặc biệt ',
+            message: 'Package name must not contain special characters',
           }
         ]}
       >
@@ -27,24 +27,24 @@ const AddPackageForm: React.FC<{ form: any }> = ({ form }) => {
       </Form.Item>
       <Form.Item
         name="duration"
-        label="Thời gian (ngày)"
-        rules={[{ required: true, message: "Thời gian là bắt buộc" }]}
+        label="Duration (ngày)"
+        rules={[{ required: true, message: "Duration is required" }]}
       >
         <InputNumber type="number" />
       </Form.Item>
    
       <Form.Item
         name="price"
-        label="Giá (VNĐ)"
-        rules={[{ required: true, message: "Giá là bắt buộc" }]}
+        label="Price (VNĐ)"
+        rules={[{ required: true, message: "Price is required" }]}
       >
         <InputNumber type="number" />
       </Form.Item>
    
       <Form.Item
         name="description"
-        label="Mô tả"
-        rules={[{ required: true, message: "Mô tả là bắt buộc" }]}
+        label="Description"
+        rules={[{ required: true, message: "Desciption is required " }]}
        
       >
       <Input />

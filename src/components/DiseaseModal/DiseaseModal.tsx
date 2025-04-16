@@ -55,12 +55,13 @@ const DiseaseModal: React.FC<{ diseaseId: number; refetch: () => void }> = ({ di
         };
 
         await updateDisease(payload); // Gửi yêu cầu API để cập nhật bệnh
-        toast.success("Cập nhật bệnh thành công!"); // Hiển thị thông báo thành công
+        toast.success("Update disease successfully!"); // Hiển thị thông báo thành công
         setOpen(false);
         refetch();
       } catch (error) {
-        console.error("Lỗi khi cập nhật bệnh:", error);
-        toast.error("Tên bệnh đã tồn tại!"); // Hiển thị thông báo lỗi nếu có lỗi API
+        const err = error as any;
+        const errorMessage = err?.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại!";
+      toast.error(errorMessage);
       } finally {
         setLoadingSave(false); // Tắt trạng thái loading
       }
@@ -92,9 +93,9 @@ const DiseaseModal: React.FC<{ diseaseId: number; refetch: () => void }> = ({ di
 
   return (
     <>
-      <Button style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={showDetailModal}>Chi tiết</Button>
+      <Button style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={showDetailModal}>Detail</Button>
       <Modal
-        title={isEditing ? "Sửa bệnh" : "Chi tiết bệnh"}
+        title={isEditing ? "Edit disease" : "Disease detail"}
         open={open}
         width={800}
         onCancel={handleCancel}
@@ -102,11 +103,11 @@ const DiseaseModal: React.FC<{ diseaseId: number; refetch: () => void }> = ({ di
         footer={[
           isEditing ? (
             <>
-              <Button key="cancel" onClick={handleCancel}>Hủy</Button>
-              <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={handleSave} loading={loadingSave}>Lưu</Button>
+              <Button key="cancel" onClick={handleCancel}>Cancel</Button>
+              <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={handleSave} loading={loadingSave}>Save</Button>
             </>
           ) : (
-            <Button key="edit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={enableEdit}>Sửa</Button>
+            <Button key="edit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={enableEdit}>Edit</Button>
           )
         ]}
       >

@@ -195,12 +195,6 @@ import { DownOutlined } from "@ant-design/icons";
 import { Button, Form, message, Select } from "antd";
 import { updateMealPlan, useGetAllFoods } from "@/app/data";
 
-interface DayFoodDetails {
-  sáng: string[];
-  trưa: string[];
-  tối: string[];
-  phụ: string[];
-}
 
 interface Day {
   dayNumber: string;
@@ -303,8 +297,11 @@ const MealSelectionForm: React.FC<{
     <div className="flex w-full">
       <div className="w-2/3">
         <Form name={`form_${day.dayNumber}`} style={{ maxWidth: 600 }}>
-          {["sáng", "trưa", "tối", "phụ"].map((mealType) => (
-            <Form.Item key={mealType} label={`Bữa ${mealType}`}>
+          {[ "Breakfast",
+              "Lunch",
+              "Dinner",
+              "Snacks",].map((mealType) => (
+            <Form.Item key={mealType} label={`${mealType}`}>
               <Select
                 mode="multiple"
                 allowClear
@@ -312,11 +309,21 @@ const MealSelectionForm: React.FC<{
                 disabled={!editMode || isLoading} // Disable nếu không phải chế độ edit
                 loading={isLoading}
                 onChange={(values) =>
-                  handleChange(mealType as keyof DayFoodDetails, values)
-                }
+                                  handleChange(mealType as keyof DayFoodDetails, values as string[])
+                                }
+                showSearch
+                filterOption={(input, option) => {
+                  if (option?.label) {
+                    return (option.label as string)
+                      .toLowerCase()
+                      .includes(input.toLowerCase());
+                  }
+                  return false;
+                }}
               >
                 {foodList?.map((food) => (
-                  <Select.Option key={food.foodId} value={food.foodId}>
+                  <Select.Option key={food.foodId} value={food.foodId} label={food.foodName}
+                  >
                     {food.foodName} {/* Hiển thị foodName */}
                   </Select.Option>
                 ))}
@@ -329,11 +336,11 @@ const MealSelectionForm: React.FC<{
         <div>
           <p className="flex justify-center text-xl font-semibold">Tổng calo</p>
           <div className="space-y-5">
-            <p>Bữa sáng: {day.totalByMealType?.Breakfast?.calories} cal</p>
-            <p>Bữa trưa: {day.totalByMealType?.Lunch?.calories} cal</p>
-            <p>Bữa tối: {day.totalByMealType?.Dinner?.calories} cal</p>
-            <p>Bữa phụ: {day.totalByMealType?.Snacks?.calories} cal</p>
-            <p>Tổng cộng: {day.totalCalories} cal</p>
+            <p>Breakfast: {day.totalByMealType?.Breakfast?.calories} cal</p>
+            <p>Lunch: {day.totalByMealType?.Lunch?.calories} cal</p>
+            <p>Dinner: {day.totalByMealType?.Dinner?.calories} cal</p>
+            <p>Snacks: {day.totalByMealType?.Snacks?.calories} cal</p>
+            
           </div>
         </div>
       </div>
@@ -345,17 +352,13 @@ const MealSelectionForm: React.FC<{
 // Removed duplicate React import block.
 
 interface DayFoodDetails {
-  sáng: string[];
-  trưa: string[];
-  tối: string[];
-  phụ: string[];
+  Breakfast: string[];
+  Lunch: string[];
+  Dinner: string[];
+  Snacks: string[];
 }
 
-interface Day {
-  dayNumber: string;
-  foodDetails: DayFoodDetails;
-  totalCalories: number;
-}
+
 
 interface UpdateMealPlanProps {
   mealPlanId: number;
@@ -399,7 +402,7 @@ const UpdateMealPlan: React.FC<UpdateMealPlanProps> = ({
       ...prevDays,
       {
         dayNumber: (prevDays.length + 1).toString(),
-        foodDetails: { sáng: [], trưa: [], tối: [], phụ: [] },
+        foodDetails: { Breakfast: [], Lunch: [], Dinner: [], Snacks: [] },
         totalCalories: 0,
       },
     ]);
@@ -448,9 +451,9 @@ const UpdateMealPlan: React.FC<UpdateMealPlanProps> = ({
   return (
     <div>
       <div className="mb-3 flex items-center justify-between">
-        <div className="text-lg font-semibold">Chi tiết thực đơn</div>
+        <div className="text-lg font-semibold">Meal plan detail</div>
         <Button className="bg-green-800 text-white" onClick={addDay} disabled={isDisabled}>
-          Thêm ngày
+         Add day
         </Button>
       </div>
       {days.map((day) => (
@@ -468,15 +471,15 @@ const UpdateMealPlan: React.FC<UpdateMealPlanProps> = ({
                     type="primary"
                     onClick={() => toggleEditMode(Number(day.dayNumber))}
                   >
-                    Lưu
+                    Save
                   </Button>
                   <Button onClick={() => toggleEditMode(Number(day.dayNumber))}>
-                    Hủy
+                    Cancel
                   </Button>
                 </>
               ) : (
                 <Button disabled={isDisabled} onClick={() => toggleEditMode(Number(day.dayNumber))}>
-                  Sửa
+                  Edit
                 </Button>
               )}
               <Button
@@ -484,7 +487,7 @@ const UpdateMealPlan: React.FC<UpdateMealPlanProps> = ({
                 disabled={isDisabled}
                 onClick={() => deleteDay(Number(day.dayNumber))}
               >
-                Xóa
+                Delete
               </Button>
             </div>
           </div>
@@ -496,7 +499,7 @@ const UpdateMealPlan: React.FC<UpdateMealPlanProps> = ({
                 updateDay={updateDay}
               />
               <div className="bg-green-800 p-5 text-center text-lg font-semibold text-white">
-                Tổng calo: {day.totalCalories} cal
+                Total calo: {day.totalCalories} cal
               </div>
             </div>
           )}
