@@ -64,12 +64,13 @@ const FoodModal: React.FC<{ foodId: number; refetch: () => void }> = ({ foodId, 
         };
 
         await updateFood(payload);
-        toast.success("Cập nhật thực phẩm thành công!");
+        toast.success("Update food succesfully!");
         setOpen(false);
         refetch();
       } catch (error) {
-        console.error("Lỗi khi cập nhật thực phẩm:", error);
-        toast.error("Thực phẩm đã tồn tại!");
+       const err = error as any;
+               const errorMessage = err?.response?.data?.message || "Dữ liệu không hợp lệ, vui lòng thử lại!";
+             toast.error(errorMessage);
       } finally {
         setLoadingSave(false); // Tắt trạng thái loading
       }

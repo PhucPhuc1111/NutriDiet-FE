@@ -166,6 +166,18 @@ export type Package = {
   duration: number;
   description: string;
 }
+export type SystemConfiguration={
+  configId: number;
+  name: string;
+  minValue: number;
+  maxValue: number;
+  effectedDateTo: string;
+  unit: string;
+  isActive:string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
   export type Feedback = {
  id: number;

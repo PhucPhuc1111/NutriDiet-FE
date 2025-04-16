@@ -112,7 +112,7 @@ const SignIn: React.FC = () => {
         throw new Error("Dữ liệu không hợp lệ từ máy chủ");
       }
 
-      if (result.data.role !== "Admin") {
+      if (result.data.role !== "Admin" && result.data.role !== "Nutritionist") {
         toast.error("Bạn không có quyền truy cập vào trang quản trị!");
         return;
       }

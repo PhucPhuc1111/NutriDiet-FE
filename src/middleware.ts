@@ -10,7 +10,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  if (role !== "Admin") {
+  if (role !== "Admin" && role !== "Nutritionist") {
     return NextResponse.redirect(new URL("/", req.url));
   }
 

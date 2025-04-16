@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
 import ChartOne from "../Charts/ChartOne";
 import ChartTwo from "../Charts/ChartTwo";
-
+import Cookies from "js-cookie";
 import CardDataStats from "../CardDataStats";
 import Loader from "../common/Loader";
 import { Dashboard, getAllDashboard, getAllRevenue } from "@/app/data";
@@ -123,7 +123,7 @@ const DashboardComponent: React.FC = () => {
     setSelectedFilter(value); // Cập nhật filter khi Accounts thay đổi
   };
 
-
+  const userRole = Cookies.get("userRole");
   return (
     <>
      
@@ -203,7 +203,8 @@ const DashboardComponent: React.FC = () => {
       </div>
     
       <div className="mt-4 w-3/4">
-        {dashboardData ? <ChartOne /> : <p>Loading chart...</p>}
+      {/* {dashboardData && userRole !== "Nutritionist" ? <ChartOne /> :<></>} */}
+      {dashboardData ? <ChartOne />: <p>Loading chart</p> }
       </div>
       </div>
       <div className=" mt-3 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
