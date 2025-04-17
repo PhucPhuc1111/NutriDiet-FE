@@ -124,7 +124,11 @@ const SignIn: React.FC = () => {
       Cookies.set("userName", result.data.name, { expires: 7 });
 
       toast.success("Đăng nhập thành công!");
-      router.push("/admin/dashboard");
+     
+      // Delay the navigation to make sure cookies are set
+      setTimeout(() => {
+        window.location.href="/admin/dashboard"
+      }, 500);
     } catch (error: any) {
       toast.error(error.message || "Đã xảy ra lỗi không mong muốn");
     }

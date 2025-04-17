@@ -6,6 +6,7 @@ import SidebarItem from "@/components/Sidebar/SidebarItem";
 import ClickOutside from "@/components/ClickOutside";
 import useLocalStorage from "@/hooks/useLocalStorage";
 import Cookies from "js-cookie";
+import { toast } from "react-toastify";
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (arg: boolean) => void;
@@ -102,8 +103,58 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     Cookies.remove("userRole");
     Cookies.remove("userName");
     setUser(null);
+    toast.success("Logout successful!");
+   
+
+  // Sau khi tải lại trang, chuyển hướng đến trang đăng ký (signup)
+  setTimeout(() => {
     router.push("/auth/signin");
+  }, 500); // Đợi một chút để trang tải lại trước khi chuyển hướng
+
   };
+  const userRole = Cookies.get("userRole");
+
+  // Filter out "System configuration" and "Account" from children if user role is "Nutritionist"
+  const filteredMenuItems = menuGroups.map(group => ({
+    ...group,
+    menuItems: group.menuItems.filter(menuItem => {
+      // Kiểm tra nếu người dùng là "Nutritionist"
+      if (userRole === 'Nutritionist') {
+        // Loại bỏ các mục menu chính và các mục con nếu có (children)
+        if (menuItem.children) {
+          menuItem.children = menuItem.children.filter(child => {
+            // Kiểm tra và loại bỏ các mục con không mong muốn
+            return !(
+              child.label.includes("Premium package") ||
+              child.label.includes("Transaction") ||
+              child.label.includes("Account") ||
+          
+              child.label.includes("System configuration")
+            );
+          });
+  
+          // Nếu sau khi lọc, không còn mục con nào, thì ẩn mục chính
+          if (menuItem.children.length === 0) {
+            return false;
+          }
+        }
+  
+        // Loại bỏ mục chính không mong muốn
+        return !(
+          menuItem.label.includes("Premium package") ||
+          menuItem.label.includes("Transaction") ||
+          menuItem.label.includes("Account") ||
+          menuItem.label.includes("Feedback") ||
+          menuItem.label.includes("System configuration")
+        );
+      }
+  
+      // Nếu không phải "Nutritionist", giữ lại mục menu
+      return true;
+    }).filter(Boolean) // Loại bỏ mục menu trống
+  }));
+  
+  
   return (
     <ClickOutside onClick={() => setSidebarOpen(false)}>
       <aside
@@ -139,20 +190,19 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
         <div className=" flex flex-col  duration-300 ease-linear">
           <nav className=" px-4 py-4 lg:mt-9 lg:px-6">
-            {menuGroups.map((group, groupIndex) => (
+          {filteredMenuItems.map((group, groupIndex) => (
               <div key={groupIndex}>
-                <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
-                  {group.name}
-                </h3>
-
-                <ul className=" flex flex-col gap-1.5">
+                <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">{group.name}</h3>
+                <ul className="flex flex-col gap-1.5">
                   {group.menuItems.map((menuItem, menuIndex) => (
-                    <SidebarItem
-                      key={menuIndex}
-                      item={menuItem}
-                      pageName={pageName}
-                      setPageName={setPageName}
-                    />
+                    menuItem && (
+                      <SidebarItem
+                        key={menuIndex}
+                        item={menuItem}
+                        pageName={pageName}
+                        setPageName={setPageName}
+                      />
+                    )
                   ))}
                 </ul>
               </div>
