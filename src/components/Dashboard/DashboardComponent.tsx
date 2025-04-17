@@ -175,27 +175,7 @@ const DashboardComponent: React.FC = () => {
   
           </CardDataStats>
           </div>
-      {/* <div className=" mt-4  h-[170px] w-[262px] bg-white shadow-3">
-        <div className="flex justify-between p-4">
-          <div>Package bán được</div>
-          <div className="">
-            {" "}
-              <Select
-                  value={selectedPackageSoldFilter} // Sử dụng value thay vì defaultValue
-                  onChange={handlePackageSoldFilterChange} // Cập nhật khi chọn filter mới
-                  style={{ width: "100%" }}
-                >
-                  <Select.Option value="Today">Today</Select.Option>
-                  <Select.Option value="Yesterday">Yesterday</Select.Option>
-                  <Select.Option value="This week">This week</Select.Option>
-                  <Select.Option value="Last week">Last week</Select.Option>
-                </Select>
-          </div>
-        </div>
-       <div className="text-2xl font-bold p-7 pt-8 text-green-700">
-              {revenueData ? `${revenueData.packageSold} Package` : "0 Package"}
-            </div>
-      </div> */}
+
      <div className=" mt-4  h-[170px] w-[262px] ">
       <CardDataStats title="Ingredients" total={dashboardData?.totalIngredient?.toString() || "0"} rate="">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className="stroke-white lucide lucide-banana-icon lucide-banana"><path d="M4 13c3.5-2 8-2 10 2a5.5 5.5 0 0 1 8 5"/><path d="M5.15 17.89c5.52-1.52 8.65-6.89 7-12C11.55 4 11.5 2 13 2c3.22 0 5 5.5 5 8 0 6.5-4.2 12-10.49 12C5.11 22 2 22 2 20c0-1.5 1.14-1.55 3.15-2.11Z"/></svg>      </CardDataStats>
@@ -242,13 +222,7 @@ const DashboardComponent: React.FC = () => {
 </svg>
 
         </CardDataStats>
-        {/* <CardDataStats title="FeedBack" total={dashboardData?.totalFeedbackAI?.toString() || "0"} rate="">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 stroke-white ">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 0 1 1.037-.443 48.282 48.282 0 0 0 5.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z" />
-</svg>
-
-
-        </CardDataStats> */}
+    
         <CardDataStats
           title="Accounts"
           total={dashboardData?.totalUser?.toString() || "0"}

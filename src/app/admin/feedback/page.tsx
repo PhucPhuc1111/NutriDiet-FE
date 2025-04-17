@@ -5,6 +5,7 @@ import { Feedback } from '@/app/data'
 import DefaultLayout from '@/components/Layouts/DefaultLayout'
 import { useGetAllFeedback } from '@/app/data/feedback'
 import { format, parseISO } from 'date-fns'
+import Loader from '@/components/common/Loader'
 
 const FeedbackPage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("")
@@ -161,13 +162,9 @@ function formatDate(dateString?: string): string {
     setMealDetails(null); // Reset meal details
   }
 
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
 
-  if (isError) {
-    return <div>Error: {error?.message}</div>
-  }
+
+
 
   return (
     <DefaultLayout>
@@ -181,12 +178,15 @@ function formatDate(dateString?: string): string {
             style={{ marginBottom: 20, width: 300 }}
           />
         </div>
-        <Table
+        {isLoading ? (
+          <Loader/>
+        ) : (
+        <Table<Feedback>
           columns={columns}
           dataSource={filteredData}
           onChange={onChange}
         />
-
+      )}
         {/* Modal to show details */}
         <Modal
           title="Detail"

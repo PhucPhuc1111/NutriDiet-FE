@@ -39,10 +39,30 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/", req.url));
     }
   }
+  
+  // Kiểm tra quyền truy cập cho Nutritionist
+  if (role === "Nutritionist") {
+    const path = req.nextUrl.pathname;
+
+    // Kiểm tra nếu đường dẫn bắt đầu với các path cho phép
+    const allowedPaths = [
+      "/admin/dashboard",
+      "/admin/disease",
+      "/admin/food",
+      "/admin/feedback",
+      "/admin/allergy",
+      "/admin/ingredient",
+      "/admin/meal",
+    ];
+
+    // Kiểm tra nếu path bắt đầu bằng một trong các path cho phép hoặc là một subpath của chúng
+    if (!allowedPaths.some(allowedPath => path.startsWith(allowedPath))) {
+      return NextResponse.redirect(new URL("/admin/dashboard", req.url));
+    }
+  }
 
   return NextResponse.next();
 }
-
 // Áp dụng middleware cho tất cả các route bắt đầu với "/admin/"
 export const config = {
   matcher: "/admin/:path*",
