@@ -200,11 +200,14 @@ interface Day {
   dayNumber: string;
   foodDetails: DayFoodDetails;
   totalCalories: number;
+  totalFat: number;
+  totalCarbs: number;
+  totalProtein: number;
   totalByMealType?: {
-    Breakfast?: { calories: number };
-    Lunch?: { calories: number };
-    Dinner?: { calories: number };
-    Snacks?: { calories: number };
+    Breakfast?: { calories: number, fat: number, carbs: number, protein:number };
+    Lunch?: { calories: number,fat: number, carbs: number, protein:number };
+    Dinner?: { calories: number,fat:number, carbs: number, protein:number };
+    Snacks?: { calories: number, fat:number, carbs: number, protein:number };
   };
 }
 
@@ -294,6 +297,7 @@ const MealSelectionForm: React.FC<{
   const { data: foodList, isLoading } = useGetAllFoods(1, 500, "");
 
   return (
+    <div>
     <div className="flex w-full">
       <div className="w-2/3">
         <Form name={`form_${day.dayNumber}`} style={{ maxWidth: 600 }}>
@@ -333,9 +337,13 @@ const MealSelectionForm: React.FC<{
         </Form>
       </div>
       <div className="w-1/3">
-        <div>
-          <p className="flex justify-center text-xl font-semibold">Tổng calo</p>
-          <div className="space-y-5">
+        
+      </div>
+    </div>
+    <div className="flex justify-between ">
+    <div className="border-2 rounded-lg border-green-800  mb-5 ">
+    <div className="flex justify-center bg-green-800 text-white p-3 w-full text-xl font-semibold">Total Calories</div>
+          <div className="space-y-5 p-5">
             <p>Breakfast: {day.totalByMealType?.Breakfast?.calories} cal</p>
             <p>Lunch: {day.totalByMealType?.Lunch?.calories} cal</p>
             <p>Dinner: {day.totalByMealType?.Dinner?.calories} cal</p>
@@ -343,7 +351,37 @@ const MealSelectionForm: React.FC<{
             
           </div>
         </div>
-      </div>
+        <div className="border-2 rounded-lg border-green-800  mb-5 ">
+        <div className="flex justify-center bg-green-800 text-white p-3 w-full text-xl font-semibold">Total Fat</div>
+          <div className="space-y-5 p-5">
+            <p>Breakfast: {day.totalByMealType?.Breakfast?.fat} g</p>
+            <p>Lunch: {day.totalByMealType?.Lunch?.fat} g</p>
+            <p>Dinner: {day.totalByMealType?.Dinner?.fat} g</p>
+            <p>Snacks: {day.totalByMealType?.Snacks?.fat} g</p>
+            
+          </div>
+        </div>
+        <div className="border-2 rounded-lg border-green-800  mb-5 ">
+          <div className="flex justify-center bg-green-800 text-white p-3 w-full text-xl font-semibold">Total Carbs</div>
+          <div className="space-y-5 p-5">
+            <p>Breakfast: {day.totalByMealType?.Breakfast?.carbs} g</p>
+            <p>Lunch: {day.totalByMealType?.Lunch?.carbs} g</p>
+            <p>Dinner: {day.totalByMealType?.Dinner?.carbs} g</p>
+            <p>Snacks: {day.totalByMealType?.Snacks?.carbs} g</p>
+            
+          </div>
+        </div>
+        <div className="border-2 rounded-lg border-green-800  mb-5 ">
+          <div className="flex justify-center bg-green-800 text-white p-3 w-full text-xl font-semibold">Total Protein</div>
+          <div className="space-y-5 p-5">
+            <p>Breakfast: {day.totalByMealType?.Breakfast?.protein} g</p>
+            <p>Lunch: {day.totalByMealType?.Lunch?.protein} g</p>
+            <p>Dinner: {day.totalByMealType?.Dinner?.protein} g</p>
+            <p>Snacks: {day.totalByMealType?.Snacks?.protein} g</p>
+            
+          </div>
+        </div>
+    </div>
     </div>
   );
 };
@@ -403,7 +441,7 @@ const UpdateMealPlan: React.FC<UpdateMealPlanProps> = ({
       {
         dayNumber: (prevDays.length + 1).toString(),
         foodDetails: { Breakfast: [], Lunch: [], Dinner: [], Snacks: [] },
-        totalCalories: 0,
+        totalCalories: 0,totalCarbs: 0,totalFat: 0,totalProtein: 0,
       },
     ]);
   }, []);
@@ -499,7 +537,10 @@ const UpdateMealPlan: React.FC<UpdateMealPlanProps> = ({
                 updateDay={updateDay}
               />
               <div className="bg-green-800 p-5 text-center text-lg font-semibold text-white">
-                Total calo: {day.totalCalories} cal
+                <p>Total calo: {day.totalCalories} cal</p>
+                <p>Total carbs: {day.totalCarbs} cal</p>
+                <p>Total fat: {day.totalFat} cal</p>
+                <p>Total protein: {day.totalProtein} cal</p>
               </div>
             </div>
           )}
