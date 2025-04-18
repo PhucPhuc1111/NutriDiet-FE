@@ -159,11 +159,14 @@ const FoodPage: React.FC = () => {
       title: "Detail/Delete",
       dataIndex: "action",
       render: (_, record) => (
-        <Space size="middle">
+
+          <div className="space-y-2">
           <FoodModal foodId={record.foodId} refetch={refetch} />
 
-          <DeleteFoodModal foodId={record.foodId} refetch={refetch} />
-        </Space>
+<DeleteFoodModal foodId={record.foodId} refetch={refetch} />
+          </div>
+        
+    
       ),
     },
   ];

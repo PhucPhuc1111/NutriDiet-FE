@@ -208,10 +208,13 @@ interface MealSelectionFormProps {
   day: DayMeal;
   editMode: boolean;
   updateDay: (dayNumber: number, foodDetails: DayMeal["foodDetails"]) => void;
-  updateTotalCalories: (
+  updateTotalNutrition: (
     dayNumber: number,
     mealType: "Breakfast" | "Lunch" | "Dinner" | "Snacks",
     totalCalories: number,
+    totalCarbs: number,
+    totalFat: number,
+    totalProtein: number
   ) => void;
 }
 
@@ -219,31 +222,50 @@ const MealSelectionForm: React.FC<MealSelectionFormProps> = ({
   day,
   editMode,
   updateDay,
-  updateTotalCalories,
+  updateTotalNutrition,
 }) => {
   const { data: foodList, isLoading } = useGetAllFoods(1, 500, "");
 
-  const calculateTotalCalories = (foodIds: number[]) => {
+  const calculateTotalNutrition = (foodIds: number[]) => {
     let totalCalories = 0;
+    let totalCarbs = 0;
+    let totalFat = 0;
+    let totalProtein = 0;
+  
     foodIds.forEach((foodId) => {
       const food = foodList?.find((item) => item.foodId === foodId);
       if (food) {
         totalCalories += food.calories;
+        totalCarbs += food.carbs;
+        totalFat += food.fat;
+        totalProtein += food.protein;
       }
     });
-    return totalCalories;
+    totalCalories = parseFloat(totalCalories.toFixed(1));
+    totalCarbs = parseFloat(totalCarbs.toFixed(1));
+    totalFat = parseFloat(totalFat.toFixed(1));
+    totalProtein = parseFloat(totalProtein.toFixed(1));
+    return { totalCalories, totalCarbs, totalFat, totalProtein };
   };
+  
 
   const handleChange = (
     mealType: keyof DayMeal["foodDetails"],
     selectedFoods: number[],
   ) => {
     updateDay(day.dayNumber, { ...day.foodDetails, [mealType]: selectedFoods });
-    const totalCalories = calculateTotalCalories(selectedFoods);
-    updateTotalCalories(day.dayNumber, mealType, totalCalories);
+    
+    const { totalCalories, totalCarbs, totalFat, totalProtein } = calculateTotalNutrition(selectedFoods);
+    
+    // Gọi updateTotalNutrition thay vì updateTotalCalories
+    updateTotalNutrition(day.dayNumber, mealType, totalCalories, totalCarbs, totalFat, totalProtein);
   };
+  
 
   return (
+    <div>
+
+  
     <div className="flex w-full">
       <div className="w-2/3">
         <Form
@@ -294,7 +316,7 @@ const MealSelectionForm: React.FC<MealSelectionFormProps> = ({
           ))}
         </Form>
       </div>
-      <div className="w-1/3">
+      {/* <div className="w-1/3">
         <div>
           <p className="flex justify-center text-xl font-semibold">Total calories</p>
           <div className="space-y-5">
@@ -305,8 +327,51 @@ const MealSelectionForm: React.FC<MealSelectionFormProps> = ({
             
           </div>
         </div>
-      </div>
+      </div> */}
+      
     </div>
+    <div className="flex justify-between ">
+    <div className="border-2 rounded-lg border-green-800  mb-5 ">
+    <div className="flex justify-center bg-green-800 text-white p-3 w-full text-xl font-semibold">Total Calories</div>
+          <div className="space-y-5 p-5">
+            <p>Breakfast: {day.totalByMealType?.Breakfast?.calories} cal</p>
+            <p>Lunch: {day.totalByMealType?.Lunch?.calories} cal</p>
+            <p>Dinner: {day.totalByMealType?.Dinner?.calories} cal</p>
+            <p>Snacks: {day.totalByMealType?.Snacks?.calories} cal</p>
+            
+          </div>
+        </div>
+        <div className="border-2 rounded-lg border-green-800  mb-5 ">
+        <div className="flex justify-center bg-green-800 text-white p-3 w-full text-xl font-semibold">Total Fat</div>
+          <div className="space-y-5 p-5">
+            <p>Breakfast: {day.totalByMealType?.Breakfast?.fat} g</p>
+            <p>Lunch: {day.totalByMealType?.Lunch?.fat} g</p>
+            <p>Dinner: {day.totalByMealType?.Dinner?.fat} g</p>
+            <p>Snacks: {day.totalByMealType?.Snacks?.fat} g</p>
+            
+          </div>
+        </div>
+        <div className="border-2 rounded-lg border-green-800  mb-5 ">
+          <div className="flex justify-center bg-green-800 text-white p-3 w-full text-xl font-semibold">Total Carbs</div>
+          <div className="space-y-5 p-5">
+            <p>Breakfast: {day.totalByMealType?.Breakfast?.carbs} g</p>
+            <p>Lunch: {day.totalByMealType?.Lunch?.carbs} g</p>
+            <p>Dinner: {day.totalByMealType?.Dinner?.carbs} g</p>
+            <p>Snacks: {day.totalByMealType?.Snacks?.carbs} g</p>
+            
+          </div>
+        </div>
+        <div className="border-2 rounded-lg border-green-800  mb-5 ">
+          <div className="flex justify-center bg-green-800 text-white p-3 w-full text-xl font-semibold">Total Protein</div>
+          <div className="space-y-5 p-5">
+            <p>Breakfast: {day.totalByMealType?.Breakfast?.protein} g</p>
+            <p>Lunch: {day.totalByMealType?.Lunch?.protein} g</p>
+            <p>Dinner: {day.totalByMealType?.Dinner?.protein} g</p>
+            <p>Snacks: {day.totalByMealType?.Snacks?.protein} g</p>
+            
+          </div>
+        </div>
+    </div>  </div>
   );
 };
 
@@ -332,6 +397,9 @@ const AddMealDaily: React.FC<AddMealDailyProps> = ({ onChange = () => {} }) => {
         dayNumber: prevDays.length + 1,
         foodDetails: { Breakfast: [], Lunch: [], Dinner: [], Snacks: [] },
         totalCalories: 0,
+        totalCarbs: 0,
+        totalFat: 0,
+        totalProtein: 0,
         totalByMealType: {
           Breakfast: { calories: 0, carbs: 0, fat: 0, protein: 0 },
           Lunch: { calories: 0, carbs: 0, fat: 0, protein: 0 },
@@ -355,6 +423,7 @@ const AddMealDaily: React.FC<AddMealDailyProps> = ({ onChange = () => {} }) => {
     dayNumber: number,
     foodDetails: DayMeal["foodDetails"],
   ) => {
+    const { totalCalories, totalCarbs, totalFat, totalProtein } = calculateTotalNutrition(foodDetails);
     // Cập nhật lại foodDetails cho ngày
     setDays((prevDays) =>
       prevDays.map((day) =>
@@ -362,17 +431,24 @@ const AddMealDaily: React.FC<AddMealDailyProps> = ({ onChange = () => {} }) => {
           ? {
               ...day,
               foodDetails,
-              totalCalories: calculateTotalCalories(foodDetails),
+              totalCalories,
+              totalCarbs,
+              totalFat,
+              totalProtein,
             }
           : day,
       ),
     );
   };
 
-  const updateTotalCalories = (
+  const updateTotalNutrition  = (
     dayNumber: number,
     mealType: "Breakfast" | "Lunch" | "Dinner" | "Snacks",
+  
     totalCalories: number,
+    totalCarbs: number,
+    totalFat: number,
+    totalProtein: number
   ) => {
     setDays((prevDays) =>
       prevDays.map((day) =>
@@ -394,30 +470,38 @@ const AddMealDaily: React.FC<AddMealDailyProps> = ({ onChange = () => {} }) => {
                     fat: 0,
                     protein: 0,
                   }),
-                  calories: totalCalories,
+                  calories: parseFloat(totalCalories.toFixed(1)),
+                  carbs: parseFloat(totalCarbs.toFixed(1)),
+                  fat: parseFloat(totalFat.toFixed(1)),
+                  protein: parseFloat(totalProtein.toFixed(1)),
                 },
               },
-              totalCalories: calculateTotalCalories(day.foodDetails),
+              ...calculateTotalNutrition(day.foodDetails),
             }
           : day,
       ),
     );
   };
-  const calculateTotalCalories = (foodDetails: DayMeal["foodDetails"]) => {
+  const calculateTotalNutrition  = (foodDetails: DayMeal["foodDetails"]) => {
     // Tính tổng số calo cho ngày
     let totalCalories = 0;
-
+    let totalCarbs = 0;
+    let totalFat = 0;
+    let totalProtein = 0;
     Object.entries(foodDetails).forEach(([mealType, foodIds]) => {
       foodIds.forEach((foodId) => {
         // Sử dụng danh sách allFoods để tìm thông tin món ăn
         const food = allFoods?.find((item) => item.foodId === foodId);
         if (food) {
           totalCalories += food.calories;
+      totalCarbs += food.carbs;
+      totalFat += food.fat;
+      totalProtein += food.protein;
         }
       });
     });
 
-    return totalCalories;
+    return { totalCalories, totalCarbs, totalFat, totalProtein };
   };
 
   return (
@@ -474,10 +558,15 @@ const AddMealDaily: React.FC<AddMealDailyProps> = ({ onChange = () => {} }) => {
                 day={day}
                 editMode={!!editMode[day.dayNumber]}
                 updateDay={updateDay}
-                updateTotalCalories={updateTotalCalories}
+                updateTotalNutrition={updateTotalNutrition}
               />
               <div className="bg-green-800 p-5 text-center text-lg font-semibold text-white">
-                Total calo: {day.totalCalories} cal
+               
+              <p>Total carbs: {day.totalCarbs.toFixed(1)} g</p>
+<p>Total fat: {day.totalFat.toFixed(1)} g</p>
+<p>Total protein: {day.totalProtein.toFixed(1)} g</p>
+<p>Total calo: {day.totalCalories} cal</p>
+
               </div>
             </div>
           )}

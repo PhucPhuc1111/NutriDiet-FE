@@ -26,6 +26,7 @@ export interface CreateMealPlanParams {
     age: number;
     gender: "Male" | "Female" | "Other"; 
     location: string; 
+    role:"Admin" | "Nutritionist" | "Customer";
     status: "Active" | "Inactive"; 
     userPackages: UserPackage[];
   };
@@ -64,6 +65,10 @@ export type Ingredient = {
   protein: number; 
   calories: number;       
   // foodId: number;
+  };
+  export type ChangeRole={
+    userId: number;
+    role:string
   };
   export type Food = {
     foodId: number;            

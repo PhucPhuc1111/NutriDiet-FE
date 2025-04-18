@@ -198,7 +198,27 @@ import { Button, Form, Input, Select, InputNumber, Spin, message } from "antd";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { useGetMealPlanById, MealPlanDetail, Day } from "@/app/data";
+import { useGetMealPlanById, MealPlanDetail } from "@/app/data";
+// Removed the import of Day as it is a value
+// Define the Day type interface used for meal plan details
+interface Day {
+  dayNumber: string;
+  foodDetails: {
+    Breakfast: string[];
+    Lunch: string[];
+    Dinner: string[];
+    Snacks: string[];
+  };
+  totalCalories: number;
+  totalByMealType: Record<
+    string,
+    { calories: number; carbs: number; fat: number; protein: number }
+  >;
+  totalFat: number;
+  totalCarbs: number;
+  totalProtein: number;
+}
+import Day from "@/components/MealPlan/UpdateMealDaily";
 import { updateMealPlan } from "@/app/data"; // Giả sử có hàm updateMealPlan từ data API
 import UpdateMealDaily from "@/components/MealPlan/UpdateMealDaily";
 
@@ -255,24 +275,24 @@ const MealPlanDetailPage = () => {
   
 
   const transformMealPlanDetails = (mealPlanDetails: MealPlanDetail[]): Day[] => {
-    const groupedDays: Record<string, { Breakfast: string[]; Lunch: string[]; Dinner: string[]; Snacks: string[]; totalCalories: number, totalByMealType: any }> = {};
+    const groupedDays: Record<string, { Breakfast: string[]; Lunch: string[]; Dinner: string[]; Snacks: string[]; totalCalories: number, totalByMealType: any, totalFat: number, totalCarbs: number, totalProtein: number }> = {};
   
     mealPlanDetails.forEach((detail) => {
       if (!groupedDays[detail.dayNumber]) {
-        groupedDays[detail.dayNumber] = { Breakfast: [], Lunch: [], Dinner: [], Snacks: [], totalCalories: 0, totalByMealType: {} };
+        groupedDays[detail.dayNumber] = { Breakfast: [], Lunch: [], Dinner: [], Snacks: [], totalCalories: 0, totalByMealType: {}, totalFat: 0, totalCarbs: 0, totalProtein: 0 };
       }
   
-      const mealTypeMap: Record<string, keyof Day["foodDetails"]> = {
+      const mealTypeMap: Record<string, "Breakfast" | "Lunch" | "Dinner" | "Snacks"> = {
         "Breakfast": "Breakfast",
         "Lunch": "Lunch",
         "Dinner": "Dinner",
         "Snacks": "Snacks",
       };
-  
+    
       const mealType = mealTypeMap[detail.mealType];
-  
+    
       if (mealType) {
-        groupedDays[detail.dayNumber][mealType].push(detail.foodName);
+        groupedDays[detail.dayNumber][mealType].push(detail.foodName.toString());
       }
   
       // Update total by meal type
@@ -290,16 +310,24 @@ const MealPlanDetailPage = () => {
       groupedDays[detail.dayNumber].totalByMealType[detail.mealType].fat += detail.totalFat;
       groupedDays[detail.dayNumber].totalByMealType[detail.mealType].protein += detail.totalProtein;
   
-      // Update total calories for the day
+      // Update total calories and nutrients for the day
       groupedDays[detail.dayNumber].totalCalories += detail.totalCalories;
+      groupedDays[detail.dayNumber].totalFat += detail.totalFat;
+      groupedDays[detail.dayNumber].totalCarbs += detail.totalCarbs;
+      groupedDays[detail.dayNumber].totalProtein += detail.totalProtein;
     });
   
-    return Object.entries(groupedDays).map(([dayNumber, { totalCalories, totalByMealType, ...foodDetails }]) => ({
-      dayNumber,
-      foodDetails,
-      totalCalories,
-      totalByMealType,
-    }));
+    return Object.entries(groupedDays).map(
+      ([dayNumber, { totalCalories, totalByMealType, totalFat, totalCarbs, totalProtein, ...foodDetails }]) => ({
+        dayNumber,
+        foodDetails,
+        totalCalories,
+        totalByMealType,
+        totalFat,
+        totalCarbs,
+        totalProtein,
+      })
+    );
   };
   
   if (isLoading) {
@@ -366,18 +394,19 @@ const MealPlanDetailPage = () => {
             </Form.Item>
 
             <Form.Item name="createdBy" label="Created by">
-              <Input defaultValue={mealPlan.createdBy} disabled={isDisabled} />
+              <Input  defaultValue={mealPlan.createdBy} disabled />
+        
             </Form.Item>
 
             <Form.Item name="createdAt" label="Created At">
-              <Input defaultValue={mealPlan.createdAt} disabled={isDisabled} />
+              <Input defaultValue={mealPlan.createdAt} disabled />
             </Form.Item>
           </Form>
         </div>
 
         <div className="space-y-5 p-10">
           <UpdateMealDaily
-            mealPlanDetails={transformMealPlanDetails(mealPlan.mealPlanDetails)}
+            mealPlanDetails={transformMealPlanDetails(mealPlan.mealPlanDetails) as Day[]}
             mealPlanId={Number(mealPlanId)}
             planName={mealPlan.planName}
             healthGoal={mealPlan.healthGoal}
