@@ -10,6 +10,8 @@ import { Dashboard, getAllDashboard, getAllRevenue } from "@/app/data";
 import { Select } from "antd";
 import ChartOne from "@/components/Charts/ChartOne";
 import Cookies from "js-cookie";
+import ChartTwo from "@/components/Charts/ChartTwo";
+import ChartThree from "@/components/Charts/ChartThree";
 
 
 
@@ -178,24 +180,8 @@ const DashboardPage: React.FC = () => {
   
           </CardDataStats>
           </div>
-
-     <div className=" mt-4  h-[170px] w-[262px] ">
-      <CardDataStats title="Ingredients" total={dashboardData?.totalIngredient?.toString() || "0"} rate="">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className="stroke-white lucide lucide-banana-icon lucide-banana"><path d="M4 13c3.5-2 8-2 10 2a5.5 5.5 0 0 1 8 5"/><path d="M5.15 17.89c5.52-1.52 8.65-6.89 7-12C11.55 4 11.5 2 13 2c3.22 0 5 5.5 5 8 0 6.5-4.2 12-10.49 12C5.11 22 2 22 2 20c0-1.5 1.14-1.55 3.15-2.11Z"/></svg>      </CardDataStats>
-      </div>
-      </div>
-    
-      <div className="mt-4 w-3/4">
-      {/* {dashboardData && userRole !== "Nutritionist" ? <ChartOne /> :<></>} */}
-      {dashboardData ? <ChartOne />: <p>Loading chart</p> }
-      </div>
-      </div>
-      <div className=" mt-3 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-     
-
-       
-       
-        <CardDataStats
+          <div className=" mt-4  h-[170px] w-[262px]  ">
+          <CardDataStats
           title="Foods"
           total={dashboardData?.totalFood?.toString() || "0"}
           rate=""
@@ -219,13 +205,16 @@ const DashboardPage: React.FC = () => {
             <path d="M21.964 20.732a1 1 0 0 1-1.232 1.232l-18-5a1 1 0 0 1-.695-1.232A19.68 19.68 0 0 1 15.732 2.037a1 1 0 0 1 1.232.695z" />
           </svg>{" "}
         </CardDataStats>
+        </div>
+        <div className=" mt-4  h-[170px] w-[262px]  ">
         <CardDataStats title="Meal plans" total={dashboardData?.totalMealPlan?.toString() || "0"} rate="">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 stroke-white">
   <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
 </svg>
 
         </CardDataStats>
-    
+   </div>
+   <div className=" mt-4  h-[170px] w-[262px]  ">
         <CardDataStats
           title="Accounts"
           total={dashboardData?.totalUser?.toString() || "0"}
@@ -253,7 +242,9 @@ const DashboardPage: React.FC = () => {
             />
           </svg>
         </CardDataStats>
-        <CardDataStats
+</div>
+<div className=" mt-4  h-[170px] w-[262px]  ">
+<CardDataStats
           title="Premium accounts"
           total={dashboardData?.totalPremiumUser?.toString() || "0"}
           rate=""
@@ -273,6 +264,8 @@ const DashboardPage: React.FC = () => {
             />
           </svg>
         </CardDataStats>
+        </div>
+        <div className=" mt-4  h-[170px] w-[262px]  ">
         <CardDataStats
           title="Package"
           total={dashboardData?.totalPackage?.toString() || "0"}
@@ -295,65 +288,116 @@ const DashboardPage: React.FC = () => {
             <path d="M2 9h20" />
           </svg>
         </CardDataStats>
+        </div>
+     <div className=" mt-4  h-[170px] w-[262px] ">
+      <CardDataStats title="Ingredients" total={dashboardData?.totalIngredient?.toString() || "0"} rate="">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className="stroke-white lucide lucide-banana-icon lucide-banana"><path d="M4 13c3.5-2 8-2 10 2a5.5 5.5 0 0 1 8 5"/><path d="M5.15 17.89c5.52-1.52 8.65-6.89 7-12C11.55 4 11.5 2 13 2c3.22 0 5 5.5 5 8 0 6.5-4.2 12-10.49 12C5.11 22 2 22 2 20c0-1.5 1.14-1.55 3.15-2.11Z"/></svg>      </CardDataStats>
       </div>
-    </>:
-    <>
-     <div className=" mt-3 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
+      </div>
+    
+      <div className="mt-4 w-3/4">
+      {/* {dashboardData && userRole !== "Nutritionist" ? <ChartOne /> :<></>} */}
+      {dashboardData ? <ChartOne />: <p>Loading chart</p> }
+      <div className="">
+      <ChartTwo/>
+      </div>
+      <ChartThree/>
+      </div>
+      </div>
+      <div className=" mt-3 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
      
 
        
        
-     <CardDataStats
-       title="Foods"
-       total={dashboardData?.totalFood?.toString() || "0"}
-       rate=""
-     >
-       <svg
-         xmlns="http://www.w3.org/2000/svg"
-         width="24"
-         height="24"
-         viewBox="0 0 24 24"
-         fill="none"
-         stroke="currentColor"
-         stroke-width="1.5"
-         stroke-linecap="round"
-         stroke-linejoin="round"
-         className=" lucide lucide-pizza-icon lucide-pizza stroke-white"
-       >
-         <path d="m12 14-1 1" />
-         <path d="m13.75 18.25-1.25 1.42" />
-         <path d="M17.775 5.654a15.68 15.68 0 0 0-12.121 12.12" />
-         <path d="M18.8 9.3a1 1 0 0 0 2.1 7.7" />
-         <path d="M21.964 20.732a1 1 0 0 1-1.232 1.232l-18-5a1 1 0 0 1-.695-1.232A19.68 19.68 0 0 1 15.732 2.037a1 1 0 0 1 1.232.695z" />
-       </svg>{" "}
-     </CardDataStats>
-     <CardDataStats title="Meal plans" total={dashboardData?.totalMealPlan?.toString() || "0"} rate="">
-     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 stroke-white">
+      
+     
+      </div>
+      
+     
+    </>:
+    <>
+    <div className="flex justify-between w-full">
+
+
+<div className="w-1/4 " >
+
+<div className=" mt-4  h-[170px] w-[262px]  ">
+<CardDataStats title="Allergies" total={dashboardData?.totalAllergy?.toString() || "0"} rate="" >
+
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className=" stroke-white lucide lucide-bean-off-icon lucide-bean-off"><path d="M9 9c-.64.64-1.521.954-2.402 1.165A6 6 0 0 0 8 22a13.96 13.96 0 0 0 9.9-4.1"/><path d="M10.75 5.093A6 6 0 0 1 22 8c0 2.411-.61 4.68-1.683 6.66"/><path d="M5.341 10.62a4 4 0 0 0 6.487 1.208M10.62 5.341a4.015 4.015 0 0 1 2.039 2.04"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
+
+
+       </CardDataStats>
+       </div>
+       <div className=" mt-4  h-[170px] w-[262px] ">
+       <CardDataStats title="Diseases" total={dashboardData?.totalDisease?.toString() || "0"} rate="">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 stroke-white">
+<path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+</svg>
+
+
+    </CardDataStats>
+    </div>
+    <div className=" mt-4  h-[170px] w-[262px]  ">
+    <CardDataStats
+    title="Foods"
+    total={dashboardData?.totalFood?.toString() || "0"}
+    rate=""
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      className=" lucide lucide-pizza-icon lucide-pizza stroke-white"
+    >
+      <path d="m12 14-1 1" />
+      <path d="m13.75 18.25-1.25 1.42" />
+      <path d="M17.775 5.654a15.68 15.68 0 0 0-12.121 12.12" />
+      <path d="M18.8 9.3a1 1 0 0 0 2.1 7.7" />
+      <path d="M21.964 20.732a1 1 0 0 1-1.232 1.232l-18-5a1 1 0 0 1-.695-1.232A19.68 19.68 0 0 1 15.732 2.037a1 1 0 0 1 1.232.695z" />
+    </svg>{" "}
+  </CardDataStats>
+  </div>
+  <div className=" mt-4  h-[170px] w-[262px]  ">
+  <CardDataStats title="Meal plans" total={dashboardData?.totalMealPlan?.toString() || "0"} rate="">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 stroke-white">
 <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
 </svg>
 
-     </CardDataStats>
+  </CardDataStats>
+</div>
+
+
+<div className=" mt-4  h-[170px] w-[262px] ">
+<CardDataStats title="Ingredients" total={dashboardData?.totalIngredient?.toString() || "0"} rate="">
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className="stroke-white lucide lucide-banana-icon lucide-banana"><path d="M4 13c3.5-2 8-2 10 2a5.5 5.5 0 0 1 8 5"/><path d="M5.15 17.89c5.52-1.52 8.65-6.89 7-12C11.55 4 11.5 2 13 2c3.22 0 5 5.5 5 8 0 6.5-4.2 12-10.49 12C5.11 22 2 22 2 20c0-1.5 1.14-1.55 3.15-2.11Z"/></svg>      </CardDataStats>
+</div>
+</div>
+
+<div className="mt-4 w-3/4">
+
+
+<div className="">
+<ChartTwo/>
+</div>
+<ChartThree/>
+</div>
+</div>
+<div className=" mt-3 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
+
+
  
-   
-   
-   
-     <CardDataStats title="Allergies" total={dashboardData?.totalAllergy?.toString() || "0"} rate="" >
-     
-     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className=" stroke-white lucide lucide-bean-off-icon lucide-bean-off"><path d="M9 9c-.64.64-1.521.954-2.402 1.165A6 6 0 0 0 8 22a13.96 13.96 0 0 0 9.9-4.1"/><path d="M10.75 5.093A6 6 0 0 1 22 8c0 2.411-.61 4.68-1.683 6.66"/><path d="M5.341 10.62a4 4 0 0 0 6.487 1.208M10.62 5.341a4.015 4.015 0 0 1 2.039 2.04"/><line x1="2" x2="22" y1="2" y2="22"/></svg>
-     
-     
-             </CardDataStats>
-             <CardDataStats title="Diseases" total={dashboardData?.totalDisease?.toString() || "0"} rate="">
-          
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6 stroke-white">
-    <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-  </svg>
-  
-  
-          </CardDataStats>
-          <CardDataStats title="Ingredients" total={dashboardData?.totalIngredient?.toString() || "0"} rate="">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className="stroke-white lucide lucide-banana-icon lucide-banana"><path d="M4 13c3.5-2 8-2 10 2a5.5 5.5 0 0 1 8 5"/><path d="M5.15 17.89c5.52-1.52 8.65-6.89 7-12C11.55 4 11.5 2 13 2c3.22 0 5 5.5 5 8 0 6.5-4.2 12-10.49 12C5.11 22 2 22 2 20c0-1.5 1.14-1.55 3.15-2.11Z"/></svg>      </CardDataStats>
-   </div>
+ 
+
+
+</div>
     
     
     
