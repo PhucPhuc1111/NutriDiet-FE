@@ -110,7 +110,6 @@ export type Revenue = {
 }
 
 
-
 type IncludeRevenue={
   daily: DailyRevenue[];
   weekly: WeeklyRevenue[];
@@ -152,8 +151,19 @@ type TotalRevenue = {
   packageSold: number;
   totalRevenue: number;
 };
-
-
+export type TopFood = {
+  map(arg0: (item: any) => any): never[];
+  foodName: number;
+  mealLogCount:number;
+  mealPlanCount:number;
+  totalCount:number;
+}
+export type Goal = {
+  labels: string[]; // Array of labels (strings)
+  achieved: number[];
+  notAchieved: number[];
+  progressPercentages: number[];
+};
 export type Transaction={
   userId:number
   email: string

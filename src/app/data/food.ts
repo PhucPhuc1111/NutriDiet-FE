@@ -115,7 +115,7 @@ export async function createFood(
   formData: {
     FoodName: string;
     MealType: string;
-    FoodImageUrl: string;
+    FoodImageUrl: string | File;
     FoodType: string;
     Description: string;
     ServingSize: string;
@@ -145,10 +145,12 @@ export async function createFood(
   form.append("Fiber", formData.Fiber.toString());
   // form.append("Others", formData.Others);
 
-  if (formData.FoodImageUrl) {
+  // Handle image upload: If it's a File, upload it.
+  if (formData.FoodImageUrl instanceof File) {
     form.append("FoodImageUrl", formData.FoodImageUrl);
+  } else if (formData.FoodImageUrl) {
+    form.append("FoodImageUrl", formData.FoodImageUrl); // If it's already a URL, use it directly
   }
-
   
   formData.Ingredients.forEach((id) => form.append("Ingredients", id));
   return await request.postMultiPart(`${baseURL}/api/food`, form);
@@ -196,12 +198,13 @@ export async function updateFood(formData: {
   form.append("Fiber", formData.Fiber?.toString() ?? oldData.fiber.toString());
   // form.append("Others", formData.Others ?? oldData.others);
 
+  // Handle image upload (File or URL)
   if (formData.FoodImageUrl instanceof File) {
     form.append("FoodImageUrl", formData.FoodImageUrl);
   } else if (formData.FoodImageUrl === "") {
-    form.append("FoodImageUrl", ""); // Nếu ảnh bị xóa
+    form.append("FoodImageUrl", ""); // If the image is removed
   } else {
-    form.append("FoodImageUrl", oldData.imageUrl ?? "");
+    form.append("FoodImageUrl", formData.FoodImageUrl ?? oldData.imageUrl);
   }
     if (formData.Ingredients) {
     formData.Ingredients.forEach((id) => form.append("Ingredients", id));

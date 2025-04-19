@@ -9,6 +9,10 @@ export * from "./package";
 export * from "./system-configuration";
 
 export interface ApiResponse<T> {
+  labels: [];
+  achieved:[];
+  notAchieved:[];
+  progressPercentages:[];
   statusCode: number;
   message: string;
   data: T;

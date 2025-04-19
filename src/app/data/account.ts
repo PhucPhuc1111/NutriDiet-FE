@@ -1,7 +1,7 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import request, { baseURL } from "@/services/apiClient";
 
-import { Account, Allergy, Dashboard, Revenue, Transaction } from "./types";
+import { Account, Allergy, Dashboard, Goal, Revenue, TopFood, Transaction } from "./types";
 import { ApiResponse } from ".";
 
 import Cookies from "js-cookie";
@@ -90,6 +90,34 @@ export const useGetAllAccounts = (
 export async function getAllRevenue(): Promise<ApiResponse<Revenue>> {
   return await request.get(`${baseURL}/api/dashboard/revenue`); // Không cần pageIndex và pageSize
 }
+export async function getAllGoal(): Promise<ApiResponse<Goal>> {
+  return await request.get(`${baseURL}/api/dashboard/goal`); // Không cần pageIndex và pageSize
+}
+export async function getAllTopFood(top:Number): Promise<ApiResponse<TopFood>> {
+  return await request.get(`${baseURL}/api/dashboard/top-food?top=${top}`); // Không cần pageIndex và pageSize
+}
+export const useGetAllGoal = (
+  config?: UseQueryOptions<Goal>
+) => {
+  return useQuery<Goal>({
+    queryKey: ["goal"],
+    queryFn: async (): Promise<Goal> => {
+      try {
+        const response = await getAllGoal(); // Call API to get goal data
+        console.log("API Response:", response); // Log the response to check the data
+
+        if (!response) {
+          throw new Error("No data returned from API");
+        }
+        return response; // Return the response directly as the Goal type
+      } catch (error) {
+        console.error("Error fetching goal data:", error);
+        return { labels: [], achieved: [], notAchieved: [], progressPercentages: [] }; // Fallback empty data
+      }
+    },
+    ...config,
+  });
+};
 
 
 export const useGetAllRevenue = (

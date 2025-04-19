@@ -185,24 +185,40 @@ const DetailFoodForm: React.FC<{ form: any, foodId: number, isEditing: boolean }
   // Ví dụ: API trả về dữ liệu:
   const [currentFood, setCurrentFood] = useState<any>(null);
 
-  // Sử dụng useEffect để cập nhật lại imageUrl khi có dữ liệu mới từ API
+  // Fetch food data and update form fields
   useEffect(() => {
     const fetchFoodData = async () => {
       try {
-        const response = await getFoodById(foodId); // Giả sử đây là API lấy thông tin thực phẩm theo ID
-        setCurrentFood(response.data); // Cập nhật giá trị currentFood
-
-        // Cập nhật imageUrl từ API
+        const response = await getFoodById(foodId);
+        setCurrentFood(response.data);
         const fetchedImageUrl = response.data?.imageUrl;
-        console.log("Fetched image URL:", fetchedImageUrl); // Kiểm tra giá trị fetchedImageUrl
-        if (fetchedImageUrl) {
-          setImageUrl(fetchedImageUrl); // Cập nhật imageUrl
-          form.setFieldsValue({ imageUrl: fetchedImageUrl }); // Cập nhật giá trị vào form
-        }
+
+        // Nếu không có ảnh, set imageUrl là null hoặc rỗng
+        const imageUrlToSet = fetchedImageUrl ? fetchedImageUrl : null;
+        // const fetchedImageUrl = response.data?.imageUrl;
+        setImageUrl(fetchedImageUrl); // Set image URL
+        form.setFieldsValue({
+          foodName: response.data?.foodName,
+          mealType: response.data?.mealType,
+          foodType: response.data?.foodType,
+          servingSize: response.data?.servingSize,
+          calories: response.data?.calories,
+          protein: response.data?.protein,
+          carbs: response.data?.carbs,
+          fat: response.data?.fat,
+          glucid: response.data?.glucid,
+          fiber: response.data?.fiber,
+          imageUrl: fetchedImageUrl, // Set image URL in form field
+          description: response.data?.description,
+          ingredients: response.data?.ingredients?.map((ingredient: any) => ingredient.ingredientId) || [],
+        });
+        setImageUrl(imageUrlToSet);
       } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu thực phẩm:", error);
+        console.error("Error fetching food data:", error);
       }
     };
+
+ 
 
     fetchFoodData();
   }, [foodId, form]);  // Chạy lại khi foodId hoặc form thay đổi
@@ -300,9 +316,9 @@ const DetailFoodForm: React.FC<{ form: any, foodId: number, isEditing: boolean }
           </Form.Item>
 
           {/* Upload ảnh trong chế độ chỉnh sửa */}
-          {isEditing && (
+          {/* {isEditing && (
             <Upload
-              listType="picture-card"
+              
               fileList={fileList}
               beforeUpload={() => false}
               onChange={({ fileList }) => {
@@ -324,7 +340,34 @@ const DetailFoodForm: React.FC<{ form: any, foodId: number, isEditing: boolean }
             >
               {fileList.length === 0 && <Button icon={<UploadOutlined />}>Chọn ảnh</Button>}
             </Upload>
-          )}
+          )} */}
+          {isEditing && (
+  <Upload
+
+    fileList={fileList}
+    beforeUpload={() => false}  // Ngừng tải lên tự động
+    onChange={({ fileList }) => {
+      if (fileList.length > 0) {
+        const newFile = fileList[0].originFileObj;
+        setFileList(fileList);  // Cập nhật danh sách file
+        setImageUrl(newFile ? URL.createObjectURL(newFile) : null);  // Tạo URL cho ảnh
+        form.setFieldsValue({ imageUrl: newFile });  // Cập nhật giá trị vào form
+      } else {
+        setFileList([]);  // Reset danh sách file nếu không có ảnh
+        setImageUrl(null);  // Reset URL ảnh
+        form.setFieldsValue({ imageUrl: "" });  // Reset trường imageUrl trong form
+      }
+    }}
+    onRemove={() => {
+      setFileList([]);  // Xóa file khi người dùng loại bỏ ảnh
+      setImageUrl(null);  // Xóa URL ảnh
+      form.setFieldsValue({ imageUrl: "" });  // Reset giá trị trường imageUrl
+    }}
+  >
+    {fileList.length === 0 && <Button icon={<UploadOutlined />}>Chọn ảnh</Button>}
+  </Upload>
+)}
+
         </div>
       </div>
 
