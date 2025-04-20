@@ -169,7 +169,7 @@ export type Activity = {
 export type DietStyle = {
   filter(arg0: (item: any) => boolean): unknown;
   map(arg0: (item: any) => any): unknown;
-  activityLevel: string;
+  dietStyle: string;
   count: number;
   percentage: number
 

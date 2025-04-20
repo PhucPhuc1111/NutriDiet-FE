@@ -15,6 +15,7 @@ import ChartThree from "@/components/Charts/ChartThree";
 import ChartFour from "@/components/Charts/ChartFour";
 import ChartSix from "@/components/Charts/ChartSix";
 import ChartSeven from "@/components/Charts/ChartSeven";
+import ChartFive from "@/components/Charts/ChartFive";
 
 
 
@@ -315,7 +316,7 @@ const DashboardPage: React.FC = () => {
 <div className="w-1/2   h-[450px]   rounded-lg bg-white  shadow-3"><ChartSix/></div>
 </div>
 <div className="w-1/2 mt-3 flex justify-center  h-[450px]   rounded-lg bg-white  shadow-3">
-<ChartFour/> </div>
+<ChartFive/> </div>
     </div>
 
         <div className="w-1/2 h-[450px]  rounded-lg bg-white  shadow-3">
