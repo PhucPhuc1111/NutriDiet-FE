@@ -16,6 +16,12 @@ export interface ApiResponse<T> {
   statusCode: number;
   message: string;
   data: T;
-
+  totalCalories: number,
+  totalCarbs: number,
+  totalProtein: number,
+  totalFat: number,
+  carbsPercentage: number,
+  proteinPercentage: number,
+  fatPercentage: number
 
 }

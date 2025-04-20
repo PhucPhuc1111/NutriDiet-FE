@@ -71,7 +71,7 @@ const ChartThree = () => {
   };
 
   return (
-    <div className="col-span-12 h-[500px] rounded-sm border border-stroke bg-white px-5 mt-6 pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
+    <div className="col-span-12 h-[490px] rounded-sm border border-stroke bg-white px-5 mt-6 pt-3 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
       <div className="rounded-3xl">
     <div className="">
       <div className="flex justify-end">
@@ -104,9 +104,17 @@ const ChartThree = () => {
           },
           scales: {
             x: {
+              title: {
+                display: true,
+                text:" Food Name",
+              },
               stacked: true,
             },
             y: {
+              title: {
+                display: true,
+                text: "Count",
+              },
               stacked: true,
             },
           },
