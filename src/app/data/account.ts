@@ -1,7 +1,8 @@
+
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import request, { baseURL } from "@/services/apiClient";
 
-import { Account, Allergy, Dashboard, Goal, Revenue, TopFood, Transaction } from "./types";
+import { Account, Activity, Allergy, Dashboard, DietStyle, Goal, Nutrition, Revenue, TopFood, Transaction } from "./types";
 import { ApiResponse } from ".";
 
 import Cookies from "js-cookie";
@@ -95,6 +96,15 @@ export async function getAllGoal(): Promise<ApiResponse<Goal>> {
 }
 export async function getAllTopFood(top:Number): Promise<ApiResponse<TopFood>> {
   return await request.get(`${baseURL}/api/dashboard/top-food?top=${top}`); // Không cần pageIndex và pageSize
+}
+export async function getAllActivity(): Promise<ApiResponse<Activity>> {
+  return await request.get(`${baseURL}/api/dashboard/activity-level`); // Không cần pageIndex và pageSize
+}
+export async function getAllDietStyle(): Promise<ApiResponse<DietStyle>> {
+  return await request.get(`${baseURL}/api/dashboard/diet-style`); // Không cần pageIndex và pageSize
+}
+export async function getAllNutrition(selectedDate:String): Promise<ApiResponse<Nutrition>> {
+  return await request.get(`${baseURL}/api/dashboard/nutrition-summary?date=${selectedDate}`); // Không cần pageIndex và pageSize
 }
 export const useGetAllGoal = (
   config?: UseQueryOptions<Goal>

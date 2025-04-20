@@ -12,6 +12,9 @@ import ChartOne from "@/components/Charts/ChartOne";
 import Cookies from "js-cookie";
 import ChartTwo from "@/components/Charts/ChartTwo";
 import ChartThree from "@/components/Charts/ChartThree";
+import ChartFour from "@/components/Charts/ChartFour";
+import ChartSix from "@/components/Charts/ChartSix";
+import ChartSeven from "@/components/Charts/ChartSeven";
 
 
 
@@ -304,16 +307,33 @@ const DashboardPage: React.FC = () => {
       <ChartThree/>
       </div>
       </div>
-      <div className=" mt-3 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-     
+      <div className ="flex mt-7 justify-center space-x-3 w-full ">
+    
+<div className="w-1/2">
+<div className="flex ">
+<div className="w-1/2 p-2 mr-1    h-[450px]   rounded-lg bg-white  shadow-3"><ChartFour/> </div>
+<div className="w-1/2   h-[450px]   rounded-lg bg-white  shadow-3"><ChartSix/></div>
+</div>
+<div className="w-1/2 mt-3 flex justify-center  h-[450px]   rounded-lg bg-white  shadow-3">
+<ChartFour/> </div>
+    </div>
+
+        <div className="w-1/2 h-[450px]  rounded-lg bg-white  shadow-3">
+          <ChartSeven/>
+        </div>
 
        
-       
-      
-     
+      {/* <div className="w-1/4 h-[450px] rounded-lg bg-white  shadow-3">
+      <ChartFour/>
       </div>
+      <div className="w-1/4 h-[450px]  rounded-lg bg-white  shadow-3">
+      <ChartFour/>
+      </div>
+      <div className="w-1/4 h-[450px]  rounded-lg bg-white  shadow-3">
+      <ChartFour/>
+      </div> */}
       
-     
+     </div>
     </>:
     <>
     <div className="flex justify-between w-full">
@@ -381,7 +401,7 @@ const DashboardPage: React.FC = () => {
 </div>
 </div>
 
-<div className="mt-4 w-3/4">
+<div className="w-3/4">
 
 
 <div className="">
@@ -390,14 +410,39 @@ const DashboardPage: React.FC = () => {
 <ChartThree/>
 </div>
 </div>
-<div className=" mt-3 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
 
-
+<div className ="flex mt-7 justify-center space-x-3 w-full ">
+    
+    <div className="w-1/2">
+    <div className="flex ">
+    <div className="w-1/2 p-2 mr-1    h-[450px]   rounded-lg bg-white  shadow-3"><ChartFour/> </div>
+    <div className="w-1/2   h-[450px]   rounded-lg bg-white  shadow-3"><ChartSix/></div>
+    </div>
+    <div className="w-1/2 mt-3 flex justify-center  h-[450px]   rounded-lg bg-white  shadow-3">
+<ChartFour/> </div>
+        </div>
+    
+            <div className="w-1/2 h-[450px]  rounded-lg bg-white  shadow-3">
+              <ChartSeven/>
+            </div>
+    
+           
+          {/* <div className="w-1/4 h-[450px] rounded-lg bg-white  shadow-3">
+          <ChartFour/>
+          </div>
+          <div className="w-1/4 h-[450px]  rounded-lg bg-white  shadow-3">
+          <ChartFour/>
+          </div>
+          <div className="w-1/4 h-[450px]  rounded-lg bg-white  shadow-3">
+          <ChartFour/>
+          </div> */}
+          
+         </div>
  
  
 
 
-</div>
+
     
     
     

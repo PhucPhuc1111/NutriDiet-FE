@@ -80,9 +80,17 @@ const ChartTwo: React.FC = () => {
     },
     scales: {
       x: {
+        title: {
+          display: true,
+          text: "Goals",
+        },
         stacked: true, // Stacked bars on the X-axis
       },
       y: {
+        title: {
+          display: true,
+          text: 'Percentage (%)',
+        },
         stacked: true, // Stack the values for Achieved and Not Achieved on the Y-axis
         ticks: {
           beginAtZero: true,
@@ -96,7 +104,7 @@ const ChartTwo: React.FC = () => {
   };
 
   return (
-    <div className="col-span-12 h-[500px] rounded-sm border border-stroke bg-white px-5 mt-6  pt-7.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
+    <div className="col-span-12 h-[400px] rounded-sm border border-stroke bg-white px-5 mt-6   shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
     <div className="rounded-3xl">
       <Bar data={chartData} options={chartOptions} />
     </div>

@@ -158,6 +158,34 @@ export type TopFood = {
   mealPlanCount:number;
   totalCount:number;
 }
+export type Activity = {
+  filter(arg0: (item: any) => boolean): unknown;
+  map(arg0: (item: any) => any): unknown;
+  activityLevel: string;
+  count: number;
+  percentage: number
+
+}
+export type DietStyle = {
+  filter(arg0: (item: any) => boolean): unknown;
+  map(arg0: (item: any) => any): unknown;
+  activityLevel: string;
+  count: number;
+  percentage: number
+
+}
+export type Nutrition = {
+  map(arg0: (item: any) => any): unknown;
+  totalCalories: number,
+  totalCarbs: number,
+  totalProtein: number,
+  totalFat: number,
+  carbsPercentage: number,
+  proteinPercentage: number,
+  fatPercentage: number
+}
+
+
 export type Goal = {
   labels: string[]; // Array of labels (strings)
   achieved: number[];
