@@ -350,7 +350,9 @@ const ChartOne: React.FC = () => {
             <div>
               {data?.revenue?.total && (
                 <div>
-                  <div className="text-lg font-md">Total revenue: <span className="text-green-800 font-semibold"> {data.revenue.total.totalRevenue} VND</span></div>
+                  <div className="text-lg font-md">Total revenue: <span className="text-green-800 font-semibold">   {data.revenue.total.totalRevenue 
+      ? `${new Intl.NumberFormat().format(data.revenue.total.totalRevenue)} VND`
+      : "0 VND"}</span></div>
                   <div className="text-lg font-md">Total package sold: <span className="text-green-800 font-semibold">{data.revenue.total.packageSold} Packages</span></div>
                 </div>
               )}

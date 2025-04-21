@@ -12,6 +12,7 @@ import { format, parseISO } from "date-fns";
 import { Allergy } from "@/app/data/types";
 import AllergyModal from "@/components/AllergyModal/AllergyModal";
 import Loader from "@/components/common/Loader";
+import Cookies from "js-cookie";
 
 
 function formatDate(dateString?: string): string {
@@ -24,7 +25,7 @@ function formatDate(dateString?: string): string {
   }}
 
 const AllergyPage: React.FC = () => {
-
+  const userRole = Cookies.get("userRole");
 
   const [searchText, setSearchText] = useState<string>("");
   const pageIndex = 1;
@@ -93,9 +94,11 @@ const AllergyPage: React.FC = () => {
       dataIndex: "action",
       render: (_: any, record: Allergy) => (
         <Space size="middle">
+         {userRole !== "Nutritionist" ? <> <AllergyModal allergyId={record.allergyId} refetch={refetch} /></>:
+         <>
          <AllergyModal allergyId={record.allergyId} refetch={refetch} />
           <DeleteAllergyModal allergyId={record.allergyId} refetch={refetch} />
-        </Space>
+   </>    } </Space>
       ),
     },
   ];
@@ -131,8 +134,11 @@ const AllergyPage: React.FC = () => {
             style={{ marginBottom: 20, width: 300 }}
           />
           <div className="mb-2 flex space-x-3">
+          {userRole !== "Nutritionist" ? <><Button onClick={handleFileExport}>Export Excel</Button></>:
+         <>
             <AddAllergyModal />
             <Button onClick={handleFileExport}>Export Excel</Button>
+          </>}
           </div>
         </div>
         {isLoading ? (

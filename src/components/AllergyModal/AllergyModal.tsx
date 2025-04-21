@@ -4,6 +4,7 @@ import { useGetFoodById, updateFood, useGetAllFoods, useGetAllergyById, useGetAl
 import { toast } from "react-toastify";
 import DetailAllergyForm from "./Form/DetailAllergyForm";
 
+import Cookies from "js-cookie";
 
 const AllergyModal: React.FC<{ allergyId: number; refetch: () => void }> = ({ allergyId, refetch }) => {
   const [open, setOpen] = useState(false);
@@ -30,7 +31,7 @@ const handleCancel = () => {
   setIsEditing(false);
   form.resetFields(); 
 };
-
+const userRole = Cookies.get("userRole");
 const handleSave = async () => {
     form.validateFields().then(async (values) => {
       setLoadingSave(true);
@@ -93,6 +94,7 @@ useEffect(() => {
   return (
     <>
       <Button style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={showDetailModal}>Detail</Button>
+     
       <Modal
         title={isEditing ? "Edit allergy" : "Allergy detail"}
         open={open}
@@ -100,13 +102,17 @@ useEffect(() => {
         onCancel={handleCancel}
         maskClosable={false}
         footer={[
-          isEditing ? (
+          // Conditionally render the "Edit" button based on userRole
+          (userRole !== "Admin" && !isEditing) && (
+            <Button key="edit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={enableEdit}>
+              Edit
+            </Button>
+          ),
+          isEditing && (
             <>
               <Button key="cancel" onClick={handleCancel}>Cancel</Button>
               <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={handleSave} loading={loadingSave}>Save</Button>
             </>
-          ) : (
-            <Button key="edit" style={{ backgroundColor: '#2f855a', color: 'white' }}  onClick={enableEdit}>Edit</Button>
           )
         ]}
       >

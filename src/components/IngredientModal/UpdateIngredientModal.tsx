@@ -4,7 +4,7 @@ import { getIngredientById, updateIngredient, useGetAllIngredients } from '@/app
 import UpdateIngredientForm from './Form/UpdateIngredientForm';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import Cookies from "js-cookie";
 const UpdateIngredientModal: React.FC<{ ingredientId: number; refetch: () => void }> = ({ ingredientId, refetch }) => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -88,11 +88,11 @@ const UpdateIngredientModal: React.FC<{ ingredientId: number; refetch: () => voi
       fetchIngredientData();
     }
   }, [open, ingredientId, form]);
-
+  const userRole = Cookies.get("userRole");
   return (
     <>
       <Button style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={showModal}>
-        Edit
+        Detail
       </Button>
       <Modal
         title="Edit ingredient"
@@ -101,12 +101,22 @@ const UpdateIngredientModal: React.FC<{ ingredientId: number; refetch: () => voi
         confirmLoading={confirmLoading}
         onCancel={handleCancel}
         footer={[
-          <Button key="cancel" onClick={handleCancel} style={{ marginRight: 10 }}>
-            Cancel
-          </Button>,
-          <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} loading={confirmLoading} onClick={handleOk}>
-            Submit
-          </Button>,
+          (userRole !== "Admin" && (
+            <>
+              <Button key="cancel" onClick={handleCancel} style={{ marginRight: 10 }}>
+                Cancel
+              </Button>
+              <Button
+                key="submit"
+                style={{ backgroundColor: '#2f855a', color: 'white' }}
+                loading={confirmLoading}
+                onClick={handleOk}
+              >
+                Submit
+              </Button>
+            </>
+          )) || null, // Hide buttons for Admin
+        
         ]}
       >
         <UpdateIngredientForm form={form} />

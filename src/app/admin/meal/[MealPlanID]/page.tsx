@@ -198,6 +198,7 @@ import { Button, Form, Input, Select, InputNumber, Spin, message } from "antd";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import Cookies from "js-cookie";
 import { useGetMealPlanById, MealPlanDetail } from "@/app/data";
 // Removed the import of Day as it is a value
 // Define the Day type interface used for meal plan details
@@ -223,6 +224,7 @@ import { updateMealPlan } from "@/app/data"; // Giả sử có hàm updateMealPl
 import UpdateMealDaily from "@/components/MealPlan/UpdateMealDaily";
 
 const MealPlanDetailPage = () => {
+  const userRole = Cookies.get("userRole");
   const { MealPlanID } = useParams();
   const mealPlanId = MealPlanID;
   const [isEditing, setIsEditing] = useState(false);
@@ -355,7 +357,7 @@ const MealPlanDetailPage = () => {
           <div className="cursor-pointer p-3">Back</div>
         </Link>
         <div className="flex space-x-4">
-          {isEditing ? (
+          {/* {isEditing ? (
             <>
               <Button className="h-10 p-3" onClick={handleCancel}>
                 Cancel
@@ -368,7 +370,27 @@ const MealPlanDetailPage = () => {
             <Button className="h-10 p-3" onClick={handleEdit}>
               Edit meal plan
             </Button>
-          )}
+          )} */}
+           {isEditing ? (
+          // Conditionally render the buttons based on the user role
+          userRole !== "Admin" && (
+            <>
+              <Button className="h-10 p-3" onClick={handleCancel}>
+                Cancel
+              </Button>
+              <Button className="h-10 p-3" type="primary" onClick={saveChanges}>
+                Save meal plan
+              </Button>
+            </>
+          )
+        ) : (
+          // Hide "Edit meal plan" button for Admin
+          userRole !== "Admin" && (
+            <Button className="h-10 p-3" onClick={handleEdit}>
+              Edit meal plan
+            </Button>
+          )
+        )}
         </div>
       </div>
 

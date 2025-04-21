@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import DetailDiseaseForm from "./Form/DetailDiseaseForm";
 import { useGetDiseaseById, updateDisease, useGetAllDiseases, getDiseaseById } from "@/app/data"; 
-
+import Cookies from "js-cookie";
 const DiseaseModal: React.FC<{ diseaseId: number; refetch: () => void }> = ({ diseaseId, refetch }) => {
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -12,7 +12,7 @@ const DiseaseModal: React.FC<{ diseaseId: number; refetch: () => void }> = ({ di
   const [currentDisease, setCurrentDisease] = useState<any>(null);
 
   const { data: allDiseases } = useGetAllDiseases(1, 500, "");
-
+const userRole = Cookies.get("userRole");
   // Mở modal
   const showDetailModal = () => {
     setIsEditing(false);
@@ -100,16 +100,29 @@ const DiseaseModal: React.FC<{ diseaseId: number; refetch: () => void }> = ({ di
         width={800}
         onCancel={handleCancel}
         maskClosable={false}
-        footer={[
-          isEditing ? (
-            <>
-              <Button key="cancel" onClick={handleCancel}>Cancel</Button>
-              <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={handleSave} loading={loadingSave}>Save</Button>
-            </>
-          ) : (
-            <Button key="edit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={enableEdit}>Edit</Button>
-          )
-        ]}
+        // footer={[
+        //   isEditing ? (
+        //     <>
+        //       <Button key="cancel" onClick={handleCancel}>Cancel</Button>
+        //       <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={handleSave} loading={loadingSave}>Save</Button>
+        //     </>
+        //   ) : (
+        //     <Button key="edit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={enableEdit}>Edit</Button>
+        //   )
+        // ]}
+         footer={[
+                  // Conditionally render the "Edit" button based on userRole
+                  (userRole !== "Admin" && !isEditing) && (
+                    <Button key="edit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={enableEdit}>
+                      Edit
+                    </Button>
+                  ),
+                  isEditing && (
+                    <>
+                      <Button key="cancel" onClick={handleCancel}>Cancel</Button>
+                      <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={handleSave} loading={loadingSave}>Save</Button>
+                    </>
+                  )]}
       >
         <DetailDiseaseForm form={form} isEditing={isEditing} diseaseId={diseaseId} />
       </Modal>
