@@ -8,6 +8,7 @@ import AddIngredientModal from "@/components/IngredientModal/AddIngredientModal"
 import UpdateIngredientModal from "@/components/IngredientModal/UpdateIngredientModal";
 import DeleteIngredientModal from "@/components/IngredientModal/DeleteIngredientModal";
 import { Key } from "antd/es/table/interface";
+import Cookies from "js-cookie";
 import {
   importIngredientExcelAnalyzeFile,
   importIngredientExcelDuplicateFile,
@@ -32,7 +33,7 @@ const IngredientPage: React.FC = () => {
     pageSize,
     searchText,
   );
-
+  const userRole = Cookies.get("userRole");
   // Handle table change
   const onChange: TableProps<Ingredient>["onChange"] = (
     pagination,
@@ -80,14 +81,17 @@ const IngredientPage: React.FC = () => {
       dataIndex: "action",
       render: (_: any, record: Ingredient) => (
         <Space size="middle">
+          
           <UpdateIngredientModal
             ingredientId={record.ingredientId}
             refetch={refetch}
           />
-          <DeleteIngredientModal
-            ingredientId={record.ingredientId}
-            refetch={refetch}
-          />
+          {userRole !== "Admin" && (
+           <DeleteIngredientModal
+           ingredientId={record.ingredientId}
+           refetch={refetch}
+         />
+          )}
         </Space>
       ),
     },
@@ -232,9 +236,13 @@ const IngredientPage: React.FC = () => {
             style={{ marginBottom: 20, width: 300 }}
           />
           <div className="mb-2 flex space-x-3">
-            <div>
-              <AddIngredientModal /> {/* Modal for adding new ingredient */}
-            </div>
+          {userRole !== "Admin" && (
+            <>
+             <div>
+             <AddIngredientModal /> {/* Modal for adding new ingredient */}
+           </div>
+        
+           
             <input
               type="file"
               accept=".xlsx, .xls"
@@ -246,7 +254,7 @@ const IngredientPage: React.FC = () => {
               onClick={() => document.getElementById("fileInput")?.click()}
             >
               Import Excel
-            </Button>
+            </Button></>  )}
             <Button onClick={handleFileExport}>Export Excel</Button>
           </div>
         </div>

@@ -9,6 +9,7 @@ import Link from "next/link";
 import { MealPlan, useGetAllMealPlans } from "@/app/data";
 import { format, parseISO } from "date-fns";
 import Loader from "@/components/common/Loader";
+import Cookies from "js-cookie";
 function formatDate(dateString?: string): string {
   if (!dateString) return "";
   try {
@@ -18,7 +19,7 @@ function formatDate(dateString?: string): string {
     return dateString;
   }
 }
-
+const userRole = Cookies.get("userRole");
 const MealPage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
 
@@ -91,11 +92,16 @@ const MealPage: React.FC = () => {
               Detail
             </Button>
           </Link>
-
-          <DeleteMealPlanModal
+          {userRole !== "Admin" && (
+             <DeleteMealPlanModal
+             mealPlanId={record.mealPlanId}
+             refetch={refetch}
+           />
+          )}
+          {/* <DeleteMealPlanModal
             mealPlanId={record.mealPlanId}
             refetch={refetch}
-          />
+          /> */}
         </Space>
       ),
     },
@@ -141,11 +147,18 @@ const MealPage: React.FC = () => {
           />
 
           <div className="mb-2 flex space-x-3">
-            <Link href={"/admin/meal/create-meal"}>
+          {userRole !== "Admin" && (
+             <Link href={"/admin/meal/create-meal"}>
+             <Button style={{ backgroundColor: "#2f855a", color: "white" }}>
+               Add meal plan
+             </Button>{" "}
+           </Link>
+          )}
+            {/* <Link href={"/admin/meal/create-meal"}>
               <Button style={{ backgroundColor: "#2f855a", color: "white" }}>
                 Add meal plan
               </Button>{" "}
-            </Link>
+            </Link> */}
           </div>
         </div>
         {isLoading ? (

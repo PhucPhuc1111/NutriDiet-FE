@@ -14,6 +14,7 @@ import { useGetAllDiseases } from "@/app/data/disease";
 import DiseaseModal from "@/components/DiseaseModal/DiseaseModal";
 import Loader from "@/components/common/Loader";
 import * as XLSX from "xlsx";
+import Cookies from "js-cookie";
 function formatDate(dateString?: string): string {
   if (!dateString) return "";
   try {
@@ -28,7 +29,7 @@ const DiseasePage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
   const pageIndex = 1;
   const pageSize = 100;
-
+const userRole = Cookies.get("userRole");
   const { data, isLoading, isError, error, refetch } = useGetAllDiseases(
     pageIndex,
     pageSize,
@@ -94,7 +95,9 @@ const DiseasePage: React.FC = () => {
       render: (_: any, record: Disease) => (
         <Space size="middle">
         <DiseaseModal diseaseId={record.diseaseId} refetch={refetch} />
-          <DeleteDiseaseModal diseaseId={record.diseaseId} refetch={refetch} />
+        {userRole !== "Admin" && (
+            <DeleteDiseaseModal diseaseId={record.diseaseId} refetch={refetch} />
+          )}
         </Space>
       ),
     },
@@ -124,7 +127,11 @@ const DiseasePage: React.FC = () => {
           />
 
           <div className="mb-2 flex space-x-3">
+          {userRole !== "Admin" && (
             <AddDiseaseModal />
+            
+          )}
+            
                         <Button onClick={handleFileExport}>Export Excel</Button>
             
           </div>

@@ -194,7 +194,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { DownOutlined } from "@ant-design/icons";
 import { Button, Form, message, Select } from "antd";
 import { updateMealPlan, useGetAllFoods } from "@/app/data";
-
+import Cookies from "js-cookie";
 
 interface Day {
   dayNumber: string;
@@ -443,6 +443,7 @@ const UpdateMealPlan: React.FC<UpdateMealPlanProps> = ({
         foodDetails: { Breakfast: [], Lunch: [], Dinner: [], Snacks: [] },
         totalCalories: 0,totalCarbs: 0,totalFat: 0,totalProtein: 0,
       },
+      
     ]);
   }, []);
 
@@ -485,14 +486,19 @@ const UpdateMealPlan: React.FC<UpdateMealPlanProps> = ({
       message.error("Lỗi khi cập nhật thực đơn!");
     }
   };
-
+  const userRole = Cookies.get("userRole");
   return (
     <div>
       <div className="mb-3 flex items-center justify-between">
         <div className="text-lg font-semibold">Meal plan detail</div>
-        <Button className="bg-green-800 text-white" onClick={addDay} disabled={isDisabled}>
+        {userRole !== "Admin" && (
+           <Button className="bg-green-800 text-white" onClick={addDay} disabled={isDisabled}>
+           Add day
+          </Button>
+          )}
+        {/* <Button className="bg-green-800 text-white" onClick={addDay} disabled={isDisabled}>
          Add day
-        </Button>
+        </Button> */}
       </div>
       {days.map((day) => (
         <div key={day.dayNumber} className="pt-10">
@@ -503,7 +509,7 @@ const UpdateMealPlan: React.FC<UpdateMealPlanProps> = ({
             <div>{day.dayNumber}</div>
             <div className="action-buttons flex space-x-3">
               <DownOutlined className={`${open === day.dayNumber ? "rotate-180" : ""}`} />
-              {editMode[day.dayNumber] ? (
+              {/* {editMode[day.dayNumber] ? (
                 <>
                   <Button
                     type="primary"
@@ -526,7 +532,44 @@ const UpdateMealPlan: React.FC<UpdateMealPlanProps> = ({
                 onClick={() => deleteDay(Number(day.dayNumber))}
               >
                 Delete
-              </Button>
+              </Button> */}
+              {editMode[day.dayNumber] ? (
+                <>
+                  {userRole !== "Admin" && (
+                    <>
+                      <Button
+                        type="primary"
+                        onClick={() => toggleEditMode(Number(day.dayNumber))}
+                      >
+                        Save
+                      </Button>
+                      <Button onClick={() => toggleEditMode(Number(day.dayNumber))}>
+                        Cancel
+                      </Button>
+                    </>
+                  )}
+                </>
+              ) : (
+                userRole !== "Admin" && (
+                  <Button
+                    disabled={isDisabled}
+                    onClick={() => toggleEditMode(Number(day.dayNumber))}
+                  >
+                    Edit
+                  </Button>
+                )
+              )}
+
+              {/* Always render Delete button if not Admin */}
+              {userRole !== "Admin" && (
+                <Button
+                  className="bg-red-600 text-white"
+                  disabled={isDisabled}
+                  onClick={() => deleteDay(Number(day.dayNumber))}
+                >
+                  Delete
+                </Button>
+              )}
             </div>
           </div>
           {open === day.dayNumber && (
@@ -537,10 +580,10 @@ const UpdateMealPlan: React.FC<UpdateMealPlanProps> = ({
                 updateDay={updateDay}
               />
               <div className="bg-green-800 p-5 text-center text-lg font-semibold text-white">
-                <p>Total calo: {day.totalCalories} cal</p>
-                <p>Total carbs: {day.totalCarbs} cal</p>
-                <p>Total fat: {day.totalFat} cal</p>
-                <p>Total protein: {day.totalProtein} cal</p>
+                <p>Total calo: {day.totalCalories.toFixed(1)} Kcal</p>
+                <p>Total carbs: {day.totalCarbs.toFixed(1)} g</p>
+                <p>Total fat: {day.totalFat.toFixed(1)} g</p>
+                <p>Total protein: {day.totalProtein.toFixed(1)} g</p>
               </div>
             </div>
           )}

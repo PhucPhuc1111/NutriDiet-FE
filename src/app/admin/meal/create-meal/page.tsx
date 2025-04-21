@@ -8,7 +8,7 @@ import React, { useState } from "react";
 import { createMealPlan } from "@/app/data";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-
+import Cookies from "js-cookie";
 // Interface dùng cho chi tiết bữa ăn khi gửi lên API
 interface MealDetail {
   foodId: number;
@@ -86,7 +86,7 @@ const CreateMealPlanPage: React.FC = () => {
       setLoading(false);
     }
   };
-
+  const userRole = Cookies.get("userRole");
   return (
     <DefaultLayout>
       <div className="flex justify-between">

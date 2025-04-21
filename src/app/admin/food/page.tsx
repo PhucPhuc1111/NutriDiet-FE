@@ -29,7 +29,7 @@ import {
 import FoodModal from "@/components/FoodModal/FoodModal";
 import Loader from "@/components/common/Loader";
 import { toast } from "react-toastify";
-
+import Cookies from "js-cookie";
 const FoodPage: React.FC = () => {
   const { data: allergiesData } = useGetAllAllergies(1, 100, "");
   const { data: diseasesData } = useGetAllDiseases(1, 100, "");
@@ -48,6 +48,7 @@ const FoodPage: React.FC = () => {
     pageSize,
     searchText,
   );
+  const userRole = Cookies.get("userRole");
   const onChange: TableProps<Food>["onChange"] = (
     pagination,
     filters,
@@ -162,8 +163,10 @@ const FoodPage: React.FC = () => {
 
           <div className="space-y-2">
           <FoodModal foodId={record.foodId} refetch={refetch} />
+          {userRole !== "Admin" && (
+            <DeleteFoodModal foodId={record.foodId} refetch={refetch} />
+          )}
 
-<DeleteFoodModal foodId={record.foodId} refetch={refetch} />
           </div>
         
     
@@ -314,18 +317,22 @@ const FoodPage: React.FC = () => {
           />
 
 <div className="flex space-x-3 mb-2">
-            <div>
-              <AddFoodModal /> 
-            </div>
-            <input
-              type="file"
-              accept=".xlsx, .xls"
-              style={{ display: "none" }}
-              id="fileInput"
-              onChange={handleFileUpload}
-            />
-            
-             <Button onClick={() => document.getElementById('fileInput')?.click()}>Import Excel</Button>
+{userRole !== "Admin" && (
+                      <>
+                      <div>
+                        <AddFoodModal /> 
+                      </div>
+                      <input
+                        type="file"
+                        accept=".xlsx, .xls"
+                        style={{ display: "none" }}
+                        id="fileInput"
+                        onChange={handleFileUpload}
+                      />
+                      
+                       <Button onClick={() => document.getElementById('fileInput')?.click()}>Import Excel</Button></>
+          )}
+
             <Button onClick={handleFileExport}>Export Excel</Button>
           </div>
         </div>

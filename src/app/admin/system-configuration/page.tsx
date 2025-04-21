@@ -80,7 +80,7 @@ const SystemConfigurationPage: React.FC = () => {
       render: (_: any, record: SystemConfiguration) => (
         <Space size="middle">
           <UpdateConfigModal configId={record.configId} refetch={refetch} />
-          <DeleteConfigModal configId={record.configId} refetch={refetch} />
+          {/* <DeleteConfigModal configId={record.configId} refetch={refetch} /> */}
         </Space>
       ),
     },

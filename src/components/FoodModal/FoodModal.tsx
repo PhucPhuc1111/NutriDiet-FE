@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import DetailFoodForm from "./Form/DetailFoodForm";
 import { useGetFoodById, updateFood, useGetAllFoods, getFoodById } from "@/app/data"; // API lấy dữ liệu theo ID
-
+import Cookies from "js-cookie";
 const FoodModal: React.FC<{ foodId: number; refetch: () => void }> = ({ foodId, refetch }) => {
   const [open, setOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -12,7 +12,7 @@ const FoodModal: React.FC<{ foodId: number; refetch: () => void }> = ({ foodId, 
   const [currentFood, setCurrentFood] = useState<any>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null); 
   const { data: allFoods } = useGetAllFoods(1,500,""); 
-
+  const userRole = Cookies.get("userRole");
   // Mở modal
   const showDetailModal = () => {
     setIsEditing(false);
@@ -120,16 +120,29 @@ const FoodModal: React.FC<{ foodId: number; refetch: () => void }> = ({ foodId, 
         width={800}
         onCancel={handleCancel}
         maskClosable={false}
+        // footer={[
+        //   isEditing ? (
+        //     <>
+        //       <Button key="cancel" onClick={handleCancel}>Cancel</Button>
+        //       <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={handleSave} loading={loadingSave}>Save</Button>
+        //     </>
+        //   ) : (
+        //     <Button key="edit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={enableEdit}>Edit</Button>
+        //   )
+        // ]}
         footer={[
-          isEditing ? (
+          // Conditionally render the "Edit" button based on userRole
+          (userRole !== "Admin" && !isEditing) && (
+            <Button key="edit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={enableEdit}>
+              Edit
+            </Button>
+          ),
+          isEditing && (
             <>
               <Button key="cancel" onClick={handleCancel}>Cancel</Button>
               <Button key="submit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={handleSave} loading={loadingSave}>Save</Button>
             </>
-          ) : (
-            <Button key="edit" style={{ backgroundColor: '#2f855a', color: 'white' }} onClick={enableEdit}>Edit</Button>
-          )
-        ]}
+          )]}
       >
         <DetailFoodForm form={form} isEditing={isEditing} foodId={foodId} />
       </Modal>
