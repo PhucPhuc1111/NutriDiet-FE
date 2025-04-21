@@ -62,7 +62,7 @@ const ChartSix: React.FC = () => {
   }, [selectedDate]); // Chạy lại mỗi khi ngày thay đổi
 
   return (
-    <div style={{ width: "100%", maxWidth: "500px", margin: 10, padding: 10 }}>
+    <div style={{ width: "100%", maxWidth: "500px", margin: 10, padding: 30 }}>
       <h3 className="text-lg font-semibold text-center mb-4 mt-7">
         Nutrition Distribution on {selectedDate}
       </h3>
