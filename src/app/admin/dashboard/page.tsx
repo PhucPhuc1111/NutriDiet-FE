@@ -6,8 +6,8 @@ import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import DashboardComponent from "@/components/Dashboard/DashboardComponent";
 import CardDataStats from "@/components/CardDataStats";
-import { Dashboard, getAllDashboard, getAllRevenue } from "@/app/data";
-import { Select } from "antd";
+import { Dashboard, getAllDashboard, getAllNutrition, getAllRevenue } from "@/app/data";
+import { DatePicker, Select } from "antd";
 import ChartOne from "@/components/Charts/ChartOne";
 import Cookies from "js-cookie";
 import ChartTwo from "@/components/Charts/ChartTwo";
@@ -16,6 +16,7 @@ import ChartFour from "@/components/Charts/ChartFour";
 import ChartSix from "@/components/Charts/ChartSix";
 import ChartSeven from "@/components/Charts/ChartSeven";
 import ChartFive from "@/components/Charts/ChartFive";
+import dayjs from "dayjs";
 
 
 
@@ -25,8 +26,15 @@ const DashboardPage: React.FC = () => {
   const [revenueData, setRevenueData] = useState<any | null>(null);
   const [selectedFilter, setSelectedFilter] = useState<string>("Today");
   const [isLoading, setIsLoading] = useState(true);
-
-
+ const [selectedDate, setSelectedDate] = useState<string>(dayjs().format("YYYY-MM-DD")); // Ngày mặc định là hôm nay
+const [totalData, setTotalData] = useState<any | null>(null); // Thay đổi kiểu dữ liệu nếu cần
+ // Hàm xử lý sự kiện khi chọn ngày từ DatePicker
+ const handleDateChange = (date: any) => {
+  if (date) {
+    const formattedDate = date.format("YYYY-MM-DD"); // Chuyển đổi ngày thành định dạng YYYY-MM-DD
+    setSelectedDate(formattedDate); // Cập nhật ngày đã chọn
+  }
+};
   const fetchRevenueData = async (filter: string) => {
     try {
       setIsLoading(true);
@@ -120,7 +128,26 @@ const DashboardPage: React.FC = () => {
 
     fetchDashboardData(); 
   }, []); // Chạy chỉ một lần khi component mount
+ useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        // Gọi hàm getAllNutrition để lấy dữ liệu dinh dưỡng cho ngày đã chọn
+        const nutritionData = await getAllNutrition(selectedDate);
 
+// Gọi API lấy thông tin tổng quan
+        setTotalData(nutritionData); 
+        console.log(nutritionData)// Lưu vào state
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Lỗi khi gọi getAllNutrition:", error);
+      } finally {
+        setIsLoading(false); // Kết thúc loading
+      }
+    };
+
+    fetchData();
+  }, [selectedDate]); // Chạy lại mỗi khi ngày thay đổi
   // Cập nhật dữ liệu Revenue khi thay đổi filter
   useEffect(() => {
     fetchRevenueData(selectedFilter); // Gọi lại hàm fetch chỉ khi filter thay đổi
@@ -297,6 +324,25 @@ const DashboardPage: React.FC = () => {
       <CardDataStats title="Ingredients" total={dashboardData?.totalIngredient?.toString() || "0"} rate="">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className="stroke-white lucide lucide-banana-icon lucide-banana"><path d="M4 13c3.5-2 8-2 10 2a5.5 5.5 0 0 1 8 5"/><path d="M5.15 17.89c5.52-1.52 8.65-6.89 7-12C11.55 4 11.5 2 13 2c3.22 0 5 5.5 5 8 0 6.5-4.2 12-10.49 12C5.11 22 2 22 2 20c0-1.5 1.14-1.55 3.15-2.11Z"/></svg>      </CardDataStats>
       </div>
+      <div className=" mt-4  h-[170px] w-[262px]  bg-white ">
+        <div className="flex justify-between p-4">
+<div className="text-lg text-green-800 font-bold">Calories Distribution</div>
+         
+         
+          <div className="w-full">
+          <DatePicker
+          value={dayjs(selectedDate, "YYYY-MM-DD")} // Hiển thị ngày đã chọn
+          onChange={handleDateChange}
+          format="YYYY-MM-DD" // Định dạng ngày theo chuẩn YYYY-MM-DD
+          disabledDate={(current) => current && current > dayjs()} // Không cho phép chọn ngày trong tương lai
+        />
+          </div>
+        </div>
+         <div className="text-2xl font-bold pl-7 pt-8 text-green-800">
+             {totalData ? `${totalData.totalCalories} Kcal` : "0 Kcal"}
+            </div>
+            
+      </div>
       </div>
     
       <div className="mt-4 w-3/4">
@@ -393,6 +439,7 @@ const DashboardPage: React.FC = () => {
 </svg>
 
   </CardDataStats>
+
 </div>
 
 
@@ -400,6 +447,26 @@ const DashboardPage: React.FC = () => {
 <CardDataStats title="Ingredients" total={dashboardData?.totalIngredient?.toString() || "0"} rate="">
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" className="stroke-white lucide lucide-banana-icon lucide-banana"><path d="M4 13c3.5-2 8-2 10 2a5.5 5.5 0 0 1 8 5"/><path d="M5.15 17.89c5.52-1.52 8.65-6.89 7-12C11.55 4 11.5 2 13 2c3.22 0 5 5.5 5 8 0 6.5-4.2 12-10.49 12C5.11 22 2 22 2 20c0-1.5 1.14-1.55 3.15-2.11Z"/></svg>      </CardDataStats>
 </div>
+<div className=" mt-4  h-[170px] w-[262px]  bg-white ">
+        <div className="flex justify-between p-4">
+<div className="text-lg text-green-800 font-bold">Calories Distribution</div>
+         
+         
+          <div className="w-full">
+          <DatePicker
+          value={dayjs(selectedDate, "YYYY-MM-DD")} // Hiển thị ngày đã chọn
+          onChange={handleDateChange}
+          format="YYYY-MM-DD" // Định dạng ngày theo chuẩn YYYY-MM-DD
+          disabledDate={(current) => current && current > dayjs()} // Không cho phép chọn ngày trong tương lai
+        />
+          </div>
+        </div>
+         <div className="text-2xl font-bold pl-7 pt-8 text-green-800">
+              {totalData ? `${totalData.totalCalories} kcal` : "0 VNĐ"}
+              
+            </div>
+           
+      </div>
 </div>
 
 <div className="w-3/4">
@@ -420,7 +487,7 @@ const DashboardPage: React.FC = () => {
     <div className="w-1/2   h-[450px]   rounded-lg bg-white  shadow-3"><ChartSix/></div>
     </div>
     <div className="w-1/2 mt-3 flex justify-center  h-[450px]   rounded-lg bg-white  shadow-3">
-<ChartFour/> </div>
+<ChartFive/> </div>
         </div>
     
             <div className="w-1/2 h-[450px]  rounded-lg bg-white  shadow-3">

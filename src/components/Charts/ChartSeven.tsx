@@ -29,17 +29,17 @@ const ChartSeven: React.FC = () => {
 
         // Kiểm tra xem có dữ liệu trả về không
         if (nutritionData) {
-          const { totalCalories, totalCarbs, totalFat, totalProtein } = nutritionData;
+          const {  totalCarbs, totalFat, totalProtein } = nutritionData;
 
           // Cập nhật dữ liệu cho Bar Chart
           setChartData({
-            labels: ["Calories","Carbs", "Protein", "Fat"], // Label cho các cột
+            labels: ["Carbs",  "Fat","Protein"], // Label cho các cột
             datasets: [
               {
                 label: "Nutrition Distribution (g)", // Tiêu đề cho Bar Chart
-                data: [totalCalories, totalCarbs, totalFat, totalProtein ], // Dữ liệu phần trăm
+                data: [ totalCarbs, totalFat, totalProtein ], // Dữ liệu phần trăm
                 backgroundColor: [
-                  "#FF6384", // Carbs
+             
                  "#FFCE56",
                 "#4BC0C0",
                 "#9966FF" // Fat
