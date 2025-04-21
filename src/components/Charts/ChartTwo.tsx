@@ -104,7 +104,7 @@ const ChartTwo: React.FC = () => {
   };
 
   return (
-    <div className="col-span-12 h-[400px] rounded-sm border border-stroke bg-white px-5 mt-6   shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
+    <div className="col-span-12 h-[540px] rounded-sm border border-stroke bg-white px-5 mt-6 pt-15   shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
     <div className="rounded-3xl">
       <Bar data={chartData} options={chartOptions} />
     </div>
