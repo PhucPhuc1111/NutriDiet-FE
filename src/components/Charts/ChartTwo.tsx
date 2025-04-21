@@ -35,11 +35,13 @@ const ChartTwo: React.FC = () => {
         label: "Achieved",
         data: data.progressPercentages.map((percentage) => percentage), // Directly use the progress percentage for completed
         backgroundColor: "rgba(130, 202, 157, 0.6)", // Light Green for completed
+        barThickness: 100, 
       },
       {
         label: "Not Achieved",
         data: data.progressPercentages.map((percentage) => 100 - percentage), // 100% - progressPercentage for not completed
         backgroundColor: "rgba(255, 115, 0, 0.6)", // Orange for not completed
+        barThickness: 100, 
       },
     ],
   };
@@ -84,7 +86,8 @@ const ChartTwo: React.FC = () => {
           display: true,
           text: "Goals",
         },
-        stacked: true, // Stacked bars on the X-axis
+        stacked: true, 
+    
       },
       y: {
         title: {
@@ -101,11 +104,12 @@ const ChartTwo: React.FC = () => {
         },
       },
     },
+    
   };
 
   return (
-    <div className="col-span-12 h-[540px] rounded-sm border border-stroke bg-white px-5 mt-6 pt-15   shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
-    <div className="rounded-3xl">
+    <div className="col-span-12 h-[540px]  rounded-sm border border-stroke bg-white px-5 mt-6 pt-15   shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:col-span-8">
+    <div className="rounded-3xl ">
       <Bar data={chartData} options={chartOptions} />
     </div>
     </div>
