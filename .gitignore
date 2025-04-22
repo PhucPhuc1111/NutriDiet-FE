@@ -10,7 +10,7 @@
 /coverage
 
 .history
-
+.env
 # next.js
 /.next/
 /out/
