@@ -7,7 +7,7 @@ import DefaultLayout from '@/components/Layouts/DefaultLayout';
 import { format, parseISO } from 'date-fns';
 import { toast } from 'react-toastify';
  // Import hàm updateStatus
-
+ import * as XLSX from "xlsx";
 // Hàm format ngày
 function formatDate(dateString?: string): string {
   if (!dateString) return "";
@@ -305,6 +305,31 @@ const CustomerPage: React.FC = () => {
       )
     : [];
 
+    const handleFileExport = () => {
+          const ws = XLSX.utils.aoa_to_sheet([
+            ["Id", "Full name", "Email","Role", "Age","Address","Premium","Status"], // Header row
+            ...filteredData.map((item) => [
+              item.userId,
+              item.fullName,
+              item.email,
+              item.role,
+              item.age,
+              item.location,
+              
+              item.userPackages && item.userPackages.length > 0 
+              ? item.userPackages.map((pkg: any) => pkg.status).join(", ")
+              : "None", // Nếu không có gói, hiển thị "None"
+              item.status,
+            ],
+         
+        
+        ) // Data rows
+
+          ]);
+          const wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "Account");
+          XLSX.writeFile(wb, "account_export.xlsx");
+        };
   return (
     <DefaultLayout>
       <div className="">
@@ -316,6 +341,12 @@ const CustomerPage: React.FC = () => {
             onChange={handleSearch}
             style={{ marginBottom: 20, width: 300 }}
           />
+           <div className="mb-2 flex space-x-3">
+         
+            
+                        <Button onClick={handleFileExport}>Export Excel</Button>
+            
+          </div>
         </div>
         {isLoading ? (
           <Loader />

@@ -9,7 +9,7 @@ import AuthLayout from '@/components/Layouts/AuthLayout'
 import DefaultLayout from '@/components/Layouts/DefaultLayout'
 import { Button, Image, Input, Pagination, PaginationProps, Space, Table, TableColumnsType, TableProps } from 'antd'
 import { format, parseISO } from 'date-fns'
-
+import * as XLSX from "xlsx";
 import Link from 'next/link'
 
 import React, { useMemo, useState } from 'react'
@@ -76,7 +76,12 @@ const columns: TableColumnsType<Transaction> = [
     sorter: (a,b) => a.price - b.price,
     render: (text) => text || "Chưa có dữ liệu",
   },
-
+  {
+    title: "Description",
+    dataIndex: "description",
+    sorter: (a,b) => a.price - b.price,
+    render: (text) => text || "Chưa có dữ liệu",
+  },
   {
     title: "Paid At",
     dataIndex: "paidAt",
@@ -84,7 +89,7 @@ const columns: TableColumnsType<Transaction> = [
     render: (text) => formatDate(text) || "Chưa có dữ liệu",
   },
   {
-    title: "Expired At",
+    title: "Expiration date",
     dataIndex: "expiryDate",
     sorter: (a, b) => a.expiryDate.localeCompare(b.expiryDate),
     render: (text) => formatDate(text) || "Chưa có dữ liệu",
@@ -104,7 +109,23 @@ const columns: TableColumnsType<Transaction> = [
     )
   : [];
 
-
+const handleFileExport = () => {
+      const ws = XLSX.utils.aoa_to_sheet([
+        ["Id", "Email", "Package name","Price",'Description', "Paid At",'Expiration date'], // Header row
+        ...filteredData.map((item) => [
+          item.userId,
+          item.email,
+          item.packageName,
+          item.price,
+           item.description,
+          formatDate(item.paidAt),  // Format date createdAt
+          formatDate(item.expiryDate),  // Format date updatedAt
+        ]), // Data rows
+      ]);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Transaction");
+      XLSX.writeFile(wb, "transaction_export.xlsx");
+    };
 
 
   
@@ -121,6 +142,7 @@ const columns: TableColumnsType<Transaction> = [
         />
         <div className="mb-2 flex space-x-3">
           {/* <AddAllergyModal /> */}
+                    <Button onClick={handleFileExport}>Export Excel</Button>
         </div>
       </div>
       {isLoading ? (

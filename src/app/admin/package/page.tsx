@@ -15,6 +15,7 @@ import { useGetAllPackages } from "@/app/data/package";
 import AddPackageModal from "@/components/PackageModal/AddPackageModal";
 import UpdatePackageModal from "@/components/PackageModal/UpdatePackageModal";
 import DeletePackageModal from "@/components/PackageModal/DeletePackageModal";
+import { format, parseISO } from "date-fns";
 
 const PackagePage: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
@@ -90,7 +91,31 @@ const PackagePage: React.FC = () => {
         item.packageName.toLowerCase().includes(searchText.toLowerCase())
       )
     : [];
-
+    function formatDate(dateString?: string): string {
+      if (!dateString) return "";
+      try {
+        return format(parseISO(dateString), "hh:mm dd/MM/yyyy");
+      } catch (error) {
+        console.error("Error formatting date:", error);
+        return dateString;
+      }
+    }
+ const handleFileExport = () => {
+      const ws = XLSX.utils.aoa_to_sheet([
+        ["Id", "Package Name", "Duration","Price ", "Description"], // Header row
+        ...filteredData.map((item) => [
+          item.packageId,
+          item.packageName,
+          item.duration,
+          item.price,
+          item.description,
+         
+        ]), // Data rows
+      ]);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "Package");
+      XLSX.writeFile(wb, "package_export.xlsx");
+    };
   return (
     <DefaultLayout>
       <div>
@@ -105,6 +130,7 @@ const PackagePage: React.FC = () => {
           <div className="flex space-x-3 mb-2">
             <div>
               <AddPackageModal /> {/* Modal for adding new ingredient */}
+            <Button onClick={handleFileExport}>Export Excel</Button>
             </div>
          
           </div>
