@@ -350,9 +350,17 @@ const ChartOne: React.FC = () => {
             <div>
               {data?.revenue?.total && (
                 <div>
-                  <div className="text-lg font-md">Total revenue: <span className="text-green-800 font-semibold">   {data.revenue.total.totalRevenue 
-      ? `${new Intl.NumberFormat().format(data.revenue.total.totalRevenue)} VND`
-      : "0 VND"}</span></div>
+                  <div className="text-lg font-md">Total revenue: <span className="text-green-800 font-semibold"> 
+                    
+                  {
+  data.revenue.total.totalRevenue 
+    ? new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+      }).format(data.revenue.total.totalRevenue)
+    : "0 VND"
+}
+</span></div>
                   <div className="text-lg font-md">Total package sold: <span className="text-green-800 font-semibold">{data.revenue.total.packageSold} Packages</span></div>
                 </div>
               )}
@@ -418,7 +426,10 @@ const ChartOne: React.FC = () => {
                           const label = tooltipItem.dataset.label;
                           const value = tooltipItem.raw;
                           if (label === "Revenue") {
-                            return `${label}: ${value} VND`;
+                            return `${label}: ${new Intl.NumberFormat('vi-VN', {
+                              style: 'currency',
+                              currency: 'VND',
+                            }).format(value)}`;
                           } else if (label === "Package sold") {
                             return `${label}: ${value} packages`;
                           }

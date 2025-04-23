@@ -58,7 +58,14 @@ const PackagePage: React.FC = () => {
     {
         title: "Price (VNĐ)",
         dataIndex: "price",
+        
         sorter: (a, b) => a.price - b.price,
+        render: (text) => {
+          return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+          }).format(text);
+        }
       },
     {
       title: "Description",

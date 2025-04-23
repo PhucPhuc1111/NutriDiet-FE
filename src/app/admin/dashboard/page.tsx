@@ -187,10 +187,14 @@ const [totalData, setTotalData] = useState<any | null>(null); // Thay đổi ki�
           </div>
         </div>
          <div className="text-2xl font-bold pl-7 pt-8 text-green-800">
-         {revenueData 
-      ? `${new Intl.NumberFormat().format(revenueData.totalRevenue)} VNĐ`
-      : "0 VNĐ"
-    }
+         {
+  revenueData 
+    ? new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+      }).format(revenueData.totalRevenue)
+    : "0 VNĐ"
+}
             </div>
             <div className=" pl-7 text-md   ">
             <span>Package sold:</span> <span> {revenueData ? `${revenueData.packageSold} Package` : "0 Package"}</span>
