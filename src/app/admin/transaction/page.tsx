@@ -74,7 +74,12 @@ const columns: TableColumnsType<Transaction> = [
     title: "Price",
     dataIndex: "price",
     sorter: (a,b) => a.price - b.price,
-    render: (text) => text || "Chưa có dữ liệu",
+       render: (text) => {
+             return new Intl.NumberFormat('vi-VN', {
+               style: 'currency',
+               currency: 'VND',
+             }).format(text);
+           }
   },
   {
     title: "Description",

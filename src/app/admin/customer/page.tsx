@@ -155,35 +155,55 @@ const CustomerPage: React.FC = () => {
       dataIndex: "location",
       render: (text) => text || "Chưa có dữ liệu",
     },
+    // {
+    //   title: "Premium",
+    //   dataIndex: "userPackages",
+    //   render: (userPackages) => {
+    //     if (userPackages && userPackages.length > 0) {
+    //       const statusMapping: { [key: string]: string } = {
+    //         active: "Active",
+    //         expired: "Expired",
+    //         default: "None",
+    //       };
+    
+    //       // Kiểm tra nếu có gói hoạt động hay không
+    //       const statusLabels = userPackages.map((pkg: any) => {
+    //         const status = pkg.status.toLowerCase();
+    //         // Dùng mapping để chuyển đổi trạng thái thành tiếng Việt
+    //         return statusMapping[status] || statusMapping.default;
+    //       }).join(", ");
+    
+    //       // Xác định màu sắc dựa trên trạng thái "active"
+    //       const hasActivePackage = userPackages.some(
+    //         (pkg: any) => pkg.status.toLowerCase() === "active"
+    //       );
+    //       const color = hasActivePackage ? "green" : "red";
+    
+    //       return <span style={{ fontWeight: "bold", color }}>{statusLabels}</span>;
+    //     }
+    //     return <span style={{ fontWeight: "bold", color: "red" }}>None</span>;
+    //   },
+    // },
     {
       title: "Premium",
       dataIndex: "userPackages",
       render: (userPackages) => {
         if (userPackages && userPackages.length > 0) {
-          const statusMapping: { [key: string]: string } = {
-            active: "Active",
-            expired: "Expired",
-            default: "None",
-          };
-    
-          // Kiểm tra nếu có gói hoạt động hay không
-          const statusLabels = userPackages.map((pkg: any) => {
-            const status = pkg.status.toLowerCase();
-            // Dùng mapping để chuyển đổi trạng thái thành tiếng Việt
-            return statusMapping[status] || statusMapping.default;
-          }).join(", ");
-    
-          // Xác định màu sắc dựa trên trạng thái "active"
-          const hasActivePackage = userPackages.some(
-            (pkg: any) => pkg.status.toLowerCase() === "active"
-          );
-          const color = hasActivePackage ? "green" : "red";
-    
-          return <span style={{ fontWeight: "bold", color }}>{statusLabels}</span>;
+          // Find the active package
+          const activePackage = userPackages.find((pkg: any) => pkg.status.toLowerCase() === "active");
+          
+          if (activePackage) {
+            return (
+              <span style={{ fontWeight: "bold", color: "green" }}>
+                {activePackage.packageName}
+              </span>
+            );
+          }
         }
         return <span style={{ fontWeight: "bold", color: "red" }}>None</span>;
       },
-    },
+    }
+,    
     {
       title: "Status",
       dataIndex: "status",
@@ -316,9 +336,13 @@ const CustomerPage: React.FC = () => {
               item.age,
               item.location,
               
-              item.userPackages && item.userPackages.length > 0 
-              ? item.userPackages.map((pkg: any) => pkg.status).join(", ")
-              : "None", // Nếu không có gói, hiển thị "None"
+              // item.userPackages && item.userPackages.length > 0 
+              // ? item.userPackages.map((pkg: any) => pkg.status).join(", ")
+              // : "None", 
+              item.userPackages && item.userPackages.length > 0
+              ? item.userPackages.find((pkg: any) => pkg.status.toLowerCase() === "active")?.packageName || "None"
+              : "None", // If no active package, display "None"
+            
               item.status,
             ],
          
