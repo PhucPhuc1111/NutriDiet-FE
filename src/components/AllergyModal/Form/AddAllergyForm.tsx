@@ -47,7 +47,7 @@ const AddAllergyForm: React.FC<{ form: any }> = ({ form }) => {
       <Form.Item
         name="notes"
         label="Note"
-        rules={[{ required: true, message: 'Note is requied' }]}
+       
       >
         <Input />
       </Form.Item>

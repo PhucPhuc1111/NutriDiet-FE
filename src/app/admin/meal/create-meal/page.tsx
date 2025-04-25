@@ -126,7 +126,8 @@ const CreateMealPlanPage: React.FC = () => {
               rules={[
                 { required: true, message: "Meal plan name is required" },
                 {
-                  pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
+                  
+                  
                   message: 'Meal plan name must not contain special characters',
                 }
               ]}

@@ -29,12 +29,21 @@ const AddFoodForm: React.FC<{ form: any }> = ({ form }) => {
   };
 
   return (
-    <Form form={form} name="add-food-form" onFinish={onFinish}>
+    <Form form={form} name="add-food-form" onFinish={onFinish} 
+    initialValues={{
+      carbs: 0,
+      calories:0,
+      protein:0,
+        fat: 0,
+        glucid: 0,
+        fiber: 0,
+    }}>
       <div className="flex space-x-2">
         <div className="w-2/3">
           <Form.Item
             name="foodName"
             label="Food name"
+            
             rules={[{ required: true, message: "Food name is required" },
               {
                 pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,

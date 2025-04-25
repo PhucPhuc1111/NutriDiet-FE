@@ -33,7 +33,7 @@ const AddDiseaseForm: React.FC<{ form: any }> = ({ form }) => {
     >
       <Form.Item
         name="diseaseName"
-        label="Diseas Name"
+        label="Disease Name"
         rules={[
           { required: true, message: 'Diseas Name is required' },
          {
@@ -48,7 +48,7 @@ const AddDiseaseForm: React.FC<{ form: any }> = ({ form }) => {
       <Form.Item
         name="description"
         label="Description"
-        rules={[{ required: true, message: 'Description is required' }]}
+        // rules={[{ required: true, message: 'Description is required' }]}
       >
         <Input />
       </Form.Item>
