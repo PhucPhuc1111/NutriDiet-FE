@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+
 export async function middleware(req: NextRequest) {
   let token = req.cookies.get("accessToken")?.value;
   const refreshToken = req.cookies.get("refreshToken")?.value;
