@@ -5,7 +5,6 @@ export async function middleware(req: NextRequest) {
   const refreshToken = req.cookies.get("refreshToken")?.value;
   const role = req.cookies.get("userRole")?.value;
 
-  
 
   if (!token && !refreshToken) {
     return NextResponse.redirect(new URL("/", req.url));
