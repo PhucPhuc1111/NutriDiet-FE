@@ -243,11 +243,12 @@ const DetailFoodForm: React.FC<{ form: any, foodId: number, isEditing: boolean }
 
           <div className="flex justify-between space-x-4">
             <Form.Item
+            rules={[{ required: true, message: "Meal type is required" }]}
               name="mealType"
               label="Select meal type"
               style={{ width: "50%" }}
             >
-              <Select placeholder="Select meal type" allowClear disabled={!isEditing}>
+              <Select placeholder="Select meal type" allowClear disabled={!isEditing} >
               <Option value="Breakfast">Sáng</Option>
                 <Option value="Lunch">Trưa</Option>
                 <Option value="Dinner">Tối</Option>
@@ -255,8 +256,8 @@ const DetailFoodForm: React.FC<{ form: any, foodId: number, isEditing: boolean }
               </Select>
             </Form.Item>
 
-            <Form.Item name="foodType" label="Food type" style={{ width: "50%" }}>
-              <Select placeholder="Select food type" allowClear disabled={!isEditing}>
+            <Form.Item name="foodType" label="Food type" style={{ width: "50%" }} rules={[{ required: true, message: "Food type is required" }]} >
+              <Select placeholder="Select food type" allowClear disabled={!isEditing} >
                 <Option value="Vegetable">Rau củ quả</Option>
                 <Option value="Fruit">Trái cây</Option>
                 <Option value="Broth">Món nước</Option>
@@ -267,30 +268,31 @@ const DetailFoodForm: React.FC<{ form: any, foodId: number, isEditing: boolean }
             </Form.Item>
           </div>
 
-          <Form.Item name="servingSize" label="Serving Size">
-            <Input disabled={!isEditing} />
+          <Form.Item name="servingSize" label="Serving Size"  rules={[{ required: true, message: "Servingsize is required" }]}>
+            <Input disabled={!isEditing}  />
+            
           </Form.Item>
 
           <div className="flex justify-between space-x-4">
-            <Form.Item name="calories" label="Calories (cal)">
+            <Form.Item name="calories" label="Calories (cal) "  rules={[{ required: true, message: "Calories is required" }]}>
               <Input disabled={!isEditing} />
             </Form.Item>
-            <Form.Item name="protein" label="Protein (g)">
+            <Form.Item name="protein" label="Protein (g)"  rules={[{ required: true, message: "Protein is required" }]}>
               <Input disabled={!isEditing} />
             </Form.Item>
-            <Form.Item name="carbs" label="Carbs (g)">
+            <Form.Item name="carbs" label="Carbs (g)"  rules={[{ required: true, message: "Carbs is required" }]}>
               <Input disabled={!isEditing} />
             </Form.Item>
           </div>
 
           <div className="flex justify-between space-x-4">
-            <Form.Item name="fat" label="Fat (g)">
+            <Form.Item name="fat" label="Fat (g)"  rules={[{ required: true, message: "Fat is required" }]}>
               <Input disabled={!isEditing} />
             </Form.Item>
-            <Form.Item name="glucid" label="Glucid (g)">
+            <Form.Item name="glucid" label="Glucid (g)"  rules={[{ required: true, message: "Glucid is required" }]}>
               <Input disabled={!isEditing} />
             </Form.Item>
-            <Form.Item name="fiber" label="Fiber (g)">
+            <Form.Item name="fiber" label="Fiber (g)"  rules={[{ required: true, message: "Fiber is required" }]}>
               <Input disabled={!isEditing} />
             </Form.Item>
           </div>
