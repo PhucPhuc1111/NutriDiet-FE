@@ -1,19 +1,24 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
-import request, { baseURL }  from "@/services/apiClient";
-import Cookies from 'js-cookie';
+import request, { baseURL } from "@/services/apiClient";
+import Cookies from "js-cookie";
 import { MealPlan } from "./types";
 import { ApiResponse } from ".";
-import {CreateMealPlanParams} from "./types";
+import { CreateMealPlanParams } from "./types";
 
-export async function getAllMealPlans(pageIndex: number, pageSize: number): Promise<ApiResponse<MealPlan[]>> {
-  return await request.get(`${baseURL}/api/meal-plan/sample-mealplan?pageIndex=${pageIndex}&pageSize=${pageSize}`);
+export async function getAllMealPlans(
+  pageIndex: number,
+  pageSize: number,
+): Promise<ApiResponse<MealPlan[]>> {
+  return await request.get(
+    `${baseURL}/api/meal-plan/sample-mealplan?pageIndex=${pageIndex}&pageSize=${pageSize}`,
+  );
 }
 
-
-export async function getMealPlanById(mealplanId: number): Promise<ApiResponse<MealPlan>> {
+export async function getMealPlanById(
+  mealplanId: number,
+): Promise<ApiResponse<MealPlan>> {
   return await request.get(`${baseURL}/api/meal-plan/${mealplanId}`);
 }
-
 
 export const createMealPlan = async (params: CreateMealPlanParams) => {
   const token = Cookies.get("accessToken");
@@ -36,33 +41,43 @@ export const createMealPlan = async (params: CreateMealPlanParams) => {
   }
 };
 
+export const updateMealPlan = async (mealPlan: MealPlan): Promise<void> => {
+  const token = Cookies.get("accessToken");
 
-// updateMealPlan gửi dữ liệu lên API
-export const updateMealPlan = async (mealPlanId: number, params: any) => {
+  if (!token) {
+    throw new Error("Bạn chưa đăng nhập!");
+  }
+
+  if (!mealPlan.mealPlanId) {
+    throw new Error("Thiếu mealPlanId để cập nhật.");
+  }
+
+  const endpoint = `${baseURL}/api/meal-plan?mealPlanId=${mealPlan.mealPlanId}`;
+  const body = {
+    planName: mealPlan.planName,
+    healthGoal: mealPlan.healthGoal,
+    mealPlanDetails: mealPlan.mealPlanDetails,
+  };
+
   try {
-    const response = await request.put(`/api/meal-plan?mealPlanId=${mealPlanId}`, {
-      data: {
-        planName: params.planName,
-        healthGoal: params.healthGoal,
-        mealPlanDetails: params.mealPlanDetails,  // Các chi tiết bữa ăn phải đúng cấu trúc
+    const response = await request.put(endpoint, body, {
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
     });
-
-    if (response.status === 200) {
-      console.log('Meal plan updated successfully');
-    }
-    return response;
   } catch (error) {
-    console.error('Error updating meal plan:', error);
+    console.error("Lỗi khi cập nhật meal plan:", error);
     throw error;
   }
 };
 
-
 // Cập nhật chi tiết bữa ăn
-export const updateMealPlanDetail = async (mealPlanDetailId: number, params: any) => {
+export const updateMealPlanDetail = async (
+  mealPlanDetailId: number,
+  params: any,
+) => {
   try {
-    const response = await request.put('/api/meal-plan-detail', {
+    const response = await request.put("/api/meal-plan-detail", {
       data: {
         mealPlanDetailId,
         foodId: params.foodId,
@@ -74,7 +89,7 @@ export const updateMealPlanDetail = async (mealPlanDetailId: number, params: any
 
     return response;
   } catch (error) {
-    console.error('Error updating meal plan detail:', error);
+    console.error("Error updating meal plan detail:", error);
     throw error;
   }
 };
@@ -87,18 +102,21 @@ export const useGetAllMealPlans = (
   pageIndex: number,
   pageSize: number,
   search: string,
-  config?: UseQueryOptions<MealPlan[]>
+  config?: UseQueryOptions<MealPlan[]>,
 ) => {
   return useQuery<MealPlan[]>({
-     queryKey: ["mealplans", pageIndex, pageSize],
-     queryFn: async () => {
-       const response = await getAllMealPlans(pageIndex, pageSize);
-       return response.data;
-     },
-     ...config,
-   });
- };
-export const useGetMealPlanById = (mealPlanId: number, config?: UseQueryOptions<MealPlan>) => {
+    queryKey: ["mealplans", pageIndex, pageSize],
+    queryFn: async () => {
+      const response = await getAllMealPlans(pageIndex, pageSize);
+      return response.data;
+    },
+    ...config,
+  });
+};
+export const useGetMealPlanById = (
+  mealPlanId: number,
+  config?: UseQueryOptions<MealPlan>,
+) => {
   return useQuery<MealPlan>({
     queryKey: ["mealPlan", mealPlanId],
     queryFn: async () => {
