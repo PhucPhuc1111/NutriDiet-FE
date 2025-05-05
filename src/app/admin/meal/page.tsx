@@ -35,7 +35,7 @@ const MealPage: React.FC = () => {
     {
       title: "Id",
       dataIndex: "mealPlanId",
-      sorter: (a, b) => a.mealPlanId - b.mealPlanId,
+      sorter: (a, b) => (a.mealPlanId ?? 0) - (b.mealPlanId ?? 0),
     },
     {
       title: "Plan name",
@@ -67,18 +67,19 @@ const MealPage: React.FC = () => {
     {
       title: "Duration (days)",
       dataIndex: "duration",
-      sorter: (a, b) => a.duration - b.duration,
+      sorter: (a, b) => (a.duration ?? 0) - (b.duration ?? 0),
     },
     {
       title: "Created By",
       dataIndex: "createdBy",
-      sorter: (a, b) => a.duration - b.duration,
+      sorter: (a, b) => (a.createdBy ?? "").localeCompare(b.createdBy ?? ""),
     },
     {
       title: "Created At ",
       dataIndex: "createdAt",
       sorter: (a, b) =>
-        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+        new Date(a.createdAt ?? 0).getTime() -
+        new Date(b.createdAt ?? 0).getTime(),
       render: (text) => formatDate(text),
     },
 
@@ -93,10 +94,10 @@ const MealPage: React.FC = () => {
             </Button>
           </Link>
           {userRole !== "Admin" && (
-             <DeleteMealPlanModal
-             mealPlanId={record.mealPlanId}
-             refetch={refetch}
-           />
+            <DeleteMealPlanModal
+              mealPlanId={record.mealPlanId!}
+              refetch={refetch}
+            />
           )}
           {/* <DeleteMealPlanModal
             mealPlanId={record.mealPlanId}
@@ -147,13 +148,13 @@ const MealPage: React.FC = () => {
           />
 
           <div className="mb-2 flex space-x-3">
-          {userRole !== "Admin" && (
-             <Link href={"/admin/meal/create-meal"}>
-             <Button style={{ backgroundColor: "#2f855a", color: "white" }}>
-               Add meal plan
-             </Button>{" "}
-           </Link>
-          )}
+            {userRole !== "Admin" && (
+              <Link href={"/admin/meal/create-meal"}>
+                <Button style={{ backgroundColor: "#2f855a", color: "white" }}>
+                  Add meal plan
+                </Button>{" "}
+              </Link>
+            )}
             {/* <Link href={"/admin/meal/create-meal"}>
               <Button style={{ backgroundColor: "#2f855a", color: "white" }}>
                 Add meal plan
@@ -164,12 +165,13 @@ const MealPage: React.FC = () => {
         {isLoading ? (
           <Loader />
         ) : (
-        <Table<MealPlan>
-          columns={columns}
-          dataSource={filteredData}
-          onChange={onChange}
-          rowKey={(record) => record.mealPlanId}
-        />)}
+          <Table<MealPlan>
+            columns={columns}
+            dataSource={filteredData}
+            onChange={onChange}
+            rowKey={(record) => record.mealPlanId ?? 0}
+          />
+        )}
       </div>
     </DefaultLayout>
   );
