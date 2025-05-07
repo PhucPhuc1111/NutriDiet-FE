@@ -190,6 +190,7 @@ export type Transaction = {
   description: string;
   price: number;
   paidAt: string;
+  status: string;
   expiryDate: string;
 };
 export type Package = {

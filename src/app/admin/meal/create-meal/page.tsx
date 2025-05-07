@@ -31,11 +31,16 @@ export interface DayMeal {
   totalFat: number;
   totalProtein: number;
   totalByMealType?: {
-    Breakfast: { calories: number, carbs: number, fat: number, protein: number },
-    Lunch: { calories: number, carbs: number, fat: number, protein: number },
-    Dinner: { calories: number, carbs: number, fat: number, protein: number },
-    Snacks: { calories: number, carbs: number, fat: number, protein: number },
-  }
+    Breakfast: {
+      calories: number;
+      carbs: number;
+      fat: number;
+      protein: number;
+    };
+    Lunch: { calories: number; carbs: number; fat: number; protein: number };
+    Dinner: { calories: number; carbs: number; fat: number; protein: number };
+    Snacks: { calories: number; carbs: number; fat: number; protein: number };
+  };
 }
 
 interface FormValues {
@@ -94,10 +99,10 @@ const CreateMealPlanPage: React.FC = () => {
           <div className="cursor-pointer p-3">Back</div>
         </Link>
         <div className="flex space-x-4">
-        <Link href="/admin/meal">
-        <Button className="h-10 w-20 p-3">Cancel</Button>
-        </Link>
-     
+          <Link href="/admin/meal">
+            <Button className="h-10 w-20 p-3">Cancel</Button>
+          </Link>
+
           <Button
             className="h-10 w-20 bg-green-800 p-3 text-white"
             form="mealPlanForm"
@@ -110,9 +115,7 @@ const CreateMealPlanPage: React.FC = () => {
       </div>
 
       <div className="w-full rounded-lg border-2 border-green-800">
-        <div className="px-10 py-5 text-lg font-bold">
-          Meal plan detail
-        </div>
+        <div className="px-10 py-5 text-lg font-bold">Meal plan detail</div>
         <div className="px-10">
           <Form
             form={form}
@@ -126,24 +129,25 @@ const CreateMealPlanPage: React.FC = () => {
               rules={[
                 { required: true, message: "Meal plan name is required" },
                 {
-                  pattern: /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
-                  message: 'Meal plan name must not contain special characters',
-                }
+                  pattern:
+                    /^[a-zA-Z0-9áàảãạăắằẳẵặâấầẩẫậéèẻẽẹêếềểễệíìỉĩịóòỏõọôốồổỗộơớờởỡợúùủũụưứừửữựýỳỷỹỵđ\s]*$/,
+                  message: "Meal plan name must not contain special characters",
+                },
               ]}
             >
               <Input />
             </Form.Item>
             <Form.Item
               name="healthGoal"
-              label="Heal Goal"
-              rules={[
-                { required: true, message: "Heal goal is required" },
-              ]}
+              label="Health Goal"
+              rules={[{ required: true, message: "Heal goal is required" }]}
             >
-              <Select placeholder="Chọn mục tiêu sức khỏe">
+              <Select placeholder="Choose Health Goal" allowClear>
                 <Select.Option value="Tăng cân">Tăng cân</Select.Option>
                 <Select.Option value="Giảm cân">Giảm cân</Select.Option>
-                <Select.Option value="Duy trì cân nặng">Duy trì cân nặng</Select.Option>
+                <Select.Option value="Duy trì cân nặng">
+                  Duy trì cân nặng
+                </Select.Option>
               </Select>
             </Form.Item>
           </Form>
