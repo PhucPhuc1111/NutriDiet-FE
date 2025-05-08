@@ -159,7 +159,7 @@ const TransactionPage: React.FC = () => {
         <div className="flex justify-between">
           <div className="mb-2">Total: {data?.length}</div>
           <Input
-            placeholder="Tìm kiếm dị ứng"
+            placeholder="Tìm kiếm..."
             value={searchText}
             onChange={handleSearch}
             style={{ marginBottom: 20, width: 300 }}
