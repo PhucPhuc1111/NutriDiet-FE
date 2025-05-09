@@ -232,9 +232,9 @@ const UpdateMealPlan: React.FC<UpdateMealPlanProps> = ({
 
     try {
       await updateMealPlan(params); // Hàm gọi API
-      message.success("Cập nhật thực đơn thành công!");
+      message.success("Update meal plan successfully!");
     } catch (error) {
-      message.error("Lỗi khi cập nhật thực đơn!");
+      message.error("Error updating meal plan!");
     }
   };
   const userRole = Cookies.get("userRole");

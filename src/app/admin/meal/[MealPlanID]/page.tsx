@@ -69,18 +69,18 @@ const MealPlanDetailPage = () => {
       !updatedData.healthGoal ||
       updatedData.mealPlanDetails.length === 0
     ) {
-      message.error("Vui lòng điền đầy đủ thông tin kế hoạch bữa ăn.");
+      message.error("Please fill in all meal plan information.");
       return; // Dừng lại nếu thiếu thông tin quan trọng
     }
 
     try {
       console.log("Updated data:", updatedData);
       await updateMealPlan(updatedData);
-      toast.success("Cập nhật thực đơn thành công!");
+      toast.success("Update meal plan successfully!");
       router.push("/admin/meal");
     } catch (error) {
       console.error("Error updating meal plan:", error);
-      message.error("Lỗi khi cập nhật thực đơn!");
+      message.error("Error updating meal plan!");
     }
   };
 

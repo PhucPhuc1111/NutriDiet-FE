@@ -141,7 +141,7 @@ const IngredientPage: React.FC = () => {
         if (analyzeResponse.data.duplicateIngredientCount === 0) {
           // No duplicates, proceed with import
           const importResponse = await importIngredientExcelFile(formData);
-          toast.success(importResponse.message);
+          toast.success(`Import successful: ${importResponse.message}`);
           refetch(); // Refresh data
         } else {
           // There are duplicates, show the modal
@@ -153,7 +153,7 @@ const IngredientPage: React.FC = () => {
         e.target.value = ""; // Reset the file input after processing
       } catch (error) {
         console.error("Error importing Excel file:", error);
-        toast.error("Import Excel file failed");
+        toast.error("Failed to import Excel file. Please try again.");
       }
     }
   };
@@ -167,12 +167,12 @@ const IngredientPage: React.FC = () => {
       try {
         // Import only new foods (ignores duplicates)
         const response = await importIngredientExcelFile(formData);
-        toast.success(response.message);
+        toast.success(`Import successful: ${response.message}`);
         refetch(); // Refresh data
         setShowDuplicateModal(false); // Close the modal
       } catch (error) {
         console.error("Error importing new foods:", error);
-        toast.error("Import new foods failed");
+        toast.error("Failed to import new ingredients. Please try again.");
       }
     }
   };
@@ -186,12 +186,12 @@ const IngredientPage: React.FC = () => {
       try {
         // Import all foods, including duplicates
         const response = await importIngredientExcelDuplicateFile(formData);
-        toast.success(response.message);
+        toast.success(`Import successful: ${response.message}`);
         refetch(); // Refresh data
         setShowDuplicateModal(false); // Close the modal
       } catch (error) {
         console.error("Error importing all foods:", error);
-        toast.error("Import all foods failed");
+        toast.error("Failed to import all ingredients. Please try again.");
       }
     }
   };
@@ -232,9 +232,6 @@ const IngredientPage: React.FC = () => {
       <div>
         <div className="flex justify-between">
           <div className="mb-2">Total: {data?.length}</div>
-          <div className="mb-2 italic text-gray-500">
-            Default unit of ingredient is 100g or 100ml
-          </div>
           <Input
             placeholder="Search ingredient name"
             value={searchText}

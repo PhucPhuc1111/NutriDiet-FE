@@ -71,29 +71,34 @@ const menuGroups = [
         route: "#",
         children: [
           // { label: ["Nguyên liệu"], route: "/admin/ingredient" },
-          { label: ["Disease"], route: "/admin/disease" }, 
+          { label: ["Disease"], route: "/admin/disease" },
           { label: ["Allergy"], route: "/admin/allergy" },
           { label: ["Ingredient"], route: "/admin/ingredient" },
           { label: ["Food"], route: "/admin/food" },
-     { label: ["Meal Plan"], route: "/admin/meal" },
-     { label: ["Premium package"], route: "/admin/package" },
-     { label: ["Transaction"], route: "/admin/transaction" },
-        { label: ["Account"], route: "/admin/customer" },
-        
+          { label: ["Meal Plan"], route: "/admin/meal" },
+          { label: ["Premium package"], route: "/admin/package" },
+          { label: ["User Package"], route: "/admin/transaction" },
+          { label: ["Account"], route: "/admin/customer" },
+
           { label: ["Feedback"], route: "/admin/feedback" },
-          { label: ["System configuration"], route: "/admin/system-configuration" },
+          {
+            label: ["System configuration"],
+            route: "/admin/system-configuration",
+          },
         ],
       },
-
-          
     ],
   },
 ];
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const pathname = usePathname();
-    const [user, setUser] = useState<{ email: string; role: string; name: string } | null>(null);
-  
+  const [user, setUser] = useState<{
+    email: string;
+    role: string;
+    name: string;
+  } | null>(null);
+
   const router = useRouter();
   const [pageName, setPageName] = useLocalStorage("selectedMenu", "dashboard");
   const handleLogout = () => {
@@ -104,57 +109,55 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     Cookies.remove("userName");
     setUser(null);
     toast.success("Logout successful!");
-   
 
-  // Sau khi tải lại trang, chuyển hướng đến trang đăng ký (signup)
-  setTimeout(() => {
-    router.push("/auth/signin");
-  }, 500); // Đợi một chút để trang tải lại trước khi chuyển hướng
-
+    // Sau khi tải lại trang, chuyển hướng đến trang đăng ký (signup)
+    setTimeout(() => {
+      router.push("/auth/signin");
+    }, 500); // Đợi một chút để trang tải lại trước khi chuyển hướng
   };
   const userRole = Cookies.get("userRole");
 
   // Filter out "System configuration" and "Account" from children if user role is "Nutritionist"
-  const filteredMenuItems = menuGroups.map(group => ({
+  const filteredMenuItems = menuGroups.map((group) => ({
     ...group,
-    menuItems: group.menuItems.filter(menuItem => {
-      // Kiểm tra nếu người dùng là "Nutritionist"
-      if (userRole === 'Nutritionist') {
-        // Loại bỏ các mục menu chính và các mục con nếu có (children)
-        if (menuItem.children) {
-          menuItem.children = menuItem.children.filter(child => {
-            // Kiểm tra và loại bỏ các mục con không mong muốn
-            return !(
-              child.label.includes("Premium package") ||
-              child.label.includes("Transaction") ||
-              child.label.includes("Account") ||
-          
-              child.label.includes("System configuration")
-            );
-          });
-  
-          // Nếu sau khi lọc, không còn mục con nào, thì ẩn mục chính
-          if (menuItem.children.length === 0) {
-            return false;
+    menuItems: group.menuItems
+      .filter((menuItem) => {
+        // Kiểm tra nếu người dùng là "Nutritionist"
+        if (userRole === "Nutritionist") {
+          // Loại bỏ các mục menu chính và các mục con nếu có (children)
+          if (menuItem.children) {
+            menuItem.children = menuItem.children.filter((child) => {
+              // Kiểm tra và loại bỏ các mục con không mong muốn
+              return !(
+                child.label.includes("Premium package") ||
+                child.label.includes("User Package") ||
+                child.label.includes("Account") ||
+                child.label.includes("System configuration")
+              );
+            });
+
+            // Nếu sau khi lọc, không còn mục con nào, thì ẩn mục chính
+            if (menuItem.children.length === 0) {
+              return false;
+            }
           }
+
+          // Loại bỏ mục chính không mong muốn
+          return !(
+            menuItem.label.includes("Premium package") ||
+            menuItem.label.includes("User Package") ||
+            menuItem.label.includes("Account") ||
+            menuItem.label.includes("Feedback") ||
+            menuItem.label.includes("System configuration")
+          );
         }
-  
-        // Loại bỏ mục chính không mong muốn
-        return !(
-          menuItem.label.includes("Premium package") ||
-          menuItem.label.includes("Transaction") ||
-          menuItem.label.includes("Account") ||
-          menuItem.label.includes("Feedback") ||
-          menuItem.label.includes("System configuration")
-        );
-      }
-  
-      // Nếu không phải "Nutritionist", giữ lại mục menu
-      return true;
-    }).filter(Boolean) // Loại bỏ mục menu trống
+
+        // Nếu không phải "Nutritionist", giữ lại mục menu
+        return true;
+      })
+      .filter(Boolean), // Loại bỏ mục menu trống
   }));
-  
-  
+
   return (
     <ClickOutside onClick={() => setSidebarOpen(false)}>
       <aside
@@ -164,7 +167,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       >
         <div className="flex items-center justify-between gap-2 px-14 ">
           <Link href="/">
-            <div className="text-2xl font-semibold p-2">NutriAdmin</div>
+            <div className="p-2 text-2xl font-semibold">NutriAdmin</div>
           </Link>
 
           <button
@@ -190,46 +193,50 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
         <div className=" flex flex-col  duration-300 ease-linear">
           <nav className=" px-4 py-4 lg:mt-9 lg:px-6">
-          {filteredMenuItems.map((group, groupIndex) => (
+            {filteredMenuItems.map((group, groupIndex) => (
               <div key={groupIndex}>
-                <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">{group.name}</h3>
+                <h3 className="mb-4 ml-4 text-sm font-semibold text-bodydark2">
+                  {group.name}
+                </h3>
                 <ul className="flex flex-col gap-1.5">
-                  {group.menuItems.map((menuItem, menuIndex) => (
-                    menuItem && (
-                      <SidebarItem
-                        key={menuIndex}
-                        item={menuItem}
-                        pageName={pageName}
-                        setPageName={setPageName}
-                      />
-                    )
-                  ))}
+                  {group.menuItems.map(
+                    (menuItem, menuIndex) =>
+                      menuItem && (
+                        <SidebarItem
+                          key={menuIndex}
+                          item={menuItem}
+                          pageName={pageName}
+                          setPageName={setPageName}
+                        />
+                      ),
+                  )}
                 </ul>
               </div>
             ))}
-            <div className="flex    hover:bg-green-900 p-3" onClick={handleLogout}> 
+            <div
+              className="flex    p-3 hover:bg-green-900"
+              onClick={handleLogout}
+            >
               <svg
-            className="fill-current"
-            width="22"
-            height="22"
-            viewBox="0 0 22 22"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M15.5375 0.618744H11.6531C10.7594 0.618744 10.0031 1.37499 10.0031 2.26874V4.64062C10.0031 5.05312 10.3469 5.39687 10.7594 5.39687C11.1719 5.39687 11.55 5.05312 11.55 4.64062V2.23437C11.55 2.16562 11.5844 2.13124 11.6531 2.13124H15.5375C16.3625 2.13124 17.0156 2.78437 17.0156 3.60937V18.3562C17.0156 19.1812 16.3625 19.8344 15.5375 19.8344H11.6531C11.5844 19.8344 11.55 19.8 11.55 19.7312V17.3594C11.55 16.9469 11.2062 16.6031 10.7594 16.6031C10.3125 16.6031 10.0031 16.9469 10.0031 17.3594V19.7312C10.0031 20.625 10.7594 21.3812 11.6531 21.3812H15.5375C17.2219 21.3812 18.5625 20.0062 18.5625 18.3562V3.64374C18.5625 1.95937 17.1875 0.618744 15.5375 0.618744Z"
-              fill=""
-            />
-            <path
-              d="M6.05001 11.7563H12.2031C12.6156 11.7563 12.9594 11.4125 12.9594 11C12.9594 10.5875 12.6156 10.2438 12.2031 10.2438H6.08439L8.21564 8.07813C8.52501 7.76875 8.52501 7.2875 8.21564 6.97812C7.90626 6.66875 7.42501 6.66875 7.11564 6.97812L3.67814 10.4844C3.36876 10.7938 3.36876 11.275 3.67814 11.5844L7.11564 15.0906C7.25314 15.2281 7.45939 15.3312 7.66564 15.3312C7.87189 15.3312 8.04376 15.2625 8.21564 15.125C8.52501 14.8156 8.52501 14.3344 8.21564 14.025L6.05001 11.7563Z"
-              fill=""
-            />
-          </svg>
-                
-                <p>
-                Logout
-                </p>
-              </div>
+                className="fill-current"
+                width="22"
+                height="22"
+                viewBox="0 0 22 22"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M15.5375 0.618744H11.6531C10.7594 0.618744 10.0031 1.37499 10.0031 2.26874V4.64062C10.0031 5.05312 10.3469 5.39687 10.7594 5.39687C11.1719 5.39687 11.55 5.05312 11.55 4.64062V2.23437C11.55 2.16562 11.5844 2.13124 11.6531 2.13124H15.5375C16.3625 2.13124 17.0156 2.78437 17.0156 3.60937V18.3562C17.0156 19.1812 16.3625 19.8344 15.5375 19.8344H11.6531C11.5844 19.8344 11.55 19.8 11.55 19.7312V17.3594C11.55 16.9469 11.2062 16.6031 10.7594 16.6031C10.3125 16.6031 10.0031 16.9469 10.0031 17.3594V19.7312C10.0031 20.625 10.7594 21.3812 11.6531 21.3812H15.5375C17.2219 21.3812 18.5625 20.0062 18.5625 18.3562V3.64374C18.5625 1.95937 17.1875 0.618744 15.5375 0.618744Z"
+                  fill=""
+                />
+                <path
+                  d="M6.05001 11.7563H12.2031C12.6156 11.7563 12.9594 11.4125 12.9594 11C12.9594 10.5875 12.6156 10.2438 12.2031 10.2438H6.08439L8.21564 8.07813C8.52501 7.76875 8.52501 7.2875 8.21564 6.97812C7.90626 6.66875 7.42501 6.66875 7.11564 6.97812L3.67814 10.4844C3.36876 10.7938 3.36876 11.275 3.67814 11.5844L7.11564 15.0906C7.25314 15.2281 7.45939 15.3312 7.66564 15.3312C7.87189 15.3312 8.04376 15.2625 8.21564 15.125C8.52501 14.8156 8.52501 14.3344 8.21564 14.025L6.05001 11.7563Z"
+                  fill=""
+                />
+              </svg>
+
+              <p>Logout</p>
+            </div>
           </nav>
         </div>
       </aside>
