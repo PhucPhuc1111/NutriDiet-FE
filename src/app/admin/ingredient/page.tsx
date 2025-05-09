@@ -232,6 +232,9 @@ const IngredientPage: React.FC = () => {
       <div>
         <div className="flex justify-between">
           <div className="mb-2">Total: {data?.length}</div>
+          <div className="mb-2 italic text-gray-500">
+            Default unit of ingredient is 100g or 100ml
+          </div>
           <Input
             placeholder="Search ingredient name"
             value={searchText}
